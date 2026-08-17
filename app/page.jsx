@@ -5,6 +5,7 @@ import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { checkAuth, logout } from '@/lib/auth-client';
 import {
   PlusCircle,
   Upload,
@@ -68,6 +69,7 @@ export default function MainDashboardPage() {
       if (queryParams.length > 0) {
         url += `?${queryParams.join('&')}`;
       }
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         setSamples(data);
@@ -216,7 +218,7 @@ export default function MainDashboardPage() {
       <Sidebar selectedPackage="Dashboard" userRole={user?.role} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden w-full">
-        <Header user={user} onLogout={() => { localStorage.clear(); router.push('/login'); }} />
+        <Header user={user} onLogout={() => logout(router)} />
 
         <main className="flex-1 overflow-y-auto p-8 space-y-8 w-full">
           {/* Top Title & Primary Action */}
