@@ -88,7 +88,7 @@ export default function TwinsPackageListPage() {
 
       setStatusMsg({
         type: 'success',
-        text: `Đã đọc thành công chỉ số cfDNA ${data.cfDNA}% từ file kết quả ${file.name} và lưu trữ lên Cloudinary!`
+        text: 'Đã đọc thành công chỉ số cfDNA ' + data.cfDNA + '% từ file kết quả ' + file.name + ' và lưu trữ lên Cloudinary!'
       });
 
       fetchSamples();
@@ -100,12 +100,12 @@ export default function TwinsPackageListPage() {
   };
 
   const handleDelete = async (sampleId, sampleCode) => {
-    if (!confirm(`Bạn có chắc chắn muốn xóa mẫu NIPT "${sampleCode}" không?`)) return;
+    if (!confirm('Bạn có chắc chắn muốn xóa mẫu NIPT ' + sampleCode + ' không?')) return;
 
     try {
       const res = await fetch(`/api/samples/${sampleId}`, { method: 'DELETE' });
       if (res.ok) {
-        setStatusMsg({ type: 'success', text: `Đã xóa mẫu ${sampleCode} thành công` });
+        setStatusMsg({ type: 'success', text: 'Đã xóa mẫu ' + sampleCode + ' thành công' });
         fetchSamples();
       } else {
         const d = await res.json();
@@ -200,11 +200,9 @@ export default function TwinsPackageListPage() {
           {/* Status Message Notification */}
           {statusMsg.text && (
             <div
-              className={`p-4 rounded-xl text-sm font-bold flex items-center justify-between border ${
-                statusMsg.type === 'success'
+              className={"p-4 rounded-xl text-sm font-bold flex items-center justify-between border " + (statusMsg.type === 'success'
                   ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
-                  : 'bg-rose-50 text-rose-900 border-rose-200'
-              }`}
+                  : 'bg-rose-50 text-rose-900 border-rose-200')}
             >
               <div className="flex items-center gap-2">
                 {statusMsg.type === 'success' ? (
@@ -273,7 +271,7 @@ export default function TwinsPackageListPage() {
                       const isCompleted = s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || hasCfDna;
                       const hasOriginalFile = Boolean(s.originalPdfUrl);
                       const isUploadingThis = uploadingId === id;
-                      const detailUrl = `/samples/${sampleRoutePrefix}/${id}`;
+                      const detailUrl = '/samples/twins/' + id;
 
                       return (
                         <tr key={id} className="hover:bg-slate-50/70 transition-colors">
@@ -287,7 +285,7 @@ export default function TwinsPackageListPage() {
                               {s.fullName}
                             </Link>
                             <span className="block text-xs text-slate-500 font-medium mt-0.5">
-                              {formatDateVN(s.dob) ? `Ngày sinh: ${formatDateVN(s.dob)}` : ''}
+                              {formatDateVN(s.dob) ? ('Ngày sinh: ' + formatDateVN(s.dob)) : ''}
                             </span>
                           </td>
                           <td className="py-4 px-4 text-slate-700 font-medium">
@@ -334,7 +332,7 @@ export default function TwinsPackageListPage() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 flex items-center gap-1.5 transition-all shadow-xs"
-                                    title={`Xem/Tải file gốc đối chiếu (${s.originalPdfName || 'File gốc'})`}
+                                    title={'Xem/Tải file gốc đối chiếu'}
                                   >
                                     <FileText className="w-4 h-4 text-indigo-600" />
                                     <span>File gốc</span>
@@ -342,11 +340,9 @@ export default function TwinsPackageListPage() {
                                 ) : null
                               ) : (
                                 <label
-                                  className={`px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all ${
-                                    isUploadingThis
+                                  className={"px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all " + (isUploadingThis
                                       ? 'bg-amber-100 text-amber-900'
-                                      : 'bg-rose-50 text-rose-800 hover:bg-rose-100 border border-rose-300'
-                                  }`}
+                                      : 'bg-rose-50 text-rose-800 hover:bg-rose-100 border border-rose-300')}
                                   title="Tải lên file PDF kết quả từ máy"
                                 >
                                   <Upload className="w-4 h-4" />
@@ -370,7 +366,7 @@ export default function TwinsPackageListPage() {
                               </Link>
 
                               <a
-                                href={`/api/samples/${id}/generate-genetrust`}
+                                href={'/api/samples/' + id + '/generate-genetrust'}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"

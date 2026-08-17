@@ -88,7 +88,7 @@ export default function EcoPackageListPage() {
 
       setStatusMsg({
         type: 'success',
-        text: `Đã đọc thành công chỉ số cfDNA ${data.cfDNA}% từ file kết quả ${file.name} và lưu trữ lên Cloudinary!`
+        text: 'Đã đọc thành công chỉ số cfDNA ' + data.cfDNA + '% từ file kết quả ' + file.name + ' và lưu trữ lên Cloudinary!'
       });
 
       fetchSamples();
@@ -100,12 +100,12 @@ export default function EcoPackageListPage() {
   };
 
   const handleDelete = async (sampleId, sampleCode) => {
-    if (!confirm(`Bạn có chắc chắn muốn xóa mẫu NIPT "${sampleCode}" không?`)) return;
+    if (!confirm('Bạn có chắc chắn muốn xóa mẫu NIPT ' + sampleCode + ' không?')) return;
 
     try {
       const res = await fetch(`/api/samples/${sampleId}`, { method: 'DELETE' });
       if (res.ok) {
-        setStatusMsg({ type: 'success', text: `Đã xóa mẫu ${sampleCode} thành công` });
+        setStatusMsg({ type: 'success', text: 'Đã xóa mẫu ' + sampleCode + ' thành công' });
         fetchSamples();
       } else {
         const d = await res.json();
@@ -136,7 +136,7 @@ export default function EcoPackageListPage() {
                 </span>
                 <div>
                   <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-                    Quản Lý Gói NIPT GeneT Eco
+                    Quản Lý Gói NIPT GeneT Eco (Song Thai)
                   </h1>
                   <p className="text-sm text-slate-500 font-medium">
                     Sàng lọc 3 hội chứng lệch bội phổ biến nhất: Hội chứng Down (T21), Edwards (T18), Patau (T13)
@@ -168,7 +168,7 @@ export default function EcoPackageListPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-slate-500 uppercase">Tổng Mẫu NIPT GeneT Eco</p>
+                <p className="text-xs font-bold text-slate-500 uppercase">Tổng Mẫu NIPT GeneT Eco (Song Thai)</p>
                 <h3 className="text-3xl font-black text-slate-900 mt-1">{samples.length}</h3>
               </div>
               <div className="w-12 h-12 bg-teal-50 border border-teal-100 rounded-2xl flex items-center justify-center text-teal-600 font-black">
@@ -200,17 +200,15 @@ export default function EcoPackageListPage() {
           {/* Status Message Notification */}
           {statusMsg.text && (
             <div
-              className={`p-4 rounded-xl text-sm font-bold flex items-center justify-between border ${
-                statusMsg.type === 'success'
+              className={"p-4 rounded-xl text-sm font-bold flex items-center justify-between border " + (statusMsg.type === 'success'
                   ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
-                  : 'bg-rose-50 text-rose-900 border-rose-200'
-              }`}
+                  : 'bg-teal-50 text-teal-900 border-teal-200')}
             >
               <div className="flex items-center gap-2">
                 {statusMsg.type === 'success' ? (
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                 ) : (
-                  <Clock className="w-5 h-5 text-rose-600 shrink-0" />
+                  <Clock className="w-5 h-5 text-teal-600 shrink-0" />
                 )}
                 <span>{statusMsg.text}</span>
               </div>
@@ -257,13 +255,13 @@ export default function EcoPackageListPage() {
                     <tr>
                       <td colSpan={7} className="py-12 text-center text-slate-400">
                         <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-teal-600" />
-                        <span>Đang tải danh sách mẫu NIPT GeneT Eco...</span>
+                        <span>Đang tải danh sách mẫu NIPT GeneT Eco (Song Thai)...</span>
                       </td>
                     </tr>
                   ) : samples.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="py-12 text-center text-slate-400">
-                        Chưa có mẫu xét nghiệm NIPT GeneT Eco nào trong danh sách.
+                        Chưa có mẫu xét nghiệm NIPT GeneT Eco (Song Thai) nào trong danh sách.
                       </td>
                     </tr>
                   ) : (
@@ -273,7 +271,7 @@ export default function EcoPackageListPage() {
                       const isCompleted = s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || hasCfDna;
                       const hasOriginalFile = Boolean(s.originalPdfUrl);
                       const isUploadingThis = uploadingId === id;
-                      const detailUrl = `/samples/${sampleRoutePrefix}/${id}`;
+                      const detailUrl = '/samples/eco/' + id;
 
                       return (
                         <tr key={id} className="hover:bg-slate-50/70 transition-colors">
@@ -287,7 +285,7 @@ export default function EcoPackageListPage() {
                               {s.fullName}
                             </Link>
                             <span className="block text-xs text-slate-500 font-medium mt-0.5">
-                              {formatDateVN(s.dob) ? `Ngày sinh: ${formatDateVN(s.dob)}` : ''}
+                              {formatDateVN(s.dob) ? ('Ngày sinh: ' + formatDateVN(s.dob)) : ''}
                             </span>
                           </td>
                           <td className="py-4 px-4 text-slate-700 font-medium">
@@ -334,7 +332,7 @@ export default function EcoPackageListPage() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 flex items-center gap-1.5 transition-all shadow-xs"
-                                    title={`Xem/Tải file gốc đối chiếu (${s.originalPdfName || 'File gốc'})`}
+                                    title={'Xem/Tải file gốc đối chiếu'}
                                   >
                                     <FileText className="w-4 h-4 text-indigo-600" />
                                     <span>File gốc</span>
@@ -342,11 +340,9 @@ export default function EcoPackageListPage() {
                                 ) : null
                               ) : (
                                 <label
-                                  className={`px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all ${
-                                    isUploadingThis
+                                  className={"px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all " + (isUploadingThis
                                       ? 'bg-amber-100 text-amber-900'
-                                      : 'bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-300'
-                                  }`}
+                                      : 'bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-300')}
                                   title="Tải lên file PDF kết quả từ máy"
                                 >
                                   <Upload className="w-4 h-4" />
@@ -370,7 +366,7 @@ export default function EcoPackageListPage() {
                               </Link>
 
                               <a
-                                href={`/api/samples/${id}/generate-genetrust`}
+                                href={'/api/samples/' + id + '/generate-genetrust'}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"
@@ -382,7 +378,7 @@ export default function EcoPackageListPage() {
 
                               <button
                                 onClick={() => handleDelete(id, s.sampleCode)}
-                                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                                className="p-1.5 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
                                 title="Xóa mẫu"
                               >
                                 <Trash2 className="w-4 h-4" />
