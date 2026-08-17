@@ -28,25 +28,20 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: 'Không tìm thấy mẫu' }, { status: 404 });
     }
 
+    const originalPdfUrl = sample.originalPdfUrl || '';
+    const originalPdfName = sample.originalPdfName || 'original.pdf';
     const sampleCode = sample.sampleCode || id;
-    const originalPdfName = sample.originalPdfName || '';
 
-    // Search order for the PDF file:
-    // 1. Explicit local path stored in sample
-    if (sample.originalPdfPath && fs.existsSync(sample.originalPdfPath)) {
-      const buffer = fs.readFileSync(sample.originalPdfPath);
-      return new NextResponse(buffer, {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `inline; filename="${originalPdfName || 'original.pdf'}"`,
-        },
-      });
+    // 1. If stored in Cloudinary, redirect to Cloudinary secure URL directly
+    if (originalPdfUrl && originalPdfUrl.startsWith('http')) {
+      return NextResponse.redirect(originalPdfUrl);
     }
 
-    // 2. Check uploads/originals folder
+    // 2. Check local uploads/originals folder
     const uploadsDir = path.join(process.cwd(), 'uploads', 'originals');
     if (fs.existsSync(uploadsDir)) {
       const possibleNames = [
+        `${sampleCode}_${originalPdfName.replace(/\s+/g, '_')}`,
         `${sampleCode}_${originalPdfName}`,
         `${id}_${originalPdfName}`,
         `${sampleCode}.pdf`,
@@ -60,28 +55,14 @@ export async function GET(req, { params }) {
           return new NextResponse(buffer, {
             headers: {
               'Content-Type': 'application/pdf',
-              'Content-Disposition': `inline; filename="${originalPdfName || 'original.pdf'}"`,
+              'Content-Disposition': `inline; filename="${originalPdfName}"`,
             },
           });
         }
       }
     }
 
-    // 3. Fallback check by originalPdfName in uploads
-    if (originalPdfName) {
-      const directUploadPath = path.join(uploadsDir, originalPdfName);
-      if (fs.existsSync(directUploadPath)) {
-        const buffer = fs.readFileSync(directUploadPath);
-        return new NextResponse(buffer, {
-          headers: {
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': `inline; filename="${originalPdfName}"`,
-          },
-        });
-      }
-    }
-
-    return NextResponse.json({ error: 'Không tìm thấy file PDF gốc đối chiếu' }, { status: 404 });
+    return NextResponse.json({ error: 'Không tìm thấy file PDF gốc đối chiếu. Vui lòng tải lại file PDF kết quả.' }, { status: 404 });
   } catch (error) {
     console.error('Error fetching original PDF:', error);
     return NextResponse.json({ error: 'Lỗi máy chủ khi tải file PDF gốc' }, { status: 500 });
