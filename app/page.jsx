@@ -526,6 +526,7 @@ export default function MainDashboardPage() {
                       {samples.map((s) => {
                         const id = s._id || s.id;
                         const hasCfDna = Boolean(s.cfDNA);
+                        const isCompleted = s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || hasCfDna;
                         const isUploadingThis = uploadingId === id;
                         const formattedDob = formatDateVN(s.dob);
                         const hasOriginalFile = Boolean(s.originalPdfUrl);
