@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { checkAuth, logout } from '@/lib/auth-client';
+import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 import {
   PlusCircle,
   Upload,
@@ -113,17 +114,27 @@ export default function MainDashboardPage() {
     }
   };
 
-  const handleDeleteSample = async (sampleId, sampleCode) => {
-    if (!window.confirm(`Bạn có chắc chắn muốn xóa mẫu NIPT barcode: ${sampleCode}?`)) return;
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
+  const handleDeleteSample = (sampleId, sampleCode) => {
+    setDeleteTarget({ id: sampleId, sampleCode });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
     try {
-      const res = await fetch(`/api/samples/${sampleId}`, { method: 'DELETE' });
+      const res = await fetch(`/api/samples/${deleteTarget.id}`, { method: 'DELETE' });
       if (res.ok) {
-        setStatusMsg({ type: 'success', text: `Đã xóa mẫu ${sampleCode} thành công` });
+        setStatusMsg({ type: 'success', text: `Đã xóa mẫu ${deleteTarget.sampleCode} thành công` });
         fetchSamples();
       }
     } catch (e) {
       setStatusMsg({ type: 'error', text: 'Lỗi xóa mẫu' });
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -590,7 +601,7 @@ export default function MainDashboardPage() {
                                 {/* Nếu đã có file gốc -> Ẩn nút Upload, hiển thị nút File Gốc Cloudinary */}
                                 {hasOriginalFile ? (
                                   <a
-                                    href={s.originalPdfUrl}
+                                    href={`/api/samples/${id}/original-pdf`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 flex items-center gap-1.5 transition-all shadow-xs"
@@ -661,6 +672,14 @@ export default function MainDashboardPage() {
           </div>
         </main>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={!!deleteTarget}
+        sampleCode={deleteTarget?.sampleCode || ''}
+        onConfirm={handleConfirmDelete}
+        onClose={() => setDeleteTarget(null)}
+        loading={deleting}
+      />
     </div>
   );
 }

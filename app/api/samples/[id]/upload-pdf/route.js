@@ -67,7 +67,7 @@ export async function POST(req, { params }) {
     }
 
     const updateData = {
-      cfDNA: extracted.cfDNA || '12.22',
+      cfDNA: extracted.cfDNA || '',
       results: extracted.results || {},
       gbsResult: extracted.gbsResult || 'Âm tính',
       conclusion: extracted.conclusion || 'Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy cơ thấp phản ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp Nhiễm sắc thể được kiểm tra.',

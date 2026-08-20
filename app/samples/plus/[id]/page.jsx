@@ -270,7 +270,7 @@ export default function GeneTPlusSampleDetailPage() {
               ) : (
                 <label className="px-4 py-2 bg-purple-50 text-purple-800 hover:bg-purple-100 rounded-xl text-xs font-extrabold cursor-pointer border border-purple-300 transition-all flex items-center gap-2">
                   <Upload className="w-4 h-4" />
-                  <span>{uploading ? 'Đang phân tích...' : 'Upload PDF Kết Quả'}</span>
+                  <span>{uploading ? 'Đang phân tích...' : 'Upload File PDF Kết Quả'}</span>
                   <input type="file" accept=".pdf" className="hidden" onChange={handlePdfUpload} disabled={uploading} />
                 </label>
               )}
@@ -609,17 +609,44 @@ export default function GeneTPlusSampleDetailPage() {
               )}
             </div>
 
-            {/* Section 6: Medical Conclusion Form */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            {/* Section 6: Medical Conclusion & Signatures Form */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
               <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
-                6. Kết Luận Y Khoa
+                6. Kết Luận Y Khoa & Người Ký Tên
               </h3>
-              <textarea
-                rows={4}
-                value={formData?.conclusion || ''}
-                onChange={(e) => handleInputChange('conclusion', e.target.value)}
-                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-purple-500 leading-relaxed"
-              />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Nội dung kết luận:</label>
+                  <textarea
+                    rows={4}
+                    value={formData?.conclusion || ''}
+                    onChange={(e) => handleInputChange('conclusion', e.target.value)}
+                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-purple-500 leading-relaxed"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Kiểm soát kết quả</label>
+                    <input
+                      type="text"
+                      value={formData?.checkerName || ''}
+                      onChange={(e) => handleInputChange('checkerName', e.target.value)}
+                      placeholder="TS. BS. Nguyễn Văn A"
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:border-purple-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Giám đốc</label>
+                    <input
+                      type="text"
+                      value={formData?.directorName || ''}
+                      onChange={(e) => handleInputChange('directorName', e.target.value)}
+                      placeholder="TS. Đặng..."
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:border-purple-500"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Section 7: Supplementary Result (Ket qua phu - GBS) */}

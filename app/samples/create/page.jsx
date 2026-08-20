@@ -26,6 +26,8 @@ export default function CreateSamplePage() {
     agencyCode: 'PK-HANOI-01',
     sampleCode: 'GT-' + Math.floor(10000 + Math.random() * 90000),
     doctorName: '',
+    checkerName: '',
+    directorName: '',
     tubeType: 'Streck',
     receivedDate: new Date().toISOString().split('T')[0],
   });
@@ -283,6 +285,8 @@ export default function CreateSamplePage() {
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
                   />
                 </div>
+
+
 
                 <div>
                   <label className="block text-sm font-bold text-slate-800 mb-1.5">Loại ống nghiệm</label>

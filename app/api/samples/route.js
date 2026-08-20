@@ -63,6 +63,8 @@ export async function POST(req) {
       agencyCode,
       sampleCode,
       doctorName,
+      checkerName,
+      directorName,
       tubeType,
       receivedDate
     } = body;
@@ -89,6 +91,8 @@ export async function POST(req) {
         agencyCode: agencyCode || '',
         sampleCode,
         doctorName: doctorName || '',
+        checkerName: checkerName || '',
+        directorName: directorName || '',
         tubeType: tubeType || 'Streck',
         receivedDate: receivedDate || new Date().toISOString().split('T')[0],
         cfDNA: '',
@@ -117,6 +121,8 @@ export async function POST(req) {
       packageType,
       agencyCode: agencyCode || '',
       doctorName: doctorName || '',
+      checkerName: checkerName || '',
+      directorName: directorName || '',
       tubeType: tubeType || 'Streck',
       receivedDate: receivedDate || new Date().toISOString().split('T')[0],
       cfDNA: '',

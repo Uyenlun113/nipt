@@ -232,7 +232,7 @@ export default function EcoSampleDetailPage() {
               ) : (
                 <label className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-sm font-bold cursor-pointer transition-all flex items-center gap-2 border border-slate-300">
                   <Upload className="w-4 h-4 text-slate-700" />
-                  <span>{uploading ? 'Đang đọc...' : 'Upload PDF Kết Quả (Basic.pdf)'}</span>
+                  <span>{uploading ? 'Đang đọc...' : 'Upload File PDF Kết Quả'}</span>
                   <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} disabled={uploading} />
                 </label>
               )}
@@ -347,6 +347,15 @@ export default function EcoSampleDetailPage() {
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-bold"
                   />
                 </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Bác sĩ chỉ định</label>
+                  <input
+                    type="text"
+                    value={formData.doctorName || ''}
+                    onChange={(e) => handleInputChange('doctorName', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                  />
+                </div>
               </div>
             </div>
 
@@ -413,17 +422,44 @@ export default function EcoSampleDetailPage() {
               </table>
             </div>
 
-            {/* Section 4: KẾT LUẬN Y KHOA */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3 w-full">
+            {/* Section 4: KẾT LUẬN Y KHOA & NGƯỜI KÝ TÊN */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 w-full">
               <h3 className="text-sm font-extrabold uppercase tracking-wider text-teal-900 border-b border-slate-200 pb-2">
-                Nội dung Phiên giải kết quả (Medical Conclusion)
+                Nội dung Phiên giải kết quả (Medical Conclusion) & Người Ký Tên
               </h3>
-              <textarea
-                rows={3}
-                value={formData.conclusion || ''}
-                onChange={(e) => handleInputChange('conclusion', e.target.value)}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold"
-              />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Nội dung kết luận:</label>
+                  <textarea
+                    rows={3}
+                    value={formData.conclusion || ''}
+                    onChange={(e) => handleInputChange('conclusion', e.target.value)}
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Kiểm soát kết quả</label>
+                    <input
+                      type="text"
+                      value={formData.checkerName || ''}
+                      onChange={(e) => handleInputChange('checkerName', e.target.value)}
+                      placeholder="TS. BS. Nguyễn Văn A"
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Giám đốc</label>
+                    <input
+                      type="text"
+                      value={formData.directorName || ''}
+                      onChange={(e) => handleInputChange('directorName', e.target.value)}
+                      placeholder="TS. Đặng..."
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Section: Supplementary Result (Ket qua phu - GBS) */}

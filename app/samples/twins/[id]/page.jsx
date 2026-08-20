@@ -233,7 +233,7 @@ export default function TwinsSampleDetailPage() {
               ) : (
                 <label className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-sm font-bold cursor-pointer transition-all flex items-center gap-2 border border-slate-300">
                   <Upload className="w-4 h-4 text-slate-700" />
-                  <span>{uploading ? 'Đang đọc...' : 'Upload PDF Kết Quả (Twin.pdf)'}</span>
+                  <span>{uploading ? 'Đang đọc...' : 'Upload File PDF Kết Quả'}</span>
                   <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} disabled={uploading} />
                 </label>
               )}
@@ -438,21 +438,45 @@ export default function TwinsSampleDetailPage() {
               </div>
             </div>
 
-            {/* 3. Conclusion (Full width) */}
+            {/* 3. Conclusion & Signatures (Full width) */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
               <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
-                3. Phiên Giải Kết Luận Y Khoa (Conclusion)
+                3. Phiên Giải Kết Luận Y Khoa (Conclusion) & Người Ký Tên
               </h3>
-              <div>
-                <label className="block text-xs font-bold text-slate-500 mb-2">
-                  Nội dung kết luận chèn vào phôi GeneTrust Twins:
-                </label>
-                <textarea
-                  rows={4}
-                  value={formData.conclusion || ''}
-                  onChange={(e) => handleInputChange('conclusion', e.target.value)}
-                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 leading-relaxed focus:bg-white focus:outline-none focus:border-rose-500 font-medium"
-                />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 mb-2">
+                    Nội dung kết luận chèn vào phôi GeneTrust Twins:
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={formData.conclusion || ''}
+                    onChange={(e) => handleInputChange('conclusion', e.target.value)}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 leading-relaxed focus:bg-white focus:outline-none focus:border-rose-500 font-medium"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Kiểm soát kết quả</label>
+                    <input
+                      type="text"
+                      value={formData.checkerName || ''}
+                      onChange={(e) => handleInputChange('checkerName', e.target.value)}
+                      placeholder="TS. BS. Nguyễn Văn A"
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:border-rose-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Giám đốc</label>
+                    <input
+                      type="text"
+                      value={formData.directorName || ''}
+                      onChange={(e) => handleInputChange('directorName', e.target.value)}
+                      placeholder="TS. Đặng..."
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:border-rose-500"
+                    />
+                  </div>
+                </div>
               </div>
               <div className="pt-2 flex justify-end">
                 <button
