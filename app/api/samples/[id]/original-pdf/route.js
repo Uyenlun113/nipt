@@ -32,22 +32,7 @@ export async function GET(req, { params }) {
     const originalPdfName = sample.originalPdfName || 'original.pdf';
     const sampleCode = sample.sampleCode || id;
 
-    // 1. Check local uploads/originals folder first (Fastest & most reliable)
-    const uploadsDir = path.join(process.cwd(), 'uploads', 'originals');
-    if (fs.existsSync(uploadsDir)) {
-      const files = fs.readdirSync(uploadsDir);
-      const matched = files.find(f => f.includes(sampleCode) || (id && f.includes(id)));
-      if (matched) {
-        const filePath = path.join(uploadsDir, matched);
-        const buffer = fs.readFileSync(filePath);
-        return new NextResponse(buffer, {
-          headers: {
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': `inline; filename="${encodeURIComponent(originalPdfName)}"`,
-          },
-        });
-      }
-    }
+
 
     // 2. If stored in Cloudinary, proxy or redirect
     if (originalPdfUrl && originalPdfUrl.startsWith('http')) {

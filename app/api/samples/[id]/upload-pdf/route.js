@@ -53,18 +53,7 @@ export async function POST(req, { params }) {
       console.warn('Cloudinary upload warning:', cErr?.message);
     }
 
-    // 3. Also save to local uploads/originals as backup
-    try {
-      const uploadDir = path.join(process.cwd(), 'uploads', 'originals');
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
-      const safeFilename = `${sampleCode}_${file.name.replace(/\s+/g, '_')}`;
-      const localFilePath = path.join(uploadDir, safeFilename);
-      fs.writeFileSync(localFilePath, buffer);
-    } catch (fErr) {
-      console.warn('Local save warning:', fErr?.message);
-    }
+
 
     const updateData = {
       cfDNA: extracted.cfDNA || '',
