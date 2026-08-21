@@ -156,22 +156,37 @@ export default function GeneT7SampleDetailPage() {
     }
   };
 
+  const [previewType, setPreviewType] = useState('nipt');
+
+  const handleDownloadBothPdfs = () => {
+    window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
+    setTimeout(() => {
+      window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
+    }, 400);
+  };
+
   const handleDownloadPdf = () => {
     window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
+  };
+
+  const handleDownloadSupplementaryPdf = () => {
+    window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
   };
 
   if (loading || !formData) {
     return (
       <div className="flex h-screen bg-slate-50 items-center justify-center">
         <div className="text-center font-bold text-slate-600 text-sm">
-          <div className="w-8 h-8 border-3 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+          <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
           Đang tải trang chi tiết Mẫu GeneT 7...
         </div>
       </div>
     );
   }
 
-  const pdfPreviewUrl = `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
+  const pdfPreviewUrl = previewType === 'phu'
+    ? `/api/samples/${sampleId}/generate-supplementary?t=${previewKey}`
+    : `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
 
   // Grouping results into Section I vs Section II
   const resultsObj = formData.results || {};
@@ -273,23 +288,6 @@ export default function GeneT7SampleDetailPage() {
                   <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} disabled={uploading} />
                 </label>
               )}
-
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu GeneT 7'}</span>
-              </button>
-
-              <button
-                onClick={handleDownloadPdf}
-                className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-extrabold shadow-md shadow-teal-600/20 transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                <span>Tải về Mẫu GeneT 7</span>
-              </button>
             </div>
           </div>
 
@@ -381,6 +379,15 @@ export default function GeneT7SampleDetailPage() {
                     type="text"
                     value={formData.doctorName || ''}
                     onChange={(e) => handleInputChange('doctorName', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Nơi gửi mẫu (Cơ sở / Phòng khám)</label>
+                  <input
+                    type="text"
+                    value={formData.facilityName || ''}
+                    onChange={(e) => handleInputChange('facilityName', e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
@@ -547,6 +554,27 @@ export default function GeneT7SampleDetailPage() {
                     </button>
                   </div>
                 </div>
+              </div>
+
+              {/* Bottom Action Buttons below Conclusion & Signatures */}
+              <div className="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-end gap-3">
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu GeneT 7'}</span>
+                </button>
+
+                <button
+                  onClick={handleDownloadBothPdfs}
+                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-extrabold shadow-md transition-all flex items-center gap-2"
+                  title="Tải về cả 2 file PDF (NIPT & Kết quả phụ)"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Tải 2 File Kết Quả (PDF)</span>
+                </button>
               </div>
             </div>
 

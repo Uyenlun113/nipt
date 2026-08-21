@@ -155,8 +155,21 @@ export default function EcoSampleDetailPage() {
     }
   };
 
+  const [previewType, setPreviewType] = useState('nipt');
+
+  const handleDownloadBothPdfs = () => {
+    window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
+    setTimeout(() => {
+      window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
+    }, 400);
+  };
+
   const handleDownloadPdf = () => {
     window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
+  };
+
+  const handleDownloadSupplementaryPdf = () => {
+    window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
   };
 
   if (loading || !formData) {
@@ -170,7 +183,9 @@ export default function EcoSampleDetailPage() {
     );
   }
 
-  const pdfPreviewUrl = `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
+  const pdfPreviewUrl = previewType === 'phu'
+    ? `/api/samples/${sampleId}/generate-supplementary?t=${previewKey}`
+    : `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
@@ -236,23 +251,6 @@ export default function EcoSampleDetailPage() {
                   <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} disabled={uploading} />
                 </label>
               )}
-
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu Eco'}</span>
-              </button>
-
-              <button
-                onClick={handleDownloadPdf}
-                className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-extrabold shadow-md shadow-teal-600/20 transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                <span>Tải về Mẫu GeneT Eco</span>
-              </button>
             </div>
           </div>
 
@@ -353,6 +351,15 @@ export default function EcoSampleDetailPage() {
                     type="text"
                     value={formData.doctorName || ''}
                     onChange={(e) => handleInputChange('doctorName', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Nơi gửi mẫu (Cơ sở / Phòng khám)</label>
+                  <input
+                    type="text"
+                    value={formData.facilityName || ''}
+                    onChange={(e) => handleInputChange('facilityName', e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
@@ -506,15 +513,53 @@ export default function EcoSampleDetailPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Bottom Action Buttons below Conclusion & Signatures */}
+              <div className="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-end gap-3">
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu Eco'}</span>
+                </button>
+
+                <button
+                  onClick={handleDownloadBothPdfs}
+                  className="px-6 py-2.5 bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-700 hover:to-indigo-700 text-white rounded-xl text-sm font-extrabold shadow-md transition-all flex items-center gap-2"
+                  title="Tải về cả 2 file PDF (NIPT & Kết quả phụ)"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Tải 2 File Kết Quả (PDF)</span>
+                </button>
+              </div>
             </div>
 
             {/* Section 5: LIVE PDF PREVIEW FRAME FOR ECO */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-4 w-full">
               <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                <h3 className="font-extrabold text-base text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                  <Eye className="w-5 h-5 text-teal-600" />
-                  <span>Bản Xem Trước Phôi In GeneTrust Eco</span>
-                </h3>
+                <div className="flex items-center gap-4">
+                  <h3 className="font-extrabold text-base text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <Eye className="w-5 h-5 text-teal-600" />
+                    <span>Bản Xem Trước Phôi In GeneTrust Eco</span>
+                  </h3>
+                  <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
+                    <button
+                      onClick={() => { setPreviewType('nipt'); setPreviewKey(Date.now()); }}
+                      className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all ${previewType === 'nipt' ? 'bg-teal-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
+                    >
+                      Phôi Eco
+                    </button>
+                    <button
+                      onClick={() => { setPreviewType('phu'); setPreviewKey(Date.now()); }}
+                      className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all ${previewType === 'phu' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
+                    >
+                      Phôi Kết Quả Phụ
+                    </button>
+                  </div>
+                </div>
+
                 <button onClick={() => setPreviewKey(Date.now())} className="px-3.5 py-2 bg-slate-100 rounded-xl text-xs font-bold flex items-center gap-1.5">
                   <RefreshCw className="w-4 h-4" /> Làm mới
                 </button>

@@ -56,9 +56,22 @@ export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSampl
     }
   };
 
+  const handleDownloadBothPdfs = () => {
+    const id = formData._id || formData.id;
+    window.open(`/api/samples/${id}/generate-genetrust`, '_blank');
+    setTimeout(() => {
+      window.open(`/api/samples/${id}/generate-supplementary`, '_blank');
+    }, 400);
+  };
+
   const handleDownloadGenetrustPdf = () => {
     const id = formData._id || formData.id;
     window.open(`/api/samples/${id}/generate-genetrust`, '_blank');
+  };
+
+  const handleDownloadSupplementaryPdf = () => {
+    const id = formData._id || formData.id;
+    window.open(`/api/samples/${id}/generate-supplementary`, '_blank');
   };
 
   return (
@@ -186,6 +199,16 @@ export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSampl
                   type="text"
                   value={formData.agencyCode || ''}
                   onChange={(e) => handleInputChange('agencyCode', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-slate-800 focus:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-slate-500 block mb-0.5">Nơi gửi mẫu (Cơ sở / Phòng khám)</label>
+                <input
+                  type="text"
+                  value={formData.facilityName || ''}
+                  onChange={(e) => handleInputChange('facilityName', e.target.value)}
                   className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-slate-800 focus:bg-white"
                 />
               </div>
@@ -357,11 +380,12 @@ export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSampl
               </button>
 
               <button
-                onClick={handleDownloadGenetrustPdf}
-                className="px-5 py-2 bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700 text-white rounded-lg text-xs font-bold shadow-md shadow-teal-600/20 transition-all flex items-center gap-2"
+                onClick={handleDownloadBothPdfs}
+                className="px-5 py-2 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 text-white rounded-lg text-xs font-extrabold shadow-md transition-all flex items-center gap-1.5"
+                title="Tải về cả 2 file PDF (NIPT & Kết quả phụ)"
               >
                 <Download className="w-4 h-4" />
-                <span>Tải về Mẫu GeneTrust</span>
+                <span>Tải 2 File Kết Quả (PDF)</span>
               </button>
             </div>
           </div>

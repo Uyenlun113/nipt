@@ -376,16 +376,19 @@ export default function GeneT23PackageListPage() {
                                 <span>Chi Tiết</span>
                               </Link>
 
-                              <a
-                                href={'/api/samples/' + id + '/generate-genetrust'}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"
-                                title="Xuất file PDF kết quả GeneTrust"
+                              <button
+                                onClick={() => {
+                                  window.open('/api/samples/' + id + '/generate-genetrust', '_blank');
+                                  setTimeout(() => {
+                                    window.open('/api/samples/' + id + '/generate-supplementary', '_blank');
+                                  }, 400);
+                                }}
+                                className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"
+                                title="Tải về cả 2 file PDF (NIPT GeneT 23 + Kết quả phụ GBS)"
                               >
                                 <Download className="w-4 h-4" />
-                                <span>Phôi</span>
-                              </a>
+                                <span>Tải 2 File PDF</span>
+                              </button>
 
                               <button
                                 onClick={() => handleDelete(id, s.sampleCode)}

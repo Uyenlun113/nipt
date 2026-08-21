@@ -184,6 +184,13 @@ export default function GeneTPlusSampleDetailPage() {
     }
   };
 
+  const handleDownloadBothPdfs = () => {
+    window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
+    setTimeout(() => {
+      window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
+    }, 400);
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen bg-slate-50 items-center justify-center font-sans">
@@ -274,25 +281,6 @@ export default function GeneTPlusSampleDetailPage() {
                   <input type="file" accept=".pdf" className="hidden" onChange={handlePdfUpload} disabled={uploading} />
                 </label>
               )}
-
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-sm flex items-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                <span>{saving ? 'Đang lưu...' : 'Lưu Thay Đổi'}</span>
-              </button>
-
-              <a
-                href={`/api/samples/${sampleId}/generate-genetrust`}
-                target="_blank"
-                rel="noreferrer"
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-sm transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                <span>Tải PDF Phôi</span>
-              </a>
             </div>
           </div>
 
@@ -410,6 +398,17 @@ export default function GeneTPlusSampleDetailPage() {
                     value={formData?.doctorName || ''}
                     onChange={(e) => handleInputChange('doctorName', e.target.value)}
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-purple-500"
+                    placeholder="Nhập tên bác sĩ"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-500 mb-1">Nơi gửi mẫu (Cơ sở / Phòng khám)</label>
+                  <input
+                    type="text"
+                    value={formData?.facilityName || ''}
+                    onChange={(e) => handleInputChange('facilityName', e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-purple-500"
+                    placeholder="VD: PK 47 Mỹ Đình"
                   />
                 </div>
               </div>
@@ -692,6 +691,27 @@ export default function GeneTPlusSampleDetailPage() {
                     </button>
                   </div>
                 </div>
+              </div>
+
+              {/* Bottom Action Buttons below Conclusion & Signatures */}
+              <div className="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-end gap-3">
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu Plus'}</span>
+                </button>
+
+                <button
+                  onClick={handleDownloadBothPdfs}
+                  className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl text-sm font-extrabold shadow-md transition-all flex items-center gap-2"
+                  title="Tải về cả 2 file PDF (NIPT & Kết quả phụ)"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Tải 2 File Kết Quả (PDF)</span>
+                </button>
               </div>
             </div>
 

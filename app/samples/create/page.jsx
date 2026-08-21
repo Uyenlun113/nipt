@@ -23,7 +23,7 @@ export default function CreateSamplePage() {
     gestationalAge: '12 tuần 0 ngày',
     pregnancyType: 'Đơn thai',
     packageType: 'GeneT 7',
-    agencyCode: 'PK-HANOI-01',
+    agencyCode: '',
     sampleCode: 'GT-' + Math.floor(10000 + Math.random() * 90000),
     doctorName: '',
     checkerName: '',
@@ -38,6 +38,7 @@ export default function CreateSamplePage() {
 
   const getPackageListRoute = (packageType) => {
     const pkg = (packageType || '').toLowerCase();
+    if (pkg.includes('20ga') || pkg.includes('20')) return '/packages/20ga';
     if (pkg.includes('7')) return '/packages/genet7';
     if (pkg.includes('23')) return '/packages/genet23';
     if (pkg.includes('plus')) return '/packages/plus';
@@ -259,6 +260,7 @@ export default function CreateSamplePage() {
                     <option value="GeneT Plus">GeneT Plus (k mở rộng)</option>
                     <option value="GeneT Twins">GeneT Twins (Song thai)</option>
                     <option value="GENNI 4">GENNI 4</option>
+                    <option value="20GA">20GA (20 Bệnh Gen Lặn)</option>
                   </select>
                 </div>
 
@@ -270,6 +272,18 @@ export default function CreateSamplePage() {
                     value={formData.agencyCode}
                     onChange={handleChange}
                     placeholder="PK-HANOI-01"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-slate-800 mb-1.5">Nơi gửi mẫu (Cơ sở / Phòng khám)</label>
+                  <input
+                    type="text"
+                    name="facilityName"
+                    value={formData.facilityName || ''}
+                    onChange={handleChange}
+                    placeholder="Ví dụ: Phòng khám 47 Mỹ Đình, Nam Từ Liêm"
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
                   />
                 </div>

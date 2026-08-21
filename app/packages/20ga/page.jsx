@@ -32,7 +32,7 @@ function formatDateVN(dateStr) {
   return dateStr;
 }
 
-export default function EcoPackageListPage() {
+export default function Package20GAPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,7 +52,7 @@ export default function EcoPackageListPage() {
   const fetchSamples = async () => {
     setLoading(true);
     try {
-      let url = `/api/samples?package=${encodeURIComponent('GeneT Eco')}`;
+      let url = `/api/samples?package=${encodeURIComponent('20GA')}`;
       if (searchTerm) {
         url += `&search=${encodeURIComponent(searchTerm)}`;
       }
@@ -89,7 +89,7 @@ export default function EcoPackageListPage() {
 
       setStatusMsg({
         type: 'success',
-        text: 'Đã đọc thành công chỉ số cfDNA ' + data.cfDNA + '% từ file kết quả ' + file.name + ' và lưu trữ lên Cloudinary!'
+        text: 'Đã đọc và cập nhật dữ liệu 20 bệnh gen lặn từ file ' + file.name + ' thành công!'
       });
 
       fetchSamples();
@@ -127,12 +127,12 @@ export default function EcoPackageListPage() {
     }
   };
 
-  const completedCount = samples.filter(s => s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || Boolean(s.cfDNA)).length;
+  const completedCount = samples.filter(s => s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl)).length;
   const pendingCount = samples.length - completedCount;
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
-      <Sidebar userRole={user?.role} selectedPackage="GeneT Eco" />
+      <Sidebar userRole={user?.role} selectedPackage="20GA" />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden w-full">
         <Header user={user} onLogout={() => logout(router)} />
@@ -142,15 +142,15 @@ export default function EcoPackageListPage() {
           <div className="flex items-center justify-between pb-4 border-b border-slate-200 w-full">
             <div>
               <div className="flex items-center gap-3">
-                <span className="p-2.5 bg-teal-100 text-teal-800 rounded-xl">
+                <span className="p-2.5 bg-emerald-100 text-emerald-800 rounded-xl">
                   <Dna className="w-6 h-6" />
                 </span>
                 <div>
                   <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-                    Quản Lý Gói NIPT GeneT Eco (Song Thai)
+                    Quản Lý Gói 20GA (20 Bệnh Di Truyền Gen Lặn)
                   </h1>
                   <p className="text-sm text-slate-500 font-medium">
-                    Sàng lọc 3 hội chứng lệch bội phổ biến nhất: Hội chứng Down (T21), Edwards (T18), Patau (T13)
+                    Sàng lọc 20 bệnh di truyền gen lặn phổ biến nhất (Tan máu bẩm sinh, G6PD, SMA, Hemophilia A...)
                   </p>
                 </div>
               </div>
@@ -167,10 +167,10 @@ export default function EcoPackageListPage() {
 
               <Link
                 href="/samples/create"
-                className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-extrabold text-sm shadow-md shadow-teal-600/20 transition-all flex items-center gap-2"
+                className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-extrabold text-sm shadow-md shadow-emerald-600/20 transition-all flex items-center gap-2"
               >
                 <PlusCircle className="w-4 h-4" />
-                <span>Tạo Mẫu Eco Mới</span>
+                <span>Tạo Mẫu 20GA Mới</span>
               </Link>
             </div>
           </div>
@@ -179,10 +179,10 @@ export default function EcoPackageListPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-slate-500 uppercase">Tổng Mẫu NIPT GeneT Eco (Song Thai)</p>
+                <p className="text-xs font-bold text-slate-500 uppercase">Tổng Mẫu Gói 20GA</p>
                 <h3 className="text-3xl font-black text-slate-900 mt-1">{samples.length}</h3>
               </div>
-              <div className="w-12 h-12 bg-teal-50 border border-teal-100 rounded-2xl flex items-center justify-center text-teal-600 font-black">
+              <div className="w-12 h-12 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 font-black">
                 {samples.length}
               </div>
             </div>
@@ -212,14 +212,14 @@ export default function EcoPackageListPage() {
           {statusMsg.text && (
             <div
               className={"p-4 rounded-xl text-sm font-bold flex items-center justify-between border " + (statusMsg.type === 'success'
-                  ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
-                  : 'bg-teal-50 text-teal-900 border-teal-200')}
+                ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
+                : 'bg-rose-50 text-rose-900 border-rose-200')}
             >
               <div className="flex items-center gap-2">
                 {statusMsg.type === 'success' ? (
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                 ) : (
-                  <Clock className="w-5 h-5 text-teal-600 shrink-0" />
+                  <Clock className="w-5 h-5 text-amber-600 shrink-0" />
                 )}
                 <span>{statusMsg.text}</span>
               </div>
@@ -240,8 +240,8 @@ export default function EcoPackageListPage() {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Tìm theo Mã Mẫu (Barcode), Họ tên thai phụ, Số điện thoại hoặc CMT..."
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:border-teal-500 transition-all"
+                placeholder="Tìm theo Mã Mẫu (Barcode), Họ tên khách hàng, Số điện thoại hoặc CMT..."
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:border-emerald-500 transition-all"
               />
             </div>
           </div>
@@ -253,40 +253,38 @@ export default function EcoPackageListPage() {
                 <thead>
                   <tr className="bg-slate-50/80 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
                     <th className="py-4 px-4">Mã Mẫu / Barcode</th>
-                    <th className="py-4 px-4">Họ và Tên Thai Phụ</th>
+                    <th className="py-4 px-4">Họ và Tên Khách Hàng</th>
                     <th className="py-4 px-4">Số Điện Thoại / CMT</th>
-                    <th className="py-4 px-4">Tuổi Thai / Loại</th>
-                    <th className="py-4 px-4 text-center">cfDNA (%)</th>
+                    <th className="py-4 px-4">Bác Sĩ / Đơn Vị</th>
                     <th className="py-4 px-4 text-center">Trạng Thái</th>
-                    <th className="py-4 px-4 text-right">Thao Tác</th>
+                    <th className="py-4 px-4 text-right">Thao Tác Tải Phôi & Chi Tiết</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm">
                   {loading ? (
                     <tr>
-                      <td colSpan={7} className="py-12 text-center text-slate-400">
-                        <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-teal-600" />
-                        <span>Đang tải danh sách mẫu NIPT GeneT Eco (Song Thai)...</span>
+                      <td colSpan={6} className="py-12 text-center text-slate-400">
+                        <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-emerald-600" />
+                        <span>Đang tải danh sách mẫu Gói 20GA...</span>
                       </td>
                     </tr>
                   ) : samples.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-12 text-center text-slate-400">
-                        Chưa có mẫu xét nghiệm NIPT GeneT Eco (Song Thai) nào trong danh sách.
+                      <td colSpan={6} className="py-12 text-center text-slate-400">
+                        Chưa có mẫu xét nghiệm Gói 20GA nào trong danh sách.
                       </td>
                     </tr>
                   ) : (
                     samples.map((s) => {
                       const id = s._id || s.id;
-                      const hasCfDna = Boolean(s.cfDNA);
-                      const isCompleted = s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || hasCfDna;
+                      const isCompleted = s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl);
                       const hasOriginalFile = Boolean(s.originalPdfUrl);
                       const isUploadingThis = uploadingId === id;
-                      const detailUrl = '/samples/eco/' + id;
+                      const detailUrl = '/samples/20ga/' + id;
 
                       return (
                         <tr key={id} className="hover:bg-slate-50/70 transition-colors">
-                          <td className="py-4 px-4 font-mono font-extrabold text-teal-900 text-sm">
+                          <td className="py-4 px-4 font-mono font-extrabold text-emerald-900 text-sm">
                             <Link href={detailUrl} className="hover:underline">
                               {s.sampleCode}
                             </Link>
@@ -304,20 +302,10 @@ export default function EcoPackageListPage() {
                             <div className="text-xs text-slate-400">{s.idCard || ''}</div>
                           </td>
                           <td className="py-4 px-4 text-slate-700 font-medium">
-                            <div>{s.gestationalAge || '-'}</div>
-                            <span className="inline-block mt-0.5 px-2 py-0.5 rounded text-[11px] font-bold bg-teal-50 text-teal-800 border border-teal-200">
-                              {s.pregnancyType || 'Đơn thai'}
+                            <div>{s.doctorName || '-'}</div>
+                            <span className="inline-block mt-0.5 px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                              {s.agencyCode || 'Chính thức'}
                             </span>
-                          </td>
-
-                          <td className="py-4 px-4 text-center">
-                            {hasCfDna ? (
-                              <span className="px-3 py-1 rounded-lg bg-teal-50 text-teal-900 font-mono font-extrabold text-xs border border-teal-200 shadow-xs">
-                                {s.cfDNA}%
-                              </span>
-                            ) : (
-                              <span className="text-xs text-slate-400 italic">Chưa có</span>
-                            )}
                           </td>
 
                           <td className="py-4 px-4 text-center">
@@ -352,9 +340,9 @@ export default function EcoPackageListPage() {
                               ) : (
                                 <label
                                   className={"px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all " + (isUploadingThis
-                                      ? 'bg-amber-100 text-amber-900'
-                                      : 'bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-300')}
-                                  title="Tải lên file PDF kết quả từ máy"
+                                    ? 'bg-amber-100 text-amber-900'
+                                    : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-300')}
+                                  title="Tải lên file PDF kết quả mẫu 20GA"
                                 >
                                   <Upload className="w-4 h-4" />
                                   <span>{isUploadingThis ? 'Đang đọc...' : 'Upload PDF'}</span>
@@ -383,8 +371,8 @@ export default function EcoPackageListPage() {
                                     window.open('/api/samples/' + id + '/generate-supplementary', '_blank');
                                   }, 400);
                                 }}
-                                className="px-3.5 py-1.5 bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-700 hover:to-indigo-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"
-                                title="Tải về cả 2 file PDF (NIPT Eco + Kết quả phụ GBS)"
+                                className="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"
+                                title="Tải về cả 2 file PDF (NIPT 20GA + Kết quả phụ GBS)"
                               >
                                 <Download className="w-4 h-4" />
                                 <span>Tải 2 File PDF</span>
@@ -392,7 +380,7 @@ export default function EcoPackageListPage() {
 
                               <button
                                 onClick={() => handleDelete(id, s.sampleCode)}
-                                className="p-1.5 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
                                 title="Xóa mẫu"
                               >
                                 <Trash2 className="w-4 h-4" />

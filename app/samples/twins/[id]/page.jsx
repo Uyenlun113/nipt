@@ -156,8 +156,21 @@ export default function TwinsSampleDetailPage() {
     }
   };
 
+  const [previewType, setPreviewType] = useState('nipt');
+
+  const handleDownloadBothPdfs = () => {
+    window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
+    setTimeout(() => {
+      window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
+    }, 400);
+  };
+
   const handleDownloadPdf = () => {
     window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
+  };
+
+  const handleDownloadSupplementaryPdf = () => {
+    window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
   };
 
   if (loading || !formData) {
@@ -171,7 +184,9 @@ export default function TwinsSampleDetailPage() {
     );
   }
 
-  const pdfPreviewUrl = `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
+  const pdfPreviewUrl = previewType === 'phu'
+    ? `/api/samples/${sampleId}/generate-supplementary?t=${previewKey}`
+    : `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
@@ -237,23 +252,6 @@ export default function TwinsSampleDetailPage() {
                   <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} disabled={uploading} />
                 </label>
               )}
-
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu Twins'}</span>
-              </button>
-
-              <button
-                onClick={handleDownloadPdf}
-                className="px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-sm font-extrabold shadow-md shadow-rose-600/20 transition-all flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                <span>Xuất PDF Phôi Twins</span>
-              </button>
             </div>
           </div>
 
@@ -355,6 +353,16 @@ export default function TwinsSampleDetailPage() {
                     value={formData.agencyCode || ''}
                     onChange={(e) => handleInputChange('agencyCode', e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:border-rose-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-500 mb-1">Nơi gửi mẫu (Cơ sở / Phòng khám)</label>
+                  <input
+                    type="text"
+                    value={formData.facilityName || ''}
+                    onChange={(e) => handleInputChange('facilityName', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:border-rose-500"
+                    placeholder="VD: PK 47 Mỹ Đình"
                   />
                 </div>
                 <div>
@@ -534,6 +542,26 @@ export default function TwinsSampleDetailPage() {
                   </div>
                 </div>
 
+                {/* Bottom Action Buttons below Conclusion & Signatures */}
+                <div className="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-end gap-3 col-span-2">
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu Twins'}</span>
+                  </button>
+
+                  <button
+                    onClick={handleDownloadBothPdfs}
+                    className="px-6 py-2.5 bg-gradient-to-r from-rose-600 to-indigo-600 hover:from-rose-700 hover:to-indigo-700 text-white rounded-xl text-sm font-extrabold shadow-md transition-all flex items-center gap-2"
+                    title="Tải về cả 2 file PDF (NIPT & Kết quả phụ)"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Tải 2 File Kết Quả (PDF)</span>
+                  </button>
+                </div>
               </div>
             </div>
 

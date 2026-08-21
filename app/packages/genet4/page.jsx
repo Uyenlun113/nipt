@@ -376,16 +376,19 @@ export default function GeneT4PackageListPage() {
                                 <span>Chi Tiết</span>
                               </Link>
 
-                              <a
-                                href={'/api/samples/' + id + '/generate-genetrust'}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"
-                                title="Xuất file PDF kết quả GeneTrust"
+                              <button
+                                onClick={() => {
+                                  window.open('/api/samples/' + id + '/generate-genetrust', '_blank');
+                                  setTimeout(() => {
+                                    window.open('/api/samples/' + id + '/generate-supplementary', '_blank');
+                                  }, 400);
+                                }}
+                                className="px-3.5 py-1.5 bg-gradient-to-r from-amber-600 to-indigo-600 hover:from-amber-700 hover:to-indigo-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"
+                                title="Tải về cả 2 file PDF (NIPT GeneT 4 + Kết quả phụ GBS)"
                               >
                                 <Download className="w-4 h-4" />
-                                <span>Phôi</span>
-                              </a>
+                                <span>Tải 2 File PDF</span>
+                              </button>
 
                               <button
                                 onClick={() => handleDelete(id, s.sampleCode)}

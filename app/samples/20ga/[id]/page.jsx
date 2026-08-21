@@ -29,7 +29,30 @@ function formatDateVN(dateStr) {
   return dateStr;
 }
 
-export default function GeneT4SampleDetailPage() {
+const DEFAULT_20GA_RESULTS = {
+  disease_1: { label: 'Alpha-Thalassemia', gene: 'HBA1 & HBA2', nst: '16p13.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_2: { label: 'Beta-Thalassemia', gene: 'HBB', nst: '11p15.4', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_3: { label: 'Thiếu men G6PD', gene: 'G6PD', nst: 'Xq28', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_4: { label: 'Phenyketon niệu', gene: 'PAH', nst: '12q23.2', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_5: { label: 'Rối loạn chuyển hoá galactose', gene: 'GALT', nst: '9p13.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_6: { label: 'Bệnh vàng da ứ mật do thiếu hụt citrin', gene: 'SLC25A13', nst: '1q21.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_7: { label: 'Rối loạn phát triển giới tính nam do thiếu 5α-reductase type 2', gene: 'SRD5A2', nst: '2q23.1', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_8: { label: 'Bệnh Pompe (rối loạn dự trữ Glycogen loại 2)', gene: 'GAA', nst: '17q25.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_9: { label: 'Bệnh Wilson (rối loạn chuyển hoá đồng)', gene: 'ATP7B', nst: '13q14.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_10: { label: 'Bệnh xơ nang', gene: 'CFTR', nst: '7q31.2', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_11: { label: 'Bệnh Fabry (Rối loạn tích trữ lipid thể tiêu hợp)', gene: 'GLA', nst: 'Xq22.1', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_12: { label: 'Thiếu hụt đa enzyme Acyl-CoA dehydrogenase', gene: 'ETFDH', nst: '4q32.1', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_13: { label: 'Bệnh thận đa nang', gene: 'PKHD1', nst: '6p12.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_14: { label: 'Tăng sản thượng thận bẩm sinh (Do thiếu men 21-hydroxylase)', gene: 'CYP21A2', nst: '6p21.33', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_15: { label: 'Cường insulin bẩm sinh', gene: 'ABCC8', nst: '11p15.1', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_16: { label: 'Teo cơ tủy sống (SMA)', gene: 'SMN1', nst: '5q13.2', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_17: { label: 'Bệnh Gaucher (Thiếu hụt men glucocerebrosidase)', gene: 'GBA', nst: '1q22', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_18: { label: 'Bệnh máu khó đông Hemophilia A', gene: 'F8', nst: 'Xq28', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_19: { label: 'Thiếu hụt hormone TSH đơn độc (Suy giáp bẩm sinh trung ương)', gene: 'TSHB', nst: '1p13.2', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+  disease_20: { label: 'Tăng homocysteine niệu (Rối loạn chuyển hóa axi amin chứa lưu huỳnh)', gene: 'CBS', nst: '21q22.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
+};
+
+export default function Package20GASampleDetailPage() {
   const router = useRouter();
   const params = useParams();
   const sampleId = params.id;
@@ -41,6 +64,7 @@ export default function GeneT4SampleDetailPage() {
   const [uploading, setUploading] = useState(false);
   const [msg, setMsg] = useState({ type: '', text: '' });
   const [previewKey, setPreviewKey] = useState(Date.now());
+  const [previewType, setPreviewType] = useState('nipt'); // 'nipt' or 'phu'
 
   useEffect(() => {
     return checkAuth(router, setUser);
@@ -59,23 +83,15 @@ export default function GeneT4SampleDetailPage() {
       if (res.ok) {
         const data = await res.json();
 
-        const defaultGeneT4Results = {
-          t21: { label: 'Trisomy 21 (Down)', value: '', risk: '', ref: '-3 < Z < 3' },
-          t18: { label: 'Trisomy 18 (Edwards)', value: '', risk: '', ref: '-3 < Z < 3' },
-          t13: { label: 'Trisomy 13 (Patau)', value: '', risk: '', ref: '-3 < Z < 3' },
-          turner: { label: 'HC Turner (45, XO)', value: '', risk: '', ref: '-3 < Z < 3' }
-        };
-
         const hasCustomResults = data.results && Object.keys(data.results).length > 0;
-        let activeResults = hasCustomResults ? { ...data.results } : defaultGeneT4Results;
+        let activeResults = hasCustomResults ? { ...DEFAULT_20GA_RESULTS, ...data.results } : DEFAULT_20GA_RESULTS;
 
         setFormData({
           ...data,
-          packageType: 'GeneT 4',
+          packageType: '20GA',
           dob: formatDateVN(data.dob),
           receivedDate: formatDateVN(data.receivedDate),
-          cfDNA: data.cfDNA || '',
-          conclusion: data.conclusion || 'Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy cơ thấp phản ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp Nhiễm sắc thể được kiểm tra.',
+          conclusion: data.conclusion || 'Chưa phát hiện biến thể gây bệnh/ có thể gây bệnh trên các vùng gen được khảo sát.',
           results: activeResults
         });
       }
@@ -115,7 +131,7 @@ export default function GeneT4SampleDetailPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Lỗi cập nhật');
 
-      setMsg({ type: 'success', text: 'Đã lưu thay đổi Mẫu GeneT 4 & cập nhật bản xem trước PDF!' });
+      setMsg({ type: 'success', text: 'Đã lưu thay đổi Mẫu 20GA & cập nhật bản xem trước PDF!' });
       setPreviewKey(Date.now());
     } catch (err) {
       setMsg({ type: 'error', text: err.message });
@@ -143,7 +159,7 @@ export default function GeneT4SampleDetailPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Lỗi đọc PDF');
 
-      setMsg({ type: 'success', text: `Upload & Đọc file PDF ${file.name} thành công. cfDNA: ${data.cfDNA}%` });
+      setMsg({ type: 'success', text: `Upload & Đọc file PDF ${file.name} thành công!` });
       fetchSampleDetail();
       setPreviewKey(Date.now());
     } catch (err) {
@@ -153,8 +169,6 @@ export default function GeneT4SampleDetailPage() {
     }
   };
 
-  const [previewType, setPreviewType] = useState('nipt');
-
   const handleDownloadBothPdfs = () => {
     window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
     setTimeout(() => {
@@ -162,7 +176,7 @@ export default function GeneT4SampleDetailPage() {
     }, 400);
   };
 
-  const handleDownloadPdf = () => {
+  const handleDownloadNiptPdf = () => {
     window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
   };
 
@@ -174,8 +188,8 @@ export default function GeneT4SampleDetailPage() {
     return (
       <div className="flex h-screen bg-slate-50 items-center justify-center">
         <div className="text-center font-bold text-slate-600 text-sm">
-          <div className="w-8 h-8 border-3 border-amber-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-          Đang tải trang chi tiết Mẫu GeneT 4...
+          <div className="w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+          Đang tải trang chi tiết Mẫu 20GA...
         </div>
       </div>
     );
@@ -185,47 +199,11 @@ export default function GeneT4SampleDetailPage() {
     ? `/api/samples/${sampleId}/generate-supplementary?t=${previewKey}`
     : `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
 
-  // Grouping results into 2 Sections for GeneT 4:
-  // Section 1: T21, T18, T13
-  // Section 2: Turner (XO)
   const resultsObj = formData.results || {};
-  const section1Keys = ['t21', 't18', 't13'];
-  const section2Keys = ['turner'];
-
-  const renderResultRows = (keys) => {
-    return keys.map((key) => {
-      const item = resultsObj[key];
-      if (!item) return null;
-      return (
-        <tr key={key} className="hover:bg-slate-50">
-          <td className="py-3.5 px-4 font-bold text-slate-900">{item.label}</td>
-          <td className="py-3.5 px-4 text-slate-600">{item.ref}</td>
-          <td className="py-3.5 px-4">
-            <input
-              type="text"
-              value={item.value || ''}
-              onChange={(e) => handleResultChange(key, 'value', e.target.value)}
-              className="w-32 px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono font-bold"
-            />
-          </td>
-          <td className="py-3.5 px-4">
-            <select
-              value={item.risk || 'Nguy cơ thấp'}
-              onChange={(e) => handleResultChange(key, 'risk', e.target.value)}
-              className="px-3 py-1.5 rounded-xl text-xs font-bold border bg-emerald-50 text-emerald-800 border-emerald-300"
-            >
-              <option value="Nguy cơ thấp">Nguy cơ thấp</option>
-              <option value="Nguy cơ cao">Nguy cơ cao</option>
-            </select>
-          </td>
-        </tr>
-      );
-    });
-  };
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
-      <Sidebar userRole={user?.role} selectedPackage="GeneT 4" />
+      <Sidebar userRole={user?.role} selectedPackage="20GA" />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden w-full">
         <Header user={user} onLogout={() => logout(router)} />
@@ -235,7 +213,7 @@ export default function GeneT4SampleDetailPage() {
           <div className="flex items-center justify-between pb-4 border-b border-slate-200 w-full">
             <div className="flex items-center gap-4">
               <Link
-                href="/packages/genet4"
+                href="/packages/20ga"
                 className="p-2.5 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-700 transition-all shadow-sm"
               >
                 <ArrowLeft className="w-5 h-5" />
@@ -243,12 +221,12 @@ export default function GeneT4SampleDetailPage() {
               <div>
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-                    Chi Tiết Mẫu GeneT 4 (Basic +.pdf - 4 Hội Chứng)
+                    Chi Tiết Mẫu 20GA (20 Bệnh Di Truyền Gen Lặn)
                   </h1>
-                  <span className="px-3 py-1 bg-amber-100 text-amber-900 font-mono font-extrabold text-sm rounded-lg border border-amber-200">
+                  <span className="px-3 py-1 bg-emerald-100 text-emerald-900 font-mono font-extrabold text-sm rounded-lg border border-emerald-200">
                     {formData.sampleCode}
                   </span>
-                  {(formData.status === 'completed' || formData.status === 'extracted' || formData.originalPdfUrl || formData.cfDNA) ? (
+                  {(formData.status === 'completed' || formData.status === 'extracted' || formData.originalPdfUrl) ? (
                     <span className="px-3 py-1 bg-emerald-50 text-emerald-800 text-xs font-extrabold rounded-lg border border-emerald-200 flex items-center gap-1.5 shadow-xs">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                       Đã trả kết quả
@@ -261,13 +239,13 @@ export default function GeneT4SampleDetailPage() {
                   )}
                 </div>
                 <p className="text-sm text-slate-500 font-medium mt-0.5">
-                  Trang xử lý riêng biệt dành riêng cho Gói Xét Nghiệm NIPT GeneT 4 (Chỉ chèn Trang 1 phôi)
+                  Trang quản lý chi tiết Gói xét nghiệm 20 Bệnh Di Truyền Gen Lặn (Phôi 2 trang)
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              {(formData.status === 'completed' || formData.status === 'extracted' || formData.originalPdfUrl || formData.cfDNA) ? (
+              {(formData.status === 'completed' || formData.status === 'extracted' || formData.originalPdfUrl) ? (
                 <div className="flex items-center gap-2">
                   <a
                     href={`/api/samples/${sampleId}/original-pdf`}
@@ -277,13 +255,13 @@ export default function GeneT4SampleDetailPage() {
                     title={`Xem/Tải file PDF gốc đối chiếu: ${formData.originalPdfName || 'File PDF'}`}
                   >
                     <FileText className="w-4 h-4 text-indigo-600" />
-                    <span>Xem File Gốc Đối Chiếu</span>
+                    <span>Xem File Gốc</span>
                   </a>
                 </div>
               ) : (
                 <label className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-sm font-bold cursor-pointer transition-all flex items-center gap-2 border border-slate-300">
                   <Upload className="w-4 h-4 text-slate-700" />
-                  <span>{uploading ? 'Đang đọc...' : 'Upload File PDF Kết Quả'}</span>
+                  <span>{uploading ? 'Đang đọc...' : 'Upload PDF Kết Quả'}</span>
                   <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} disabled={uploading} />
                 </label>
               )}
@@ -291,9 +269,9 @@ export default function GeneT4SampleDetailPage() {
           </div>
 
           {msg.text && (
-            <div className={`p-4 rounded-xl text-sm font-bold flex items-center gap-3 border w-full ${msg.type === 'success' ? 'bg-teal-50 border-teal-200 text-teal-900' : 'bg-rose-50 border-rose-200 text-rose-900'
+            <div className={`p-4 rounded-xl text-sm font-bold flex items-center gap-3 border w-full ${msg.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-900'
               }`}>
-              <CheckCircle2 className="w-5 h-5 text-teal-600 shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
               <span>{msg.text}</span>
             </div>
           )}
@@ -303,13 +281,13 @@ export default function GeneT4SampleDetailPage() {
             {/* Section 1: Thông tin thai phụ */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 w-full">
               <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-2 flex items-center justify-between">
-                <span>I. Thông Tin Hành Chính Thai Phụ</span>
-                <span className="text-amber-700 font-bold font-mono">Gói: GeneT 4</span>
+                <span>I. Thông Tin Hành Chính Khách Hàng</span>
+                <span className="text-emerald-700 font-bold font-mono">Gói: 20GA</span>
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-sm w-full">
                 <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Họ và tên thai phụ</label>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Họ và tên khách hàng</label>
                   <input
                     type="text"
                     value={formData.fullName || ''}
@@ -318,7 +296,7 @@ export default function GeneT4SampleDetailPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Ngày / Năm sinh (Định dạng DD/MM/YYYY)</label>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Ngày / Năm sinh</label>
                   <input
                     type="text"
                     placeholder="DD/MM/YYYY"
@@ -346,38 +324,21 @@ export default function GeneT4SampleDetailPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Tuổi thai</label>
-                  <input
-                    type="text"
-                    value={formData.gestationalAge || ''}
-                    onChange={(e) => handleInputChange('gestationalAge', e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Số lượng thai</label>
-                  <input
-                    type="text"
-                    value={formData.pregnancyType || 'Đơn thai'}
-                    onChange={(e) => handleInputChange('pregnancyType', e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Địa chỉ (Tránh chờm nhãn)</label>
-                  <input
-                    type="text"
-                    value={formData.address || ''}
-                    onChange={(e) => handleInputChange('address', e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Bác sĩ chỉ định</label>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Bác sĩ chỉ định / Tư vấn</label>
                   <input
                     type="text"
                     value={formData.doctorName || ''}
                     onChange={(e) => handleInputChange('doctorName', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Mã Đại lý</label>
+                  <input
+                    type="text"
+                    value={formData.agencyCode || ''}
+                    onChange={(e) => handleInputChange('agencyCode', e.target.value)}
+                    placeholder="VD: PK-HANOI-01"
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
@@ -387,6 +348,16 @@ export default function GeneT4SampleDetailPage() {
                     type="text"
                     value={formData.facilityName || ''}
                     onChange={(e) => handleInputChange('facilityName', e.target.value)}
+                    placeholder="VD: 47 Mỹ Đình, Nam Từ Liêm, Hà Nội"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Địa chỉ thai phụ</label>
+                  <input
+                    type="text"
+                    value={formData.address || ''}
+                    onChange={(e) => handleInputChange('address', e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
@@ -402,77 +373,59 @@ export default function GeneT4SampleDetailPage() {
               </div>
             </div>
 
-            {/* Section 2: cfDNA % */}
-            <div className="bg-teal-50/80 p-5 rounded-2xl border border-teal-200 shadow-sm flex items-center justify-between w-full">
-              <div>
-                <h3 className="text-sm font-extrabold text-teal-950 uppercase tracking-wider">Hàm lượng cfDNA (%) - Mẫu GeneT 4</h3>
-                <p className="text-xs text-teal-800 font-medium">Tự động trích xuất từ file Basic +.pdf ({formData.originalPdfName || 'File kết quả'})</p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-slate-700">cfDNA:</span>
-                <input
-                  type="text"
-                  value={formData.cfDNA || '7.10'}
-                  onChange={(e) => handleInputChange('cfDNA', e.target.value)}
-                  className="w-36 px-4 py-2 text-xl font-extrabold text-teal-900 bg-white border border-teal-300 rounded-xl text-center shadow-inner"
-                />
-                <span className="text-sm font-bold text-teal-800">%</span>
-              </div>
-            </div>
-
-            {/* Section 3: Bảng kết quả 2 phần (Phần I & Phần II) */}
+            {/* Section 2: Bảng kết quả 20 bệnh gen lặn */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 w-full">
               <div className="border-b border-slate-200 pb-2">
                 <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900">
-                  KẾT QUẢ PHÂN TÍCH XÉT NGHIỆM GENET 4 (4 HỘI CHỨNG)
+                  KẾT QUẢ PHÂN TÍCH SÀNG LỌC 20 BỆNH DI TRUYỀN GEN LẶN
                 </h3>
               </div>
 
-              {/* Phần I: Lệch Bội Phổ Biến */}
-              <div className="space-y-3">
-                <div className="bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 font-extrabold text-xs uppercase text-teal-900">
-                  I. Lệch Bội Phổ Biến (Nhiễm Sắc Thể Thường 21, 18, 13)
-                </div>
+              <div className="overflow-x-auto w-full">
                 <table className="w-full text-left text-sm border-collapse">
                   <thead>
                     <tr className="bg-slate-100 text-slate-700 text-xs uppercase font-extrabold border-b border-slate-300">
-                      <th className="py-3 px-4">Hội chứng / NST</th>
-                      <th className="py-3 px-4">Khoảng tham chiếu</th>
-                      <th className="py-3 px-4">Giá trị phân tích (Z-score)</th>
-                      <th className="py-3 px-4">Kết luận nguy cơ</th>
+                      <th className="py-3 px-4 w-12 text-center">STT</th>
+                      <th className="py-3 px-4">Tên Bệnh Di Truyền</th>
+                      <th className="py-3 px-4">Gen xét nghiệm</th>
+                      <th className="py-3 px-4">Vị trí NST</th>
+                      <th className="py-3 px-4">Kết quả phân tích</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
-                    {renderResultRows(section1Keys)}
-                  </tbody>
-                </table>
-              </div>
+                    {Array.from({ length: 20 }).map((_, idx) => {
+                      const key = `disease_${idx + 1}`;
+                      const defaultItem = DEFAULT_20GA_RESULTS[key] || {};
+                      const rawItem = resultsObj[key];
+                      const item = (typeof rawItem === 'object' && rawItem !== null)
+                        ? { ...defaultItem, ...rawItem }
+                        : (typeof rawItem === 'string' ? { ...defaultItem, value: rawItem } : defaultItem);
 
-              {/* Phần II: Lệch Bội NST Giới Tính */}
-              <div className="space-y-3 pt-2">
-                <div className="bg-amber-50 px-4 py-2 rounded-xl border border-amber-200 font-extrabold text-xs uppercase text-amber-950">
-                  II. Lệch Bội Nhiễm Sắc Thể Giới Tính (HC Turner XO)
-                </div>
-                <table className="w-full text-left text-sm border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-700 text-xs uppercase font-extrabold border-b border-slate-300">
-                      <th className="py-3 px-4">Hội chứng / NST</th>
-                      <th className="py-3 px-4">Khoảng tham chiếu</th>
-                      <th className="py-3 px-4">Giá trị phân tích (Z-score)</th>
-                      <th className="py-3 px-4">Kết luận nguy cơ</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-200">
-                    {renderResultRows(section2Keys)}
+                      return (
+                        <tr key={key} className="hover:bg-slate-50">
+                          <td className="py-3 px-4 font-bold text-slate-500 text-center">{idx + 1}</td>
+                          <td className="py-3 px-4 font-bold text-slate-900">{item.label}</td>
+                          <td className="py-3 px-4 text-emerald-800 font-mono font-bold">{item.gene}</td>
+                          <td className="py-3 px-4 text-slate-600 font-mono">{item.nst}</td>
+                          <td className="py-3 px-4">
+                            <input
+                              type="text"
+                              value={item.value || 'Chưa phát hiện đột biến trong vùng được khảo sát'}
+                              onChange={(e) => handleResultChange(key, 'value', e.target.value)}
+                              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900"
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
             </div>
 
-            {/* Section 4: KẾT LUẬN Y KHOA & NGƯỜI KÝ TÊN */}
+            {/* Section 3: KẾT LUẬN & NGƯỜI KÝ TÊN */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 w-full">
-              <h3 className="text-sm font-extrabold uppercase tracking-wider text-teal-900 border-b border-slate-200 pb-2">
+              <h3 className="text-sm font-extrabold uppercase tracking-wider text-emerald-900 border-b border-slate-200 pb-2">
                 Nội dung Phiên giải kết quả (Medical Conclusion) & Người Ký Tên
               </h3>
               <div className="space-y-4">
@@ -507,83 +460,54 @@ export default function GeneT4SampleDetailPage() {
                     />
                   </div>
                 </div>
+
+                {/* Bottom Action Buttons below Section 3 */}
+                <div className="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-end gap-3">
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu 20GA'}</span>
+                  </button>
+
+                  <button
+                    onClick={handleDownloadBothPdfs}
+                    className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 text-white rounded-xl text-sm font-extrabold shadow-md transition-all flex items-center gap-2"
+                    title="Tải về cả 2 file PDF (NIPT & Kết quả phụ)"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Tải 2 File Kết Quả (PDF)</span>
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Section: Supplementary Result (Ket qua phu - GBS) */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 w-full">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <div className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-indigo-600" />
-                  <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-                    Kết Quả Phụ Đính Kèm
+            {/* Section 4: LIVE PDF PREVIEW FRAME */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-4 w-full">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                <div className="flex items-center gap-4">
+                  <h3 className="font-extrabold text-base text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <Eye className="w-5 h-5 text-emerald-600" />
+                    <span>Bản Xem Trước Phôi In 20GA</span>
                   </h3>
-                </div>
-                <span className="px-3 py-1 bg-indigo-50 text-indigo-800 font-bold text-xs rounded-full border border-indigo-200">
-                  Đính kèm trang Kết quả phụ.pdf
-                </span>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                <div>
-                  <label className="block text-slate-600 font-bold text-xs mb-2">
-                    Kết Quả Xét Nghiệm GBS :
-                  </label>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
                     <button
-                      type="button"
-                      onClick={() => handleInputChange('gbsResult', 'Âm tính')}
-                      className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-extrabold border transition-all flex items-center justify-center gap-2 ${(formData?.gbsResult || 'Âm tính') === 'Âm tính'
-                        ? 'bg-emerald-600 text-white border-emerald-700 shadow-sm'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                        }`}
+                      onClick={() => { setPreviewType('nipt'); setPreviewKey(Date.now()); }}
+                      className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all ${previewType === 'nipt' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
                     >
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>ÂM TÍNH</span>
+                      Phôi 20GA
                     </button>
                     <button
-                      type="button"
-                      onClick={() => handleInputChange('gbsResult', 'Dương tính')}
-                      className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-extrabold border transition-all flex items-center justify-center gap-2 ${formData?.gbsResult === 'Dương tính'
-                        ? 'bg-rose-600 text-white border-rose-700 shadow-sm'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                        }`}
+                      onClick={() => { setPreviewType('phu'); setPreviewKey(Date.now()); }}
+                      className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all ${previewType === 'phu' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
                     >
-                      <Clock className="w-4 h-4" />
-                      <span>DƯƠNG TÍNH</span>
+                      Phôi Kết Quả Phụ
                     </button>
                   </div>
                 </div>
-              </div>
 
-              {/* Bottom Action Buttons below Conclusion & Signatures */}
-              <div className="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-end gap-3">
-                <button
-                  onClick={handleSave}
-                  disabled={saving}
-                  className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center gap-2"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu GeneT 4'}</span>
-                </button>
-
-                <button
-                  onClick={handleDownloadBothPdfs}
-                  className="px-6 py-2.5 bg-gradient-to-r from-amber-600 to-indigo-600 hover:from-amber-700 hover:to-indigo-700 text-white rounded-xl text-sm font-extrabold shadow-md transition-all flex items-center gap-2"
-                  title="Tải về cả 2 file PDF (NIPT & Kết quả phụ)"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>Tải 2 File Kết Quả (PDF)</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Section 5: LIVE PDF PREVIEW FRAME FOR GENET 4 (PAGE 1 ONLY) */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-4 w-full">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                <h3 className="font-extrabold text-base text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                  <Eye className="w-5 h-5 text-teal-600" />
-                  <span>Bản Xem Trước Phôi In GeneTrust 4</span>
-                </h3>
                 <button onClick={() => setPreviewKey(Date.now())} className="px-3.5 py-2 bg-slate-100 rounded-xl text-xs font-bold flex items-center gap-1.5">
                   <RefreshCw className="w-4 h-4" /> Làm mới
                 </button>
