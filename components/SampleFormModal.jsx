@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Dna, FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import { X, Dna, FileText, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import { generateBarcodeByPackage, cleanAndFormatBarcode } from '@/lib/barcode-utils';
 
 export default function SampleFormModal({ isOpen, onClose, onSave, initialPackage = 'GeneT 7' }) {
+  const defaultPkg = initialPackage === 'all' ? 'GeneT 7' : initialPackage;
   const [formData, setFormData] = useState({
     fullName: '',
     dob: '',
@@ -12,9 +14,9 @@ export default function SampleFormModal({ isOpen, onClose, onSave, initialPackag
     address: '',
     gestationalAge: '12 tuần 0 ngày',
     pregnancyType: 'Đơn thai',
-    packageType: initialPackage === 'all' ? 'GeneT 7' : initialPackage,
+    packageType: defaultPkg,
     agencyCode: '',
-    sampleCode: 'GT-' + Math.floor(10000 + Math.random() * 90000),
+    sampleCode: generateBarcodeByPackage(defaultPkg),
     doctorName: '',
     checkerName: '',
     directorName: '',
@@ -25,11 +27,42 @@ export default function SampleFormModal({ isOpen, onClose, onSave, initialPackag
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  React.useEffect(() => {
+    if (isOpen) {
+      fetchNextBarcode(defaultPkg);
+    }
+  }, [isOpen, initialPackage]);
+
+  const fetchNextBarcode = async (pkgType) => {
+    try {
+      const res = await fetch(`/api/samples/next-barcode?package=${encodeURIComponent(pkgType)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.sampleCode) {
+          setFormData((prev) => ({ ...prev, sampleCode: data.sampleCode }));
+        }
+      }
+    } catch (e) {
+      console.error('Fetch next barcode error:', e);
+    }
+  };
+
   if (!isOpen) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'packageType') {
+      setFormData((prev) => ({ ...prev, packageType: value }));
+      fetchNextBarcode(value);
+    } else if (name === 'sampleCode') {
+      setFormData((prev) => ({ ...prev, sampleCode: cleanAndFormatBarcode(value) }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleRefreshBarcode = () => {
+    fetchNextBarcode(formData.packageType);
   };
 
   const handleSubmit = async (e) => {
@@ -188,15 +221,25 @@ export default function SampleFormModal({ isOpen, onClose, onSave, initialPackag
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Mã Barcode / Mã mẫu <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  name="sampleCode"
-                  value={formData.sampleCode}
-                  onChange={handleChange}
-                  placeholder="GT-2026-..."
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs font-bold text-teal-800 bg-teal-50/50 border-teal-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
-                  required
-                />
+                <div className="flex gap-1.5">
+                  <input
+                    type="text"
+                    name="sampleCode"
+                    value={formData.sampleCode}
+                    onChange={handleChange}
+                    placeholder="GT7-100234"
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs font-bold text-teal-800 bg-teal-50/50 border-teal-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 uppercase"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRefreshBarcode}
+                    className="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg border border-slate-200 transition-all shrink-0"
+                    title="Tạo mã Barcode ngẫu nhiên theo gói"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
 
               <div>
@@ -278,17 +321,6 @@ export default function SampleFormModal({ isOpen, onClose, onSave, initialPackag
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                 />
               </div>
-            </div>
-          </div>
-
-          {/* Note on cfDNA reading */}
-          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-start gap-2.5">
-            <CheckCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold">Hàm lượng cfDNA tự động đọc từ file PDF</p>
-              <p className="text-[11px] text-amber-700">
-                Bạn KHÔNG cần nhập chỉ số cfDNA tại đây. Sau khi tạo mẫu, bấm nút <strong>Upload Kết Quả</strong> trên danh sách mẫu, hệ thống sẽ tự động trích xuất chỉ số cfDNA (%) và điền vào mẫu.
-              </p>
             </div>
           </div>
 

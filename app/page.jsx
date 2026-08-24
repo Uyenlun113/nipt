@@ -43,6 +43,7 @@ export default function MainDashboardPage() {
   const [user, setUser] = useState(null);
   const [selectedFilterPkg, setSelectedFilterPkg] = useState('Tất cả');
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [samples, setSamples] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploadingId, setUploadingId] = useState(null);
@@ -53,8 +54,15 @@ export default function MainDashboardPage() {
   }, [router]);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
     fetchSamples();
-  }, [selectedFilterPkg, searchTerm]);
+  }, [selectedFilterPkg, debouncedSearchTerm]);
 
   const fetchSamples = async () => {
     setLoading(true);
@@ -64,8 +72,8 @@ export default function MainDashboardPage() {
       if (selectedFilterPkg && selectedFilterPkg !== 'Tất cả') {
         queryParams.push(`package=${encodeURIComponent(selectedFilterPkg)}`);
       }
-      if (searchTerm) {
-        queryParams.push(`search=${encodeURIComponent(searchTerm)}`);
+      if (debouncedSearchTerm) {
+        queryParams.push(`search=${encodeURIComponent(debouncedSearchTerm)}`);
       }
       if (queryParams.length > 0) {
         url += `?${queryParams.join('&')}`;

@@ -10,10 +10,10 @@ export async function GET(req, { params }) {
     const db = await connectToDatabase();
     if (db) {
       if (mongoose.Types.ObjectId.isValid(id)) {
-        const sample = await NiptSample.findById(id);
+        const sample = await NiptSample.findById(id).lean();
         if (sample) return NextResponse.json(sample);
       } else {
-        const sample = await NiptSample.findOne({ sampleCode: id });
+        const sample = await NiptSample.findOne({ sampleCode: id }).lean();
         if (sample) return NextResponse.json(sample);
       }
     }

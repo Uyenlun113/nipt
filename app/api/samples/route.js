@@ -23,7 +23,7 @@ export async function GET(req) {
           { idCard: { $regex: search, $options: 'i' } },
         ];
       }
-      const samples = await NiptSample.find(query).sort({ createdAt: -1 });
+      const samples = await NiptSample.find(query).sort({ createdAt: -1 }).lean();
       return NextResponse.json(samples);
     }
 
@@ -69,15 +69,17 @@ export async function POST(req) {
       receivedDate
     } = body;
 
-    if (!fullName || !packageType || !sampleCode) {
+    const formattedSampleCode = cleanAndFormatBarcode(sampleCode);
+
+    if (!fullName || !packageType || !formattedSampleCode) {
       return NextResponse.json({ error: 'Họ tên, Gói xét nghiệm và Barcode / Mã số mẫu là bắt buộc' }, { status: 400 });
     }
 
     const db = await connectToDatabase();
     if (db) {
-      const existing = await NiptSample.findOne({ sampleCode });
+      const existing = await NiptSample.findOne({ sampleCode: formattedSampleCode });
       if (existing) {
-        return NextResponse.json({ error: 'Mã Barcode / Mã mẫu đã tồn tại' }, { status: 400 });
+        return NextResponse.json({ error: `Mã Barcode ${formattedSampleCode} đã tồn tại trong hệ thống` }, { status: 400 });
       }
       const newSample = await NiptSample.create({
         fullName,
@@ -89,7 +91,7 @@ export async function POST(req) {
         pregnancyType: pregnancyType || 'Đơn thai',
         packageType,
         agencyCode: agencyCode || '',
-        sampleCode,
+        sampleCode: formattedSampleCode,
         doctorName: doctorName || '',
         checkerName: checkerName || '',
         directorName: directorName || '',

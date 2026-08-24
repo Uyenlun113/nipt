@@ -6,7 +6,9 @@ import { checkAuth, logout } from '@/lib/auth-client';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import Link from 'next/link';
-import { ArrowLeft, Dna, CheckCircle2, AlertCircle, Save } from 'lucide-react';
+import { ArrowLeft, Dna, CheckCircle2, AlertCircle, Save, RefreshCw } from 'lucide-react';
+
+import { generateBarcodeByPackage, cleanAndFormatBarcode } from '@/lib/barcode-utils';
 
 export default function CreateSamplePage() {
   const router = useRouter();
@@ -24,7 +26,7 @@ export default function CreateSamplePage() {
     pregnancyType: 'Đơn thai',
     packageType: 'GeneT 7',
     agencyCode: '',
-    sampleCode: 'GT-' + Math.floor(10000 + Math.random() * 90000),
+    sampleCode: generateBarcodeByPackage('GeneT 7'),
     doctorName: '',
     checkerName: '',
     directorName: '',
@@ -33,8 +35,24 @@ export default function CreateSamplePage() {
   });
 
   useEffect(() => {
-    return checkAuth(router, setUser);
+    const unsub = checkAuth(router, setUser);
+    fetchNextBarcode('GeneT 7');
+    return unsub;
   }, [router]);
+
+  const fetchNextBarcode = async (pkgType) => {
+    try {
+      const res = await fetch(`/api/samples/next-barcode?package=${encodeURIComponent(pkgType)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.sampleCode) {
+          setFormData((prev) => ({ ...prev, sampleCode: data.sampleCode }));
+        }
+      }
+    } catch (e) {
+      console.error('Fetch next barcode error:', e);
+    }
+  };
 
   const getPackageListRoute = (packageType) => {
     const pkg = (packageType || '').toLowerCase();
@@ -50,7 +68,18 @@ export default function CreateSamplePage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'packageType') {
+      setFormData((prev) => ({ ...prev, packageType: value }));
+      fetchNextBarcode(value);
+    } else if (name === 'sampleCode') {
+      setFormData((prev) => ({ ...prev, sampleCode: cleanAndFormatBarcode(value) }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleRefreshBarcode = () => {
+    fetchNextBarcode(formData.packageType);
   };
 
   const handleSubmit = async (e) => {
@@ -233,15 +262,25 @@ export default function CreateSamplePage() {
                   <label className="block text-sm font-bold text-slate-800 mb-1.5">
                     Mã Barcode / Mã số mẫu <span className="text-rose-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    name="sampleCode"
-                    value={formData.sampleCode}
-                    onChange={handleChange}
-                    placeholder="GT-2026-..."
-                    className="w-full px-4 py-3 bg-teal-50/60 border border-teal-300 rounded-xl text-sm font-mono font-bold text-teal-900 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
-                    required
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      name="sampleCode"
+                      value={formData.sampleCode}
+                      onChange={handleChange}
+                      placeholder="GT7-100234"
+                      className="w-full px-4 py-3 bg-teal-50/60 border border-teal-300 rounded-xl text-sm font-mono font-bold text-teal-900 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all uppercase"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRefreshBarcode}
+                      className="px-3 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl border border-slate-300 transition-all shrink-0"
+                      title="Tạo mã Barcode ngẫu nhiên theo gói"
+                    >
+                      <RefreshCw className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
                 <div>
@@ -328,15 +367,7 @@ export default function CreateSamplePage() {
             </div>
 
             {/* Note on cfDNA */}
-            <div className="p-4 bg-teal-50 border border-teal-200 rounded-2xl text-sm text-teal-900 flex items-start gap-3 w-full">
-              <CheckCircle2 className="w-5 h-5 text-teal-700 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-bold">Hàm lượng cfDNA tự động đọc từ file PDF</p>
-                <p className="text-xs text-teal-800 mt-0.5">
-                  Bạn không cần nhập hàm lượng cfDNA tại đây. Sau khi tạo mẫu thành công, bạn bấm <strong>Upload Kết Quả</strong> ở màn danh sách để đọc tự động chỉ số cfDNA và các kết quả phân tích.
-                </p>
-              </div>
-            </div>
+
 
             {/* Action Buttons */}
             <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-4 w-full">

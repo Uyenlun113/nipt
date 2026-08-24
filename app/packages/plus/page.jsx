@@ -36,6 +36,7 @@ export default function GeneTPlusPackageListPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [samples, setSamples] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploadingId, setUploadingId] = useState(null);
@@ -46,15 +47,22 @@ export default function GeneTPlusPackageListPage() {
   }, [router]);
 
   useEffect(() => {
-    fetchSamples();
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+    return () => clearTimeout(timer);
   }, [searchTerm]);
+
+  useEffect(() => {
+    fetchSamples();
+  }, [debouncedSearchTerm]);
 
   const fetchSamples = async () => {
     setLoading(true);
     try {
       let url = `/api/samples?package=${encodeURIComponent('GeneT Plus')}`;
-      if (searchTerm) {
-        url += `&search=${encodeURIComponent(searchTerm)}`;
+      if (debouncedSearchTerm) {
+        url += `&search=${encodeURIComponent(debouncedSearchTerm)}`;
       }
       const res = await fetch(url);
       if (res.ok) {

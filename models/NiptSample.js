@@ -26,4 +26,10 @@ const NiptSampleSchema = new mongoose.Schema({
   createdById: { type: String },
 }, { timestamps: true });
 
+NiptSampleSchema.index({ packageType: 1, createdAt: -1 });
+NiptSampleSchema.index({ createdAt: -1 });
+NiptSampleSchema.index({ fullName: 1 });
+NiptSampleSchema.index({ phone: 1 });
+NiptSampleSchema.index({ idCard: 1 });
+
 export default mongoose.models.NiptSample || mongoose.model('NiptSample', NiptSampleSchema);

@@ -11,7 +11,6 @@ const nextConfig = {
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;
 
-    // Fix Windows Webpack chunk cache corruption
     if (dev) {
       config.cache = {
         type: 'memory',
