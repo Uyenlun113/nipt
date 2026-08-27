@@ -4,6 +4,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 import NiptSample from '@/models/NiptSample';
 import { generateGeneTrustPdf, generateSupplementaryPdf } from '@/lib/pdf-generator';
 import { fallbackStore } from '@/lib/store-fallback';
+import { removeVietnameseAccents } from '@/lib/string-utils';
 import mongoose from 'mongoose';
 
 export async function GET(req, { params }) {
@@ -28,8 +29,8 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: 'Không tìm thấy thông tin mẫu NIPT' }, { status: 404 });
     }
 
-    const safeName = (sample.fullName || 'KhachHang').replace(/[^a-zA-Z0-9_\- ]/g, '').trim().replace(/\s+/g, '_');
-    const code = (sample.sampleCode || 'NIPT').replace(/[^a-zA-Z0-9_\-]/g, '_');
+    const safeName = removeVietnameseAccents(sample.fullName || 'KhachHang');
+    const code = removeVietnameseAccents(sample.sampleCode || 'NIPT');
 
     // Generate both PDFs concurrently
     const [pdfMain, pdfSupp] = await Promise.all([

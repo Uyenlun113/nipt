@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 import NiptSample from '@/models/NiptSample';
 import { generateSupplementaryPdf } from '@/lib/pdf-generator';
 import { fallbackStore } from '@/lib/store-fallback';
+import { removeVietnameseAccents } from '@/lib/string-utils';
 import mongoose from 'mongoose';
 
 export async function GET(req, { params }) {
@@ -28,8 +29,9 @@ export async function GET(req, { params }) {
     }
 
     const pdfBuffer = await generateSupplementaryPdf(sample);
-    const safeName = (sample.fullName || 'KhachHang').replace(/[^a-zA-Z0-9]/g, '_');
-    const fileName = `Ket_Qua_Phu_${sample.sampleCode || 'NIPT'}_${safeName}.pdf`;
+    const safeName = removeVietnameseAccents(sample.fullName || 'KhachHang');
+    const code = removeVietnameseAccents(sample.sampleCode || 'NIPT');
+    const fileName = `Ket_Qua_Phu_${code}_${safeName}.pdf`;
 
     return new NextResponse(pdfBuffer, {
       status: 200,
