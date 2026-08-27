@@ -644,6 +644,19 @@ export default function GeneTPlusSampleDetailPage() {
                       className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:border-purple-500"
                     />
                   </div>
+                  <div className="col-span-1 md:col-span-2 pt-3 border-t border-slate-100 flex items-center gap-2.5">
+                    <input
+                      type="checkbox"
+                      id="hasMstStamp"
+                      checked={!!formData?.hasMstStamp}
+                      onChange={(e) => handleInputChange('hasMstStamp', e.target.checked)}
+                      className="w-4 h-4 text-purple-600 rounded border-slate-300 focus:ring-purple-500 cursor-pointer"
+                    />
+                    <label htmlFor="hasMstStamp" className="text-xs font-bold text-slate-700 cursor-pointer flex items-center gap-2 select-none">
+                      <span>Thêm dấu vuông (MST GeneTrust)</span>
+                      <span className="text-[11px] text-slate-500 font-normal">(Tự động chèn con dấu đỏ CTCP GeneTrust MST: 0111559308 dưới phần chữ ký)</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>

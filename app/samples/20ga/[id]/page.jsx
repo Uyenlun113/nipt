@@ -459,6 +459,19 @@ export default function Package20GASampleDetailPage() {
                       className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
                     />
                   </div>
+                  <div className="col-span-1 md:col-span-2 pt-3 border-t border-slate-100 flex items-center gap-2.5">
+                    <input
+                      type="checkbox"
+                      id="hasMstStamp"
+                      checked={!!formData.hasMstStamp}
+                      onChange={(e) => handleInputChange('hasMstStamp', e.target.checked)}
+                      className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                    />
+                    <label htmlFor="hasMstStamp" className="text-xs font-bold text-slate-700 cursor-pointer flex items-center gap-2 select-none">
+                      <span>Thêm dấu vuông (MST GeneTrust)</span>
+                      <span className="text-[11px] text-slate-500 font-normal">(Tự động chèn con dấu đỏ CTCP GeneTrust MST: 0111559308 dưới phần chữ ký)</span>
+                    </label>
+                  </div>
                 </div>
 
                 {/* Bottom Action Buttons below Section 3 */}

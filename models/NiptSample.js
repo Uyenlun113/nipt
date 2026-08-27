@@ -20,6 +20,7 @@ const NiptSampleSchema = new mongoose.Schema({
   conclusion: { type: String, default: 'Chưa phát hiện lệch bội nhiễm sắc thể trên các cặp NST khảo sát.' },
   checkerName: { type: String, default: '' },
   directorName: { type: String, default: '' },
+  hasMstStamp: { type: Boolean, default: false },
   status: { type: String, enum: ['pending', 'completed', 'extracted'], default: 'pending' },
   originalPdfUrl: { type: String, default: '' },
   originalPdfName: { type: String, default: '' },

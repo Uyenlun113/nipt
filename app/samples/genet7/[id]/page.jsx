@@ -78,6 +78,7 @@ export default function GeneT7SampleDetailPage() {
           dob: formatDateVN(data.dob),
           receivedDate: formatDateVN(data.receivedDate),
           cfDNA: data.cfDNA || '',
+          hasMstStamp: !!data.hasMstStamp,
           conclusion: data.conclusion || 'Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy cơ thấp phản ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp Nhiễm sắc thể được kiểm tra.',
           results: activeResults
         });
@@ -506,6 +507,19 @@ export default function GeneT7SampleDetailPage() {
                       placeholder="TS. Đặng..."
                       className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
                     />
+                  </div>
+                  <div className="col-span-1 md:col-span-2 pt-3 border-t border-slate-100 flex items-center gap-2.5">
+                    <input
+                      type="checkbox"
+                      id="hasMstStamp"
+                      checked={!!formData.hasMstStamp}
+                      onChange={(e) => handleInputChange('hasMstStamp', e.target.checked)}
+                      className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500 cursor-pointer"
+                    />
+                    <label htmlFor="hasMstStamp" className="text-xs font-bold text-slate-700 cursor-pointer flex items-center gap-2 select-none">
+                      <span>Thêm dấu vuông (MST GeneTrust)</span>
+                      <span className="text-[11px] text-slate-500 font-normal">(Tự động chèn con dấu đỏ CTCP GeneTrust MST: 0111559308 dưới phần chữ ký)</span>
+                    </label>
                   </div>
                 </div>
               </div>
