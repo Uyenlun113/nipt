@@ -170,10 +170,7 @@ export default function Package20GASampleDetailPage() {
   };
 
   const handleDownloadBothPdfs = () => {
-    window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
-    setTimeout(() => {
-      window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
-    }, 400);
+    window.open(`/api/samples/${sampleId}/download-zip`, '_blank');
   };
 
   const handleDownloadNiptPdf = () => {

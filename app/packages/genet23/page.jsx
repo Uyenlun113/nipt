@@ -386,10 +386,7 @@ export default function GeneT23PackageListPage() {
 
                               <button
                                 onClick={() => {
-                                  window.open('/api/samples/' + id + '/generate-genetrust', '_blank');
-                                  setTimeout(() => {
-                                    window.open('/api/samples/' + id + '/generate-supplementary', '_blank');
-                                  }, 400);
+                                  window.open('/api/samples/' + id + '/download-zip', '_blank');
                                 }}
                                 className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"
                                 title="Tải về cả 2 file PDF (NIPT GeneT 23 + Kết quả phụ GBS)"

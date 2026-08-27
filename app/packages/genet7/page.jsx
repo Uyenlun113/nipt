@@ -386,10 +386,7 @@ export default function GeneT7PackageListPage() {
 
                               <button
                                 onClick={() => {
-                                  window.open('/api/samples/' + id + '/generate-genetrust', '_blank');
-                                  setTimeout(() => {
-                                    window.open('/api/samples/' + id + '/generate-supplementary', '_blank');
-                                  }, 400);
+                                  window.open('/api/samples/' + id + '/download-zip', '_blank');
                                 }}
                                 className="px-3.5 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center gap-1.5"
                                 title="Tải về cả 2 file PDF (NIPT GeneT 7 + Kết quả phụ GBS)"

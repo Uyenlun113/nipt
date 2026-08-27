@@ -58,10 +58,7 @@ export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSampl
 
   const handleDownloadBothPdfs = () => {
     const id = formData._id || formData.id;
-    window.open(`/api/samples/${id}/generate-genetrust`, '_blank');
-    setTimeout(() => {
-      window.open(`/api/samples/${id}/generate-supplementary`, '_blank');
-    }, 400);
+    window.open(`/api/samples/${id}/download-zip`, '_blank');
   };
 
   const handleDownloadGenetrustPdf = () => {

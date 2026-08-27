@@ -159,10 +159,7 @@ export default function EcoSampleDetailPage() {
   const [previewType, setPreviewType] = useState('nipt');
 
   const handleDownloadBothPdfs = () => {
-    window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
-    setTimeout(() => {
-      window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
-    }, 400);
+    window.open(`/api/samples/${sampleId}/download-zip`, '_blank');
   };
 
   const handleDownloadPdf = () => {
