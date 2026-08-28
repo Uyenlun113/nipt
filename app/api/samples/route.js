@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import NiptSample from '@/models/NiptSample';
 import { fallbackStore } from '@/lib/store-fallback';
+import { cleanAndFormatBarcode } from '@/lib/barcode-utils';
 
 export async function GET(req) {
   try {
@@ -105,14 +106,14 @@ export async function POST(req) {
     }
 
     // Fallback store
-    const exists = fallbackStore.samples.find(s => s.sampleCode === sampleCode);
+    const exists = fallbackStore.samples.find(s => s.sampleCode === formattedSampleCode);
     if (exists) {
       return NextResponse.json({ error: 'Mã Barcode / Mã mẫu đã tồn tại' }, { status: 400 });
     }
 
     const newFbSample = {
       id: 'sample_' + Date.now(),
-      sampleCode,
+      sampleCode: formattedSampleCode,
       fullName,
       dob: dob || '',
       idCard: idCard || '',
