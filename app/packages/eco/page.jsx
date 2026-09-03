@@ -155,7 +155,7 @@ export default function EcoPackageListPage() {
                 </span>
                 <div>
                   <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-                    Quản Lý Gói NIPT GeneT Eco (Song Thai)
+                    Quản Lý Gói NIPT GeneT Eco
                   </h1>
                   <p className="text-sm text-slate-500 font-medium">
                     Sàng lọc 3 hội chứng lệch bội phổ biến nhất: Hội chứng Down (T21), Edwards (T18), Patau (T13)
@@ -187,7 +187,7 @@ export default function EcoPackageListPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold text-slate-500 uppercase">Tổng Mẫu NIPT GeneT Eco (Song Thai)</p>
+                <p className="text-xs font-bold text-slate-500 uppercase">Tổng Mẫu NIPT GeneT Eco</p>
                 <h3 className="text-3xl font-black text-slate-900 mt-1">{samples.length}</h3>
               </div>
               <div className="w-12 h-12 bg-teal-50 border border-teal-100 rounded-2xl flex items-center justify-center text-teal-600 font-black">
@@ -220,8 +220,8 @@ export default function EcoPackageListPage() {
           {statusMsg.text && (
             <div
               className={"p-4 rounded-xl text-sm font-bold flex items-center justify-between border " + (statusMsg.type === 'success'
-                  ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
-                  : 'bg-teal-50 text-teal-900 border-teal-200')}
+                ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
+                : 'bg-teal-50 text-teal-900 border-teal-200')}
             >
               <div className="flex items-center gap-2">
                 {statusMsg.type === 'success' ? (
@@ -274,13 +274,13 @@ export default function EcoPackageListPage() {
                     <tr>
                       <td colSpan={7} className="py-12 text-center text-slate-400">
                         <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-teal-600" />
-                        <span>Đang tải danh sách mẫu NIPT GeneT Eco (Song Thai)...</span>
+                        <span>Đang tải danh sách mẫu NIPT GeneT Eco</span>
                       </td>
                     </tr>
                   ) : samples.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="py-12 text-center text-slate-400">
-                        Chưa có mẫu xét nghiệm NIPT GeneT Eco (Song Thai) nào trong danh sách.
+                        Chưa có mẫu xét nghiệm NIPT GeneT Eco nào trong danh sách.
                       </td>
                     </tr>
                   ) : (
@@ -360,8 +360,8 @@ export default function EcoPackageListPage() {
                               ) : (
                                 <label
                                   className={"px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all " + (isUploadingThis
-                                      ? 'bg-amber-100 text-amber-900'
-                                      : 'bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-300')}
+                                    ? 'bg-amber-100 text-amber-900'
+                                    : 'bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-300')}
                                   title="Tải lên file PDF kết quả từ máy"
                                 >
                                   <Upload className="w-4 h-4" />

@@ -141,7 +141,11 @@ export default function GeneTPlusSampleDetailPage() {
 
       if (!res.ok) throw new Error('Không thể lưu thông tin mẫu');
       const updated = await res.json();
-      setFormData(updated);
+      if (updated.sample) {
+        setFormData(updated.sample);
+      } else {
+        setFormData(updated);
+      }
       setPreviewKey(Date.now());
       setMsg({ type: 'success', text: 'Cập nhật mẫu GeneT Plus thành công!' });
     } catch (err) {
@@ -538,7 +542,7 @@ export default function GeneTPlusSampleDetailPage() {
                 <div className="flex items-center gap-2">
                   <Dna className="w-5 h-5 text-purple-600" />
                   <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-                    5. Danh Sách 102 Hội Chứng Vi Mất / Lặp Đoạn NST (&gt;10Mb & &gt;5Mb)
+                    5. Danh Sách 122 Hội Chứng Vi Mất / Lặp Đoạn NST (&gt;10Mb & &gt;5Mb)
                   </h3>
                   <span className="px-2.5 py-0.5 bg-purple-100 text-purple-900 font-mono font-extrabold text-xs rounded-full border border-purple-200">
                     {microdeletionsList.length} hội chứng
@@ -559,7 +563,7 @@ export default function GeneTPlusSampleDetailPage() {
 
               {microdeletionsList.length === 0 ? (
                 <div className="p-6 text-center text-xs text-slate-500 font-semibold bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                  Upload file PDF kết quả <span className="font-mono text-purple-700 font-bold">Plus 122.pdf</span> để tự động trích xuất danh sách 102 hội chứng vi mất/lặp đoạn
+                  Upload file PDF kết quả <span className="font-mono text-purple-700 font-bold">Plus 122.pdf</span> để tự động trích xuất danh sách 122 hội chứng vi mất/lặp đoạn
                 </div>
               ) : (
                 <div className="max-h-96 overflow-y-auto rounded-xl border border-slate-200">
