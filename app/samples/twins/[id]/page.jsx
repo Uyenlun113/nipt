@@ -18,16 +18,8 @@ import {
   FileText
 } from 'lucide-react';
 
-function formatDateVN(dateStr) {
-  if (!dateStr) return '';
-  if (dateStr.includes('/')) return dateStr;
-  const cleanStr = dateStr.split('T')[0];
-  const parts = cleanStr.split('-');
-  if (parts.length === 3) {
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
-  }
-  return dateStr;
-}
+import { formatDateVN, formatDateForInput } from '@/lib/date-utils';
+
 
 export default function TwinsSampleDetailPage() {
   const router = useRouter();
@@ -77,6 +69,7 @@ export default function TwinsSampleDetailPage() {
           pregnancyType: data.pregnancyType || 'Song thai',
           dob: formatDateVN(data.dob),
           receivedDate: formatDateVN(data.receivedDate),
+          reportDate: formatDateVN(data.reportDate),
           cfDNA: data.cfDNA || '',
           conclusion: data.conclusion || 'Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy cơ thấp phản ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp Nhiễm sắc thể được kiểm tra.',
           results: activeResults
@@ -380,6 +373,15 @@ export default function TwinsSampleDetailPage() {
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:border-rose-500"
                   />
                 </div>
+                <div>
+                  <label className="block text-slate-500 mb-1">Ngày nhận mẫu</label>
+                  <input
+                    type="date"
+                    value={formatDateForInput(formData.receivedDate)}
+                    onChange={(e) => handleInputChange('receivedDate', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:border-rose-500 font-medium"
+                  />
+                </div>
               </div>
             </div>
 
@@ -424,13 +426,17 @@ export default function TwinsSampleDetailPage() {
                           </td>
                           <td className="py-3.5 px-4">
                             <select
-                              value={item.risk || 'Nguy cơ thấp'}
+                              value={item.risk || ''}
                               onChange={(e) => handleResultChange(key, 'risk', e.target.value)}
-                              className={`px-3 py-1.5 rounded-xl text-xs font-bold border ${isHigh
-                                ? 'bg-rose-50 text-rose-800 border-rose-300'
-                                : 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                }`}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold border ${
+                                (item.risk || '').includes('cao')
+                                  ? 'bg-rose-50 text-rose-800 border-rose-300'
+                                  : (item.risk || '').includes('thấp')
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-slate-50 text-slate-500 border-slate-300'
+                              }`}
                             >
+                              <option value="">-- Chưa chọn --</option>
                               <option value="Nguy cơ thấp">Nguy cơ thấp</option>
                               <option value="Nguy cơ cao">Nguy cơ cao</option>
                             </select>
@@ -494,6 +500,18 @@ export default function TwinsSampleDetailPage() {
                       <span className="text-[11px] text-slate-500 font-normal">(Tự động chèn con dấu đỏ CTCP GeneTrust MST: 0111559308 dưới phần chữ ký)</span>
                     </label>
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-slate-600 font-bold text-xs mb-2">
+                    Ngày Trả Kết Quả :
+                  </label>
+                  <input
+                    type="date"
+                    value={formatDateForInput(formData.reportDate)}
+                    onChange={(e) => handleInputChange('reportDate', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
+                  />
                 </div>
               </div>
               <div className="pt-2 flex justify-end">

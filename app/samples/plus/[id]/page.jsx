@@ -20,16 +20,8 @@ import {
   FileText
 } from 'lucide-react';
 
-function formatDateVN(dateStr) {
-  if (!dateStr) return '';
-  if (dateStr.includes('/')) return dateStr;
-  const cleanStr = dateStr.split('T')[0];
-  const parts = cleanStr.split('-');
-  if (parts.length === 3) {
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
-  }
-  return dateStr;
-}
+import { formatDateVN, formatDateForInput } from '@/lib/date-utils';
+
 
 export default function GeneTPlusSampleDetailPage() {
   const router = useRouter();
@@ -103,6 +95,10 @@ export default function GeneTPlusSampleDetailPage() {
       if (!data.conclusion) {
         data.conclusion = 'Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy cơ thấp phản ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp Nhiễm sắc thể được kiểm tra. Mất đoạn, lặp đoạn xảy ra do mất hoặc thêm vật chất di truyền ở trên một nhiễm sắc thể. Các bất thường này có thể gây ra các khuyết tật bẩm sinh. Kết quả xét nghiệm “Không phát hiện” phản ánh không phát hiện các bất thường vi mất, lặp đoạn nằm trong khả năng bao phủ của xét nghiệm.';
       }
+
+      data.receivedDate = formatDateVN(data.receivedDate);
+      data.reportDate = formatDateVN(data.reportDate);
+      data.dob = formatDateVN(data.dob);
 
       setFormData(data);
     } catch (err) {
@@ -412,6 +408,15 @@ export default function GeneTPlusSampleDetailPage() {
                     placeholder="VD: PK 47 Mỹ Đình"
                   />
                 </div>
+                <div>
+                  <label className="block text-slate-500 mb-1">Ngày nhận mẫu</label>
+                  <input
+                    type="date"
+                    value={formatDateForInput(formData?.receivedDate)}
+                    onChange={(e) => handleInputChange('receivedDate', e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-purple-500 font-medium"
+                  />
+                </div>
               </div>
             </div>
 
@@ -444,11 +449,13 @@ export default function GeneTPlusSampleDetailPage() {
                           <label className="block text-[10px] text-slate-400 font-bold mb-0.5">Đánh giá nguy cơ</label>
                           <input
                             type="text"
-                            value={rowData.risk || 'Nguy cơ thấp'}
+                            value={rowData.risk || ''}
                             onChange={(e) => handleResultChange('main', item.key, 'risk', e.target.value)}
                             className={`w-full px-2 py-1 border rounded text-center font-bold ${(rowData.risk || '').includes('cao')
                               ? 'bg-rose-50 text-rose-900 border-rose-300'
-                              : 'bg-purple-50 text-purple-900 border-purple-200'
+                              : (rowData.risk || '').includes('thấp')
+                              ? 'bg-purple-50 text-purple-900 border-purple-200'
+                              : 'bg-white text-slate-500 border-slate-200'
                               }`}
                           />
                         </div>
@@ -489,11 +496,13 @@ export default function GeneTPlusSampleDetailPage() {
                           <label className="block text-[10px] text-slate-400 font-bold mb-0.5">Đánh giá nguy cơ</label>
                           <input
                             type="text"
-                            value={rowData.risk || 'Nguy cơ thấp'}
+                            value={rowData.risk || ''}
                             onChange={(e) => handleResultChange('main', item.key, 'risk', e.target.value)}
                             className={`w-full px-2 py-1 border rounded text-center font-bold ${(rowData.risk || '').includes('cao')
                               ? 'bg-rose-50 text-rose-900 border-rose-300'
-                              : 'bg-purple-50 text-purple-900 border-purple-200'
+                              : (rowData.risk || '').includes('thấp')
+                              ? 'bg-purple-50 text-purple-900 border-purple-200'
+                              : 'bg-white text-slate-500 border-slate-200'
                               }`}
                           />
                         </div>
@@ -525,7 +534,7 @@ export default function GeneTPlusSampleDetailPage() {
                         />
                         <input
                           type="text"
-                          value={rowData.risk || 'Nguy cơ thấp'}
+                          value={rowData.risk || ''}
                           onChange={(e) => handleResultChange('others', item.key, 'risk', e.target.value)}
                           className="w-full px-1 py-0.5 bg-purple-50 text-purple-900 border border-purple-200 rounded text-center font-bold text-[10px]"
                         />
@@ -704,6 +713,17 @@ export default function GeneTPlusSampleDetailPage() {
                       <span>DƯƠNG TÍNH</span>
                     </button>
                   </div>
+                </div>
+                <div>
+                  <label className="block text-slate-600 font-bold text-xs mb-2">
+                    Ngày Trả Kết Quả :
+                  </label>
+                  <input
+                    type="date"
+                    value={formatDateForInput(formData?.reportDate)}
+                    onChange={(e) => handleInputChange('reportDate', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold text-xs"
+                  />
                 </div>
               </div>
 

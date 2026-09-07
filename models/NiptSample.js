@@ -14,6 +14,7 @@ const NiptSampleSchema = new mongoose.Schema({
   doctorName: { type: String },
   tubeType: { type: String, default: 'Streck' },
   receivedDate: { type: String },
+  reportDate: { type: String },
   cfDNA: { type: String, default: '' },
   results: { type: Object, default: {} },
   gbsResult: { type: String, default: 'Âm tính' },

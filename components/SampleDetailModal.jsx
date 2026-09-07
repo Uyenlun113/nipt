@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, Dna, Download, Save, FileText, CheckCircle2, AlertTriangle, RefreshCw } from 'lucide-react';
+import { formatDateForInput } from '../lib/date-utils';
+
 
 export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSample }) {
   const [formData, setFormData] = useState(null);
@@ -12,13 +14,13 @@ export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSampl
     if (sample) {
       setFormData({
         ...sample,
-        cfDNA: sample.cfDNA || '8.45',
+        cfDNA: sample.cfDNA || '',
         results: sample.results || {
-          t21: { label: 'Trisomy 21 (Down)', value: '-0.35', risk: 'Nguy cơ thấp', ref: '-3 < Z < 3' },
-          t18: { label: 'Trisomy 18 (Edwards)', value: '0.12', risk: 'Nguy cơ thấp', ref: '-3 < Z < 3' },
-          t13: { label: 'Trisomy 13 (Patau)', value: '-0.08', risk: 'Nguy cơ thấp', ref: '-3 < Z < 3' },
-          sexChr: { label: 'Nhiễm sắc thể Giới tính', value: 'XX (Nữ)', risk: 'Bình thường', ref: 'Bình thường' },
-          microdeletions: { label: 'Vi mất đoạn / lặp đoạn', value: 'Chưa phát hiện bất thường', risk: 'Nguy cơ thấp', ref: 'Bình thường' }
+          t21: { label: 'Trisomy 21 (Down)', value: '', risk: '', ref: '-3 < Z < 3' },
+          t18: { label: 'Trisomy 18 (Edwards)', value: '', risk: '', ref: '-3 < Z < 3' },
+          t13: { label: 'Trisomy 13 (Patau)', value: '', risk: '', ref: '-3 < Z < 3' },
+          sexChr: { label: 'Nhiễm sắc thể Giới tính', value: '', risk: '', ref: 'Bình thường' },
+          microdeletions: { label: 'Vi mất đoạn / lặp đoạn', value: '', risk: '', ref: 'Bình thường' }
         }
       });
     }
@@ -209,6 +211,26 @@ export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSampl
                   className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-slate-800 focus:bg-white"
                 />
               </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-teal-700 block mb-0.5">Ngày nhận mẫu</label>
+                <input
+                  type="date"
+                  value={formatDateForInput(formData.receivedDate)}
+                  onChange={(e) => handleInputChange('receivedDate', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-slate-800 focus:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-indigo-700 block mb-0.5">Ngày trả kết quả</label>
+                <input
+                  type="date"
+                  value={formatDateForInput(formData.reportDate)}
+                  onChange={(e) => handleInputChange('reportDate', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-slate-800 focus:bg-white"
+                />
+              </div>
             </div>
           </div>
 
@@ -284,13 +306,16 @@ export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSampl
                         </td>
                         <td className="py-2.5 px-3">
                           <select
-                            value={item.risk || 'Nguy cơ thấp'}
+                            value={item.risk || ''}
                             onChange={(e) => handleResultChange(key, 'risk', e.target.value)}
                             className={`px-2 py-1 rounded text-xs font-semibold border ${isHighRisk
                               ? 'bg-rose-50 text-rose-700 border-rose-200 font-bold'
-                              : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              : (item.risk || '').includes('thấp') || (item.risk || '').includes('thường')
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              : 'bg-slate-50 text-slate-500 border-slate-200'
                               }`}
                           >
+                            <option value="">-- Chưa chọn --</option>
                             <option value="Nguy cơ thấp">Nguy cơ thấp</option>
                             <option value="Nguy cơ cao">Nguy cơ cao</option>
                             <option value="Bình thường">Bình thường</option>

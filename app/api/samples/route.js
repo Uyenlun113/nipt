@@ -67,7 +67,8 @@ export async function POST(req) {
       checkerName,
       directorName,
       tubeType,
-      receivedDate
+      receivedDate,
+      reportDate
     } = body;
 
     const formattedSampleCode = cleanAndFormatBarcode(sampleCode);
@@ -98,6 +99,7 @@ export async function POST(req) {
         directorName: directorName || '',
         tubeType: tubeType || 'Streck',
         receivedDate: receivedDate || new Date().toISOString().split('T')[0],
+        reportDate: reportDate || '',
         cfDNA: '',
         results: {},
         status: 'pending'
@@ -128,6 +130,7 @@ export async function POST(req) {
       directorName: directorName || '',
       tubeType: tubeType || 'Streck',
       receivedDate: receivedDate || new Date().toISOString().split('T')[0],
+      reportDate: reportDate || '',
       cfDNA: '',
       results: {},
       status: 'pending',

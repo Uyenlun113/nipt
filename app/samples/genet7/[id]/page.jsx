@@ -18,16 +18,8 @@ import {
   FileText
 } from 'lucide-react';
 
-function formatDateVN(dateStr) {
-  if (!dateStr) return '';
-  if (dateStr.includes('/')) return dateStr;
-  const cleanStr = dateStr.split('T')[0];
-  const parts = cleanStr.split('-');
-  if (parts.length === 3) {
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
-  }
-  return dateStr;
-}
+import { formatDateVN, formatDateForInput } from '@/lib/date-utils';
+
 
 export default function GeneT7SampleDetailPage() {
   const router = useRouter();
@@ -77,6 +69,7 @@ export default function GeneT7SampleDetailPage() {
           packageType: 'GeneT 7',
           dob: formatDateVN(data.dob),
           receivedDate: formatDateVN(data.receivedDate),
+          reportDate: formatDateVN(data.reportDate),
           cfDNA: data.cfDNA || '',
           hasMstStamp: !!data.hasMstStamp,
           conclusion: data.conclusion || 'Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy cơ thấp phản ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp Nhiễm sắc thể được kiểm tra.',
@@ -209,10 +202,17 @@ export default function GeneT7SampleDetailPage() {
           </td>
           <td className="py-3.5 px-4">
             <select
-              value={item.risk || 'Nguy cơ thấp'}
+              value={item.risk || ''}
               onChange={(e) => handleResultChange(key, 'risk', e.target.value)}
-              className="px-3 py-1.5 rounded-xl text-xs font-bold border bg-emerald-50 text-emerald-800 border-emerald-300"
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold border ${
+                (item.risk || '').includes('cao')
+                  ? 'bg-rose-50 text-rose-800 border-rose-300'
+                  : (item.risk || '').includes('thấp')
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                  : 'bg-slate-50 text-slate-500 border-slate-300'
+              }`}
             >
+              <option value="">-- Chưa chọn --</option>
               <option value="Nguy cơ thấp">Nguy cơ thấp</option>
               <option value="Nguy cơ cao">Nguy cơ cao</option>
             </select>
@@ -398,6 +398,15 @@ export default function GeneT7SampleDetailPage() {
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-bold"
                   />
                 </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Ngày nhận mẫu</label>
+                  <input
+                    type="date"
+                    value={formatDateForInput(formData.receivedDate)}
+                    onChange={(e) => handleInputChange('receivedDate', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-medium"
+                  />
+                </div>
               </div>
             </div>
 
@@ -412,7 +421,7 @@ export default function GeneT7SampleDetailPage() {
                 <span className="text-sm font-bold text-slate-700">cfDNA:</span>
                 <input
                   type="text"
-                  value={formData.cfDNA || '12.22'}
+                  value={formData.cfDNA || ''}
                   onChange={(e) => handleInputChange('cfDNA', e.target.value)}
                   className="w-36 px-4 py-2 text-xl font-extrabold text-teal-900 bg-white border border-teal-300 rounded-xl text-center shadow-inner"
                 />
@@ -564,6 +573,17 @@ export default function GeneT7SampleDetailPage() {
                       <span>DƯƠNG TÍNH (Phát hiện)</span>
                     </button>
                   </div>
+                </div>
+                <div>
+                  <label className="block text-slate-600 font-bold text-xs mb-2">
+                    Ngày Trả Kết Quả :
+                  </label>
+                  <input
+                    type="date"
+                    value={formatDateForInput(formData.reportDate)}
+                    onChange={(e) => handleInputChange('reportDate', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
+                  />
                 </div>
               </div>
 

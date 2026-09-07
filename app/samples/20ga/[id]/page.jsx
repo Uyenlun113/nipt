@@ -18,16 +18,8 @@ import {
   FileText
 } from 'lucide-react';
 
-function formatDateVN(dateStr) {
-  if (!dateStr) return '';
-  if (dateStr.includes('/')) return dateStr;
-  const cleanStr = dateStr.split('T')[0];
-  const parts = cleanStr.split('-');
-  if (parts.length === 3) {
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
-  }
-  return dateStr;
-}
+import { formatDateVN, formatDateForInput } from '@/lib/date-utils';
+
 
 const DEFAULT_20GA_RESULTS = {
   disease_1: { label: 'Alpha-Thalassemia', gene: 'HBA1 & HBA2', nst: '16p13.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
@@ -91,6 +83,7 @@ export default function Package20GASampleDetailPage() {
           packageType: '20GA',
           dob: formatDateVN(data.dob),
           receivedDate: formatDateVN(data.receivedDate),
+          reportDate: formatDateVN(data.reportDate),
           conclusion: data.conclusion || 'Chưa phát hiện biến thể gây bệnh/ có thể gây bệnh trên các vùng gen được khảo sát.',
           results: activeResults
         });
@@ -365,6 +358,24 @@ export default function Package20GASampleDetailPage() {
                     value={formData.sampleCode || ''}
                     onChange={(e) => handleInputChange('sampleCode', e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Ngày nhận mẫu</label>
+                  <input
+                    type="date"
+                    value={formatDateForInput(formData.receivedDate)}
+                    onChange={(e) => handleInputChange('receivedDate', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Ngày trả kết quả</label>
+                  <input
+                    type="date"
+                    value={formatDateForInput(formData.reportDate)}
+                    onChange={(e) => handleInputChange('reportDate', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
                   />
                 </div>
               </div>
