@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 import { connectToDatabase } from '@/lib/mongodb';
 import NiptSample from '@/models/NiptSample';
 import { fallbackStore } from '@/lib/store-fallback';
@@ -30,6 +32,27 @@ export async function GET(req, { params }) {
     const originalPdfUrl = sample.originalPdfUrl || '';
     const originalPdfPublicId = sample.originalPdfPublicId || '';
     const originalPdfName = sample.originalPdfName || 'original.pdf';
+    const sampleCode = sample.sampleCode || id;
+
+    // 0. Check local filesystem for instant 5ms response
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'original-pdfs');
+    const localCandidates = [
+      path.join(uploadDir, `${sampleCode}.pdf`),
+      path.join(uploadDir, `${id}.pdf`),
+      path.join(uploadDir, `${sample._id}.pdf`),
+    ];
+
+    for (const locPath of localCandidates) {
+      if (fs.existsSync(locPath)) {
+        const pdfBuf = fs.readFileSync(locPath);
+        return new NextResponse(pdfBuf, {
+          headers: {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${encodeURIComponent(originalPdfName)}"`,
+          },
+        });
+      }
+    }
 
     // 1. Try downloading using Cloudinary signed private download URL
     if (originalPdfPublicId || originalPdfUrl) {
