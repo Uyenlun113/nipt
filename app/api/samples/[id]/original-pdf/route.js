@@ -10,6 +10,8 @@ import cloudinary from '@/lib/cloudinary';
 export async function GET(req, { params }) {
   try {
     const { id } = params;
+    const { searchParams } = new URL(req.url);
+    const target = (searchParams.get('target') || '').toLowerCase();
 
     let sample = null;
     const db = await connectToDatabase();
@@ -29,14 +31,20 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: 'Không tìm thấy mẫu' }, { status: 404 });
     }
 
-    const originalPdfUrl = sample.originalPdfUrl || '';
-    const originalPdfPublicId = sample.originalPdfPublicId || '';
-    const originalPdfName = sample.originalPdfName || 'original.pdf';
+    const is20GA = target === '20ga';
+    const originalPdfUrl = is20GA ? (sample.originalPdf20GAUrl || sample.originalPdfUrl || '') : (sample.originalPdfUrl || '');
+    const originalPdfPublicId = is20GA ? (sample.originalPdf20GAPublicId || '') : (sample.originalPdfPublicId || '');
+    const originalPdfName = is20GA ? (sample.originalPdf20GAName || 'original_20ga.pdf') : (sample.originalPdfName || 'original.pdf');
     const sampleCode = sample.sampleCode || id;
 
     // 0. Check local filesystem for instant 5ms response
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'original-pdfs');
-    const localCandidates = [
+    const localCandidates = is20GA ? [
+      path.join(uploadDir, `${sampleCode}_20GA.pdf`),
+      path.join(uploadDir, `${id}_20GA.pdf`),
+      path.join(uploadDir, `${sampleCode}.pdf`),
+    ] : [
+      path.join(uploadDir, `${sampleCode}_NIPT.pdf`),
       path.join(uploadDir, `${sampleCode}.pdf`),
       path.join(uploadDir, `${id}.pdf`),
       path.join(uploadDir, `${sample._id}.pdf`),

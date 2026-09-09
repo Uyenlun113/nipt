@@ -14,7 +14,11 @@ export default function SampleDetailDispatcherPage() {
         .then(r => r.json())
         .then(data => {
           const pkg = (data.packageType || '').toLowerCase();
-          if (pkg.includes('7')) {
+          if (pkg.includes('+') || pkg.includes('combo')) {
+            router.replace(`/samples/combo/${sampleId}`);
+          } else if (pkg.includes('20ga') || pkg.includes('20')) {
+            router.replace(`/samples/20ga/${sampleId}`);
+          } else if (pkg.includes('7')) {
             router.replace(`/samples/genet7/${sampleId}`);
           } else if (pkg.includes('23')) {
             router.replace(`/samples/genet23/${sampleId}`);

@@ -2,7 +2,7 @@ import JSZip from 'jszip';
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import NiptSample from '@/models/NiptSample';
-import { generateGeneTrustPdf, generateSupplementaryPdf } from '@/lib/pdf-generator';
+import { generateGeneTrustPdf, generate20GAPdf, generateSupplementaryPdf } from '@/lib/pdf-generator';
 import { fallbackStore } from '@/lib/store-fallback';
 import { removeVietnameseAccents } from '@/lib/string-utils';
 import mongoose from 'mongoose';
@@ -15,9 +15,9 @@ export async function GET(req, { params }) {
     const db = await connectToDatabase();
     if (db) {
       if (mongoose.Types.ObjectId.isValid(id)) {
-        sample = await NiptSample.findById(id);
+        sample = await NiptSample.findById(id).lean();
       } else {
-        sample = await NiptSample.findOne({ sampleCode: id });
+        sample = await NiptSample.findOne({ sampleCode: id }).lean();
       }
     }
 
@@ -31,20 +31,34 @@ export async function GET(req, { params }) {
 
     const safeName = removeVietnameseAccents(sample.fullName || 'KhachHang');
     const code = removeVietnameseAccents(sample.sampleCode || 'NIPT');
-
-    // Generate both PDFs concurrently
-    const [pdfMain, pdfSupp] = await Promise.all([
-      generateGeneTrustPdf(sample),
-      generateSupplementaryPdf(sample)
-    ]);
-
     const zip = new JSZip();
-    zip.file(`Ket_Qua_NIPT_${code}_${safeName}.pdf`, pdfMain);
-    zip.file(`Ket_Qua_Phu_${code}_${safeName}.pdf`, pdfSupp);
+
+    const isCombo = (sample.packageType || '').includes('+') || (sample.packageType || '').toLowerCase().includes('combo');
+
+    if (isCombo) {
+      // Generate both NIPT and 20GA PDFs concurrently for Combo packages
+      const [pdfNipt, pdf20GA] = await Promise.all([
+        generateGeneTrustPdf(sample),
+        generate20GAPdf(sample)
+      ]);
+
+      zip.file(`Ket_Qua_NIPT_${code}_${safeName}.pdf`, pdfNipt);
+      zip.file(`Ket_Qua_20GA_${code}_${safeName}.pdf`, pdf20GA);
+    } else if (sample.packageType === '20GA') {
+      const pdf20GA = await generate20GAPdf(sample);
+      zip.file(`Ket_Qua_20GA_${code}_${safeName}.pdf`, pdf20GA);
+    } else {
+      // Standard NIPT package
+      const [pdfMain, pdfSupp] = await Promise.all([
+        generateGeneTrustPdf(sample),
+        generateSupplementaryPdf(sample)
+      ]);
+
+      zip.file(`Ket_Qua_NIPT_${code}_${safeName}.pdf`, pdfMain);
+      zip.file(`Ket_Qua_Phu_${code}_${safeName}.pdf`, pdfSupp);
+    }
 
     const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' });
-
-    // File name zip: tên folder/zip là mã ca (mã mẫu NIPT)
     const zipFileName = `${code}.zip`;
 
     return new NextResponse(zipBuffer, {

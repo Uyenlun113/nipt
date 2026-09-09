@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import NiptSample from '@/models/NiptSample';
-import { generateGeneTrustPdf, generateSupplementaryPdf } from '@/lib/pdf-generator';
+import { generateGeneTrustPdf, generate20GAPdf, generateSupplementaryPdf } from '@/lib/pdf-generator';
 import { fallbackStore } from '@/lib/store-fallback';
 import { removeVietnameseAccents } from '@/lib/string-utils';
 import mongoose from 'mongoose';
@@ -10,15 +10,15 @@ export async function GET(req, { params }) {
   try {
     const { id } = params;
     const { searchParams } = new URL(req.url);
-    const type = searchParams.get('type');
+    const type = (searchParams.get('type') || '').toLowerCase();
 
     let sample = null;
     const db = await connectToDatabase();
     if (db) {
       if (mongoose.Types.ObjectId.isValid(id)) {
-        sample = await NiptSample.findById(id);
+        sample = await NiptSample.findById(id).lean();
       } else {
-        sample = await NiptSample.findOne({ sampleCode: id });
+        sample = await NiptSample.findOne({ sampleCode: id }).lean();
       }
     }
 
@@ -35,7 +35,10 @@ export async function GET(req, { params }) {
     let pdfBuffer;
     let fileName;
 
-    if (type === 'phu' || type === 'supplementary') {
+    if (type === '20ga' || (type !== 'nipt' && type !== 'phu' && type !== 'supplementary' && sample.packageType === '20GA')) {
+      pdfBuffer = await generate20GAPdf(sample);
+      fileName = `Ket_Qua_20GA_${code}_${safeName}.pdf`;
+    } else if (type === 'phu' || type === 'supplementary') {
       pdfBuffer = await generateSupplementaryPdf(sample);
       fileName = `Ket_Qua_Phu_${code}_${safeName}.pdf`;
     } else {

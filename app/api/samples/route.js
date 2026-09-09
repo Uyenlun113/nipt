@@ -19,6 +19,8 @@ export async function GET(req) {
       if (packageFilter && packageFilter !== 'all') {
         if (packageFilter === 'GeneT 4' || packageFilter === 'GENNI 4' || packageFilter === 'GENET 4') {
           query.packageType = { $in: ['GeneT 4', 'GENNI 4', 'GENET 4'] };
+        } else if (packageFilter === 'combo' || packageFilter === 'Combo') {
+          query.packageType = { $in: ['GeneT 7 + 20GA', 'GeneT 23 + 20GA', 'GeneT Plus + 20GA', 'GeneT Twins + 20GA'] };
         } else {
           query.packageType = packageFilter;
         }
@@ -40,6 +42,8 @@ export async function GET(req) {
     if (packageFilter && packageFilter !== 'all') {
       if (packageFilter === 'GeneT 4' || packageFilter === 'GENNI 4' || packageFilter === 'GENET 4') {
         filtered = filtered.filter(s => s.packageType === 'GeneT 4' || s.packageType === 'GENNI 4' || s.packageType === 'GENET 4');
+      } else if (packageFilter === 'combo' || packageFilter === 'Combo') {
+        filtered = filtered.filter(s => (s.packageType || '').includes('+') || (s.packageType || '').toLowerCase().includes('combo'));
       } else {
         filtered = filtered.filter(s => s.packageType === packageFilter);
       }

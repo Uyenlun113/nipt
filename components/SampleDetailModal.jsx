@@ -221,16 +221,6 @@ export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSampl
                   className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-slate-800 focus:bg-white"
                 />
               </div>
-
-              <div>
-                <label className="text-[11px] font-semibold text-indigo-700 block mb-0.5">Ngày trả kết quả</label>
-                <input
-                  type="date"
-                  value={formatDateForInput(formData.reportDate)}
-                  onChange={(e) => handleInputChange('reportDate', e.target.value)}
-                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-slate-800 focus:bg-white"
-                />
-              </div>
             </div>
           </div>
 
@@ -343,7 +333,16 @@ export default function SampleDetailModal({ isOpen, onClose, sample, onSaveSampl
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-teal-500/20"
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-slate-100">
+                  <div>
+                    <label className="text-[11px] font-semibold text-slate-700 block mb-0.5">Ngày trả kết quả</label>
+                    <input
+                      type="date"
+                      value={formatDateForInput(formData.reportDate)}
+                      onChange={(e) => handleInputChange('reportDate', e.target.value)}
+                      className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs text-slate-800 focus:bg-white"
+                    />
+                  </div>
                   <div>
                     <label className="text-[11px] font-semibold text-slate-700 block mb-0.5">Kiểm soát kết quả</label>
                     <input

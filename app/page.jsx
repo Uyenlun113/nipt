@@ -148,6 +148,8 @@ export default function MainDashboardPage() {
 
   const getPackageDetailRoute = (sampleId, packageType) => {
     const pkg = (packageType || '').toLowerCase();
+    if (pkg.includes('+') || pkg.includes('combo')) return `/samples/combo/${sampleId}`;
+    if (pkg.includes('20ga') || pkg.includes('20')) return `/samples/20ga/${sampleId}`;
     if (pkg.includes('7')) return `/samples/genet7/${sampleId}`;
     if (pkg.includes('23')) return `/samples/genet23/${sampleId}`;
     if (pkg.includes('plus')) return `/samples/plus/${sampleId}`;
@@ -181,7 +183,7 @@ export default function MainDashboardPage() {
     {
       id: 'GeneT 7',
       name: 'GeneT 7',
-      count: samples.filter(s => (s.packageType || '').includes('7')).length,
+      count: samples.filter(s => (s.packageType || '').includes('7') && !(s.packageType || '').includes('+')).length,
       color: 'from-blue-500 to-blue-600',
       barBg: 'bg-blue-500',
       badgeBg: 'bg-blue-50 text-blue-900 border-blue-200',
@@ -190,7 +192,7 @@ export default function MainDashboardPage() {
     {
       id: 'GeneT 23',
       name: 'GeneT 23',
-      count: samples.filter(s => (s.packageType || '').includes('23')).length,
+      count: samples.filter(s => (s.packageType || '').includes('23') && !(s.packageType || '').includes('+')).length,
       color: 'from-indigo-500 to-indigo-600',
       barBg: 'bg-indigo-500',
       badgeBg: 'bg-indigo-50 text-indigo-900 border-indigo-200',
@@ -199,7 +201,7 @@ export default function MainDashboardPage() {
     {
       id: 'GeneT Plus',
       name: 'GeneT Plus',
-      count: samples.filter(s => (s.packageType || '').toLowerCase().includes('plus')).length,
+      count: samples.filter(s => (s.packageType || '').toLowerCase().includes('plus') && !(s.packageType || '').includes('+')).length,
       color: 'from-purple-500 to-purple-600',
       barBg: 'bg-purple-500',
       badgeBg: 'bg-purple-50 text-purple-900 border-purple-200',
@@ -208,11 +210,20 @@ export default function MainDashboardPage() {
     {
       id: 'GeneT Twins',
       name: 'GeneT Twins',
-      count: samples.filter(s => (s.packageType || '').toLowerCase().includes('twin')).length,
+      count: samples.filter(s => (s.packageType || '').toLowerCase().includes('twin') && !(s.packageType || '').includes('+')).length,
       color: 'from-rose-500 to-rose-600',
       barBg: 'bg-rose-500',
       badgeBg: 'bg-rose-50 text-rose-900 border-rose-200',
       route: '/packages/twins'
+    },
+    {
+      id: 'Combo',
+      name: 'Gói Combo',
+      count: samples.filter(s => (s.packageType || '').includes('+') || (s.packageType || '').toLowerCase().includes('combo')).length,
+      color: 'from-violet-500 to-violet-600',
+      barBg: 'bg-violet-500',
+      badgeBg: 'bg-violet-50 text-violet-900 border-violet-200',
+      route: '/packages/combo'
     }
   ];
 
@@ -361,7 +372,7 @@ export default function MainDashboardPage() {
               </div>
 
               {/* Bar Chart Visual Bars */}
-              <div className="grid grid-cols-6 gap-3 items-end h-64 pt-6 pb-2 px-2 border-b border-slate-200">
+              <div className="grid grid-cols-7 gap-3 items-end h-64 pt-6 pb-2 px-2 border-b border-slate-200">
                 {packageStats.map((item) => {
                   const heightPercent = totalSamplesCount > 0 ? Math.max(Math.round((item.count / maxCount) * 100), 8) : 8;
                   const percentOfTotal = totalSamplesCount > 0 ? Math.round((item.count / totalSamplesCount) * 100) : 0;
@@ -489,7 +500,7 @@ export default function MainDashboardPage() {
 
             {/* Package Filter Buttons */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
-              {['Tất cả', 'GeneT Eco', 'GeneT 4', 'GeneT 7', 'GeneT 23'].map((pkg) => (
+              {['Tất cả', 'GeneT Eco', 'GeneT 4', 'GeneT 7', 'GeneT 23', 'GeneT Plus', 'GeneT Twins', '20GA', 'Combo'].map((pkg) => (
                 <button
                   key={pkg}
                   onClick={() => setSelectedFilterPkg(pkg)}

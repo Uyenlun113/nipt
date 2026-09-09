@@ -14,9 +14,9 @@ export async function GET(req, { params }) {
     const db = await connectToDatabase();
     if (db) {
       if (mongoose.Types.ObjectId.isValid(id)) {
-        sample = await NiptSample.findById(id);
+        sample = await NiptSample.findById(id).lean();
       } else {
-        sample = await NiptSample.findOne({ sampleCode: id });
+        sample = await NiptSample.findOne({ sampleCode: id }).lean();
       }
     }
 

@@ -258,6 +258,12 @@ export default function SampleFormModal({ isOpen, onClose, onSave, initialPackag
                   <option value="GeneT 23">GeneT 23</option>
                   <option value="GeneT Plus">GeneT Plus (k mở rộng)</option>
                   <option value="GeneT Twins">GeneT Twins (Song thai)</option>
+                  <option value="20GA">20GA (20 Bệnh Gen Lặn)</option>
+                  <option disabled>── GÓI COMBO (NIPT + 20GA) ──</option>
+                  <option value="GeneT 7 + 20GA">GeneT 7 + 20GA</option>
+                  <option value="GeneT 23 + 20GA">GeneT 23 + 20GA</option>
+                  <option value="GeneT Plus + 20GA">GeneT Plus + 20GA</option>
+                  <option value="GeneT Twins + 20GA">GeneT Twins + 20GA</option>
                 </select>
               </div>
 

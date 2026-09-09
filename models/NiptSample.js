@@ -17,14 +17,18 @@ const NiptSampleSchema = new mongoose.Schema({
   reportDate: { type: String },
   cfDNA: { type: String, default: '' },
   results: { type: Object, default: {} },
+  results20GA: { type: Object, default: {} },
   gbsResult: { type: String, default: 'Âm tính' },
   conclusion: { type: String, default: 'Chưa phát hiện lệch bội nhiễm sắc thể trên các cặp NST khảo sát.' },
+  conclusion20GA: { type: String, default: 'Chưa phát hiện biến thể gây bệnh/ có thể gây bệnh trên các vùng gen được khảo sát.' },
   checkerName: { type: String, default: '' },
   directorName: { type: String, default: '' },
   hasMstStamp: { type: Boolean, default: false },
   status: { type: String, enum: ['pending', 'completed', 'extracted'], default: 'pending' },
   originalPdfUrl: { type: String, default: '' },
   originalPdfName: { type: String, default: '' },
+  originalPdf20GAUrl: { type: String, default: '' },
+  originalPdf20GAName: { type: String, default: '' },
   createdById: { type: String },
 }, { timestamps: true });
 
