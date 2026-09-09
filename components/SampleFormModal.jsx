@@ -253,11 +253,11 @@ export default function SampleFormModal({ isOpen, onClose, onSave, initialPackag
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
                 >
                   <option value="GeneT Eco">GeneT Eco</option>
+                  <option value="GeneT 4">GeneT 4</option>
                   <option value="GeneT 7">GeneT 7</option>
                   <option value="GeneT 23">GeneT 23</option>
                   <option value="GeneT Plus">GeneT Plus (k mở rộng)</option>
                   <option value="GeneT Twins">GeneT Twins (Song thai)</option>
-                  <option value="GENNI 4">GENNI 4</option>
                 </select>
               </div>
 

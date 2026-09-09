@@ -294,11 +294,11 @@ export default function CreateSamplePage() {
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
                   >
                     <option value="GeneT Eco">GeneT Eco</option>
+                    <option value="GeneT 4">GeneT 4</option>
                     <option value="GeneT 7">GeneT 7</option>
                     <option value="GeneT 23">GeneT 23</option>
                     <option value="GeneT Plus">GeneT Plus (k mở rộng)</option>
                     <option value="GeneT Twins">GeneT Twins (Song thai)</option>
-                    <option value="GENNI 4">GENNI 4</option>
                     <option value="20GA">20GA (20 Bệnh Gen Lặn)</option>
                   </select>
                 </div>

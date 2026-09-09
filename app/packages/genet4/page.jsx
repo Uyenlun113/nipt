@@ -344,37 +344,37 @@ export default function GeneT4PackageListPage() {
 
                           <td className="py-4 px-4 text-right">
                             <div className="flex items-center justify-end gap-2">
-                              {isCompleted ? (
-                                hasOriginalFile ? (
-                                  <a
-                                    href={`/api/samples/${s._id || s.id || s.sampleCode}/original-pdf`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 flex items-center gap-1.5 transition-all shadow-xs"
-                                    title={'Xem/Tải file gốc đối chiếu'}
-                                  >
-                                    <FileText className="w-4 h-4 text-indigo-600" />
-                                    <span>File gốc</span>
-                                  </a>
-                                ) : null
-                              ) : (
-                                <label
-                                  className={"px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all " + (isUploadingThis
-                                      ? 'bg-amber-100 text-amber-900'
-                                      : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-300')}
-                                  title="Tải lên file PDF kết quả từ máy"
+                              {hasOriginalFile && (
+                                <a
+                                  href={`/api/samples/${s._id || s.id || s.sampleCode}/original-pdf`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 flex items-center gap-1.5 transition-all shadow-xs"
+                                  title={'Xem/Tải file gốc đối chiếu'}
                                 >
-                                  <Upload className="w-4 h-4" />
-                                  <span>{isUploadingThis ? 'Đang đọc...' : 'Upload PDF'}</span>
-                                  <input
-                                    type="file"
-                                    accept=".pdf"
-                                    className="hidden"
-                                    onChange={(e) => handleFileUpload(id, e)}
-                                    disabled={isUploadingThis}
-                                  />
-                                </label>
+                                  <FileText className="w-4 h-4 text-indigo-600" />
+                                  <span>File gốc</span>
+                                </a>
                               )}
+
+                              <label
+                                className={"px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all " + (isUploadingThis
+                                    ? 'bg-amber-100 text-amber-900'
+                                    : hasOriginalFile
+                                    ? 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-300'
+                                    : 'bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-300')}
+                                title="Tải lại file PDF kết quả từ máy để trích xuất tự động lại"
+                              >
+                                <Upload className="w-4 h-4" />
+                                <span>{isUploadingThis ? 'Đang đọc...' : (hasOriginalFile ? 'Đọc lại PDF' : 'Upload PDF')}</span>
+                                <input
+                                  type="file"
+                                  accept=".pdf"
+                                  className="hidden"
+                                  onChange={(e) => handleFileUpload(id, e)}
+                                  disabled={isUploadingThis}
+                                />
+                              </label>
 
                               <Link
                                 href={detailUrl}

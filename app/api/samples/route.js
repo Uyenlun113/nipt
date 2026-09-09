@@ -12,9 +12,16 @@ export async function GET(req) {
 
     const db = await connectToDatabase();
     if (db) {
+      // Auto-migrate legacy 'GENNI 4' packageType to 'GeneT 4'
+      await NiptSample.updateMany({ packageType: 'GENNI 4' }, { $set: { packageType: 'GeneT 4' } }).catch(() => {});
+
       const query = {};
       if (packageFilter && packageFilter !== 'all') {
-        query.packageType = packageFilter;
+        if (packageFilter === 'GeneT 4' || packageFilter === 'GENNI 4' || packageFilter === 'GENET 4') {
+          query.packageType = { $in: ['GeneT 4', 'GENNI 4', 'GENET 4'] };
+        } else {
+          query.packageType = packageFilter;
+        }
       }
       if (search) {
         query.$or = [
@@ -31,7 +38,11 @@ export async function GET(req) {
     // Fallback store
     let filtered = [...fallbackStore.samples];
     if (packageFilter && packageFilter !== 'all') {
-      filtered = filtered.filter(s => s.packageType === packageFilter);
+      if (packageFilter === 'GeneT 4' || packageFilter === 'GENNI 4' || packageFilter === 'GENET 4') {
+        filtered = filtered.filter(s => s.packageType === 'GeneT 4' || s.packageType === 'GENNI 4' || s.packageType === 'GENET 4');
+      } else {
+        filtered = filtered.filter(s => s.packageType === packageFilter);
+      }
     }
     if (search) {
       const term = search.toLowerCase();

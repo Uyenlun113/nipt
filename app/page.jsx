@@ -606,8 +606,7 @@ export default function MainDashboardPage() {
 
                             <td className="py-4 px-4 text-right">
                               <div className="flex items-center justify-end gap-2">
-                                {/* Nếu đã có file gốc -> Ẩn nút Upload, hiển thị nút File Gốc Cloudinary */}
-                                {hasOriginalFile ? (
+                                {hasOriginalFile && (
                                   <a
                                     href={`/api/samples/${id}/original-pdf`}
                                     target="_blank"
@@ -618,26 +617,28 @@ export default function MainDashboardPage() {
                                     <FileText className="w-4 h-4 text-indigo-600" />
                                     <span>File gốc</span>
                                   </a>
-                                ) : (
-                                  <label
-                                    className={`px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all ${
-                                      isUploadingThis
-                                        ? 'bg-amber-100 text-amber-900'
-                                        : 'bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-300'
-                                    }`}
-                                    title="Tải lên file PDF kết quả từ máy"
-                                  >
-                                    <Upload className="w-4 h-4" />
-                                    <span>{isUploadingThis ? 'Đang đọc...' : 'Upload PDF'}</span>
-                                    <input
-                                      type="file"
-                                      accept=".pdf"
-                                      className="hidden"
-                                      onChange={(e) => handleFileUpload(id, e)}
-                                      disabled={isUploadingThis}
-                                    />
-                                  </label>
                                 )}
+
+                                <label
+                                  className={`px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all ${
+                                    isUploadingThis
+                                      ? 'bg-amber-100 text-amber-900'
+                                      : hasOriginalFile
+                                      ? 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-300'
+                                      : 'bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-300'
+                                  }`}
+                                  title="Tải lại file PDF kết quả từ máy để trích xuất tự động lại"
+                                >
+                                  <Upload className="w-4 h-4" />
+                                  <span>{isUploadingThis ? 'Đang đọc...' : (hasOriginalFile ? 'Đọc lại PDF' : 'Upload PDF')}</span>
+                                  <input
+                                    type="file"
+                                    accept=".pdf"
+                                    className="hidden"
+                                    onChange={(e) => handleFileUpload(id, e)}
+                                    disabled={isUploadingThis}
+                                  />
+                                </label>
 
                                 <Link
                                   href={detailUrl}

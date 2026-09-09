@@ -30,7 +30,7 @@ export default function TemplatesPage() {
     { name: 'KQ_NIPT_GENET 23.pdf', package: 'GeneT 23', desc: 'Phôi kết quả Gói GeneT 23 (Khảo sát toàn bộ 23 cặp NST)' },
     { name: 'KQ_NIPT_GENET Plus k mở rộng.pdf', package: 'GeneT Plus', desc: 'Phôi kết quả Gói GeneT Plus (Toàn bộ NST + 86 hội chứng vi mất đoạn)' },
     { name: 'KQ_NIPT_GENET Twins.pdf', package: 'GeneT Twins', desc: 'Phôi kết quả Gói GeneT Twins (Dành riêng cho Thai đôi / Song thai)' },
-    { name: 'KQ_NIPT_GENNI 4.pdf', package: 'GENNI 4', desc: 'Phôi kết quả Gói GENNI 4' },
+    { name: 'KQ_NIPT_GENET 4.pdf', package: 'GeneT 4', desc: 'Phôi kết quả Gói GeneT 4 (Sàng lọc T21, T18, T13 & Turner XO)' },
     { name: 'Kết quả phụ.pdf', package: 'Phụ lục / Gen lặn', desc: 'Phôi kết quả phụ kèm theo' },
   ];
 

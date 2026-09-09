@@ -266,26 +266,24 @@ export default function GeneT7SampleDetailPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              {(formData.status === 'completed' || formData.status === 'extracted' || formData.originalPdfUrl || formData.cfDNA) ? (
-                <div className="flex items-center gap-2">
-                  <a
-                    href={`/api/samples/${sampleId}/original-pdf`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-indigo-200 shadow-xs"
-                    title={`Xem/Tải file PDF gốc đối chiếu: ${formData.originalPdfName || 'File PDF'}`}
-                  >
-                    <FileText className="w-4 h-4 text-indigo-600" />
-                    <span>Xem File Gốc Đối Chiếu</span>
-                  </a>
-                </div>
-              ) : (
-                <label className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-sm font-bold cursor-pointer transition-all flex items-center gap-2 border border-slate-300">
-                  <Upload className="w-4 h-4 text-slate-700" />
-                  <span>{uploading ? 'Đang đọc...' : 'Upload File PDF Kết Quả'}</span>
-                  <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} disabled={uploading} />
-                </label>
+              {(formData.status === 'completed' || formData.status === 'extracted' || formData.originalPdfUrl || formData.cfDNA) && (
+                <a
+                  href={`/api/samples/${sampleId}/original-pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-indigo-200 shadow-xs"
+                  title={`Xem/Tải file PDF gốc đối chiếu: ${formData.originalPdfName || 'File PDF'}`}
+                >
+                  <FileText className="w-4 h-4 text-indigo-600" />
+                  <span>Xem File Gốc</span>
+                </a>
               )}
+
+              <label className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-extrabold cursor-pointer transition-all flex items-center gap-2 shadow-md shadow-teal-600/20">
+                <Upload className="w-4 h-4" />
+                <span>{uploading ? 'Đang đọc lại...' : (formData.originalPdfUrl ? 'Đọc lại / Tải lại PDF' : 'Upload File PDF Kết Quả')}</span>
+                <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} disabled={uploading} />
+              </label>
             </div>
           </div>
 
