@@ -162,16 +162,8 @@ export default function Package20GASampleDetailPage() {
     }
   };
 
-  const handleDownloadBothPdfs = () => {
-    window.open(`/api/samples/${sampleId}/download-zip`, '_blank');
-  };
-
-  const handleDownloadNiptPdf = () => {
+  const handleDownload20GAPdf = () => {
     window.open(`/api/samples/${sampleId}/generate-genetrust`, '_blank');
-  };
-
-  const handleDownloadSupplementaryPdf = () => {
-    window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
   };
 
   if (loading || !formData) {
@@ -185,9 +177,7 @@ export default function Package20GASampleDetailPage() {
     );
   }
 
-  const pdfPreviewUrl = previewType === 'phu'
-    ? `/api/samples/${sampleId}/generate-supplementary?t=${previewKey}`
-    : `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
+  const pdfPreviewUrl = `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
 
   const resultsObj = formData.results || {};
 
@@ -494,12 +484,12 @@ export default function Package20GASampleDetailPage() {
                   </button>
 
                   <button
-                    onClick={handleDownloadBothPdfs}
-                    className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 text-white rounded-xl text-sm font-extrabold shadow-md transition-all flex items-center gap-2"
-                    title="Tải về cả 2 file PDF (NIPT & Kết quả phụ)"
+                    onClick={handleDownload20GAPdf}
+                    className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl text-sm font-extrabold shadow-md transition-all flex items-center gap-2"
+                    title="Tải về File PDF Kết Quả 20GA"
                   >
                     <Download className="w-4 h-4" />
-                    <span>Tải 2 File Kết Quả (PDF)</span>
+                    <span>Tải File PDF 20GA</span>
                   </button>
                 </div>
               </div>
@@ -513,20 +503,6 @@ export default function Package20GASampleDetailPage() {
                     <Eye className="w-5 h-5 text-emerald-600" />
                     <span>Bản Xem Trước Phôi In 20GA</span>
                   </h3>
-                  <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
-                    <button
-                      onClick={() => { setPreviewType('nipt'); setPreviewKey(Date.now()); }}
-                      className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all ${previewType === 'nipt' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
-                    >
-                      Phôi 20GA
-                    </button>
-                    <button
-                      onClick={() => { setPreviewType('phu'); setPreviewKey(Date.now()); }}
-                      className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all ${previewType === 'phu' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
-                    >
-                      Phôi Kết Quả Phụ
-                    </button>
-                  </div>
                 </div>
 
                 <button onClick={() => setPreviewKey(Date.now())} className="px-3.5 py-2 bg-slate-100 rounded-xl text-xs font-bold flex items-center gap-1.5">

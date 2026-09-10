@@ -45,6 +45,16 @@ const DEFAULT_20GA_RESULTS = {
   disease_20: { label: 'Tăng homocysteine niệu (Rối loạn chuyển hóa axi amin chứa lưu huỳnh)', gene: 'CBS', nst: '21q22.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
 };
 
+const DEFAULT_NIPT_RESULTS = {
+  t21: { label: 'Trisomy 21 (Down)', value: '', risk: '', ref: '-3 < Z < 3' },
+  t18: { label: 'Trisomy 18 (Edwards)', value: '', risk: '', ref: '-3 < Z < 3' },
+  t13: { label: 'Trisomy 13 (Patau)', value: '', risk: '', ref: '-3 < Z < 3' },
+  turner: { label: 'HC Turner (45, XO)', value: '', risk: '', ref: '-3 < Z < 3' },
+  klinefelter: { label: 'HC Klinefelter (47, XXY)', value: '', risk: '', ref: '-3 < Z < 3' },
+  jacobs: { label: 'HC Jacobs (47, XYY)', value: '', risk: '', ref: '-3 < Z < 3' },
+  tripleX: { label: 'HC Trisomy X (47, XXX)', value: '', risk: '', ref: '-3 < Z < 3' }
+};
+
 export default function ComboSampleDetailPage() {
   const router = useRouter();
   const params = useParams();
@@ -77,6 +87,26 @@ export default function ComboSampleDetailPage() {
       if (res.ok) {
         const data = await res.json();
 
+        const hasNiptResults = data.results && Object.keys(data.results).length > 0;
+        let activeNipt = hasNiptResults ? { ...DEFAULT_NIPT_RESULTS, ...data.results } : { ...DEFAULT_NIPT_RESULTS };
+
+        const pkgLower = (data.packageType || '').toLowerCase();
+        if (pkgLower.includes('23') || pkgLower.includes('plus')) {
+          const otherTrisomies = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19, 20, 22];
+          otherTrisomies.forEach(num => {
+            const k = `trisomy_${num}`;
+            if (!activeNipt[k]) {
+              activeNipt[k] = { label: `Trisomy ${num}`, value: '', risk: '', ref: '-3 < Z < 3' };
+            }
+          });
+        }
+        if (pkgLower.includes('twins')) {
+          delete activeNipt.turner;
+          delete activeNipt.klinefelter;
+          delete activeNipt.jacobs;
+          delete activeNipt.tripleX;
+        }
+
         const has20GAResults = data.results20GA && Object.keys(data.results20GA).length > 0;
         let active20GA = has20GAResults ? { ...DEFAULT_20GA_RESULTS, ...data.results20GA } : DEFAULT_20GA_RESULTS;
 
@@ -85,9 +115,14 @@ export default function ComboSampleDetailPage() {
           dob: formatDateVN(data.dob),
           receivedDate: formatDateVN(data.receivedDate),
           reportDate: formatDateVN(data.reportDate),
+          reportDate20GA: formatDateVN(data.reportDate20GA) || formatDateVN(data.reportDate),
+          checkerName20GA: data.checkerName20GA !== undefined ? data.checkerName20GA : (data.checkerName || ''),
+          directorName20GA: data.directorName20GA !== undefined ? data.directorName20GA : (data.directorName || ''),
+          hasMstStamp20GA: data.hasMstStamp20GA !== undefined ? data.hasMstStamp20GA : (!!data.hasMstStamp),
+          gbsResult: data.gbsResult || 'Âm tính',
           conclusion: data.conclusion || 'Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy cơ thấp phản ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp Nhiễm sắc thể được kiểm tra.',
           conclusion20GA: data.conclusion20GA || 'Chưa phát hiện biến thể gây bệnh/ có thể gây bệnh trên các vùng gen được khảo sát.',
-          results: data.results || {},
+          results: activeNipt,
           results20GA: active20GA
         });
       }
@@ -188,6 +223,10 @@ export default function ComboSampleDetailPage() {
     window.open(`/api/samples/${sampleId}/generate-genetrust?type=nipt`, '_blank');
   };
 
+  const handleDownloadSupplementaryPdf = () => {
+    window.open(`/api/samples/${sampleId}/generate-supplementary`, '_blank');
+  };
+
   const handleDownload20GAPdf = () => {
     window.open(`/api/samples/${sampleId}/generate-genetrust?type=20ga`, '_blank');
   };
@@ -209,9 +248,54 @@ export default function ComboSampleDetailPage() {
 
   const pdfPreviewUrl = previewType === '20ga'
     ? `/api/samples/${sampleId}/generate-genetrust?type=20ga&t=${previewKey}`
-    : `/api/samples/${sampleId}/generate-genetrust?type=nipt&t=${previewKey}`;
+    : (previewType === 'phu'
+        ? `/api/samples/${sampleId}/generate-supplementary?t=${previewKey}`
+        : `/api/samples/${sampleId}/generate-genetrust?type=nipt&t=${previewKey}`);
 
   const results20GAObj = formData.results20GA || DEFAULT_20GA_RESULTS;
+  const niptResultsObj = formData.results || {};
+  const section1Keys = ['t21', 't18', 't13'];
+  const section2Keys = ['turner', 'klinefelter', 'jacobs', 'tripleX'];
+  const section3Keys = Object.keys(niptResultsObj).filter(k => k.startsWith('trisomy_') || (k.startsWith('t') && !section1Keys.includes(k) && !section2Keys.includes(k)));
+
+  const renderNiptResultRows = (keys) => {
+    return keys.map((key) => {
+      const item = niptResultsObj[key];
+      if (!item) return null;
+      return (
+        <tr key={key} className="hover:bg-slate-50">
+          <td className="py-2.5 px-4 font-bold text-slate-900 text-xs md:text-sm">{item.label}</td>
+          <td className="py-2.5 px-4 text-slate-600 font-mono text-xs">{item.ref || '-3 < Z < 3'}</td>
+          <td className="py-2.5 px-4">
+            <input
+              type="text"
+              value={item.value || ''}
+              onChange={(e) => handleNiptResultChange(key, 'value', e.target.value)}
+              placeholder="VD: 0.12"
+              className="w-32 px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 focus:bg-white"
+            />
+          </td>
+          <td className="py-2.5 px-4">
+            <select
+              value={item.risk || ''}
+              onChange={(e) => handleNiptResultChange(key, 'risk', e.target.value)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold border ${
+                (item.risk || '').includes('cao')
+                  ? 'bg-rose-50 text-rose-800 border-rose-300'
+                  : (item.risk || '').includes('thấp')
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                  : 'bg-slate-50 text-slate-500 border-slate-300'
+              }`}
+            >
+              <option value="">-- Chưa chọn --</option>
+              <option value="Nguy cơ thấp">Nguy cơ thấp</option>
+              <option value="Nguy cơ cao">Nguy cơ cao</option>
+            </select>
+          </td>
+        </tr>
+      );
+    });
+  };
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
@@ -452,30 +536,130 @@ export default function ComboSampleDetailPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Tỷ lệ ADN thai nhi (cfDNA %)</label>
-                  <div className="relative">
+              {/* Tỷ lệ ADN thai nhi (cfDNA %) & Kết quả Phụ GBS */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-blue-50/60 p-4 rounded-xl border border-blue-200 flex items-center justify-between">
+                  <div>
+                    <h4 className="text-xs font-extrabold text-blue-950 uppercase tracking-wider">Hàm lượng cfDNA (%)</h4>
+                    <p className="text-xs text-blue-700 font-medium">Tự động trích xuất từ file NIPT PDF</p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-700">cfDNA:</span>
                     <input
                       type="text"
                       value={formData.cfDNA || ''}
                       onChange={(e) => handleInputChange('cfDNA', e.target.value)}
                       placeholder="VD: 7.52"
-                      className="w-full px-3.5 py-2.5 bg-blue-50/50 border border-blue-300 rounded-xl font-mono font-bold text-blue-900"
+                      className="w-28 px-3 py-1.5 text-base font-extrabold text-blue-900 bg-white border border-blue-300 rounded-xl text-center shadow-inner"
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-blue-700">%</span>
+                    <span className="text-xs font-bold text-blue-800">%</span>
                   </div>
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Nội dung kết luận NIPT:</label>
-                  <textarea
-                    rows={2}
-                    value={formData.conclusion || ''}
-                    onChange={(e) => handleInputChange('conclusion', e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900"
-                  />
+                <div className="bg-indigo-50/60 p-4 rounded-xl border border-indigo-200 flex items-center justify-between">
+                  <div>
+                    <h4 className="text-xs font-extrabold text-indigo-950 uppercase tracking-wider">Kết Quả Phụ NIPT (Sàng lọc GBS / Vi sinh)</h4>
+                    <p className="text-xs text-indigo-700 font-medium">Lựa chọn kết quả phôi phụ NIPT</p>
+                  </div>
+
+                  <select
+                    value={formData.gbsResult || 'Âm tính'}
+                    onChange={(e) => handleInputChange('gbsResult', e.target.value)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-extrabold border shadow-xs cursor-pointer ${
+                      (formData.gbsResult || '').toLowerCase().includes('dương')
+                        ? 'bg-rose-100 text-rose-900 border-rose-300'
+                        : 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                    }`}
+                  >
+                    <option value="Âm tính">Âm tính</option>
+                    <option value="Dương tính">Dương tính</option>
+                  </select>
                 </div>
+              </div>
+
+              {/* Bảng chi tiết kết quả NST NIPT */}
+              <div className="space-y-6">
+                {/* Phần I: Lệch Bội Phổ Biến */}
+                <div className="space-y-3">
+                  <div className="bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 font-extrabold text-xs uppercase text-blue-900">
+                    I. Lệch Bội Phổ Biến (Nhiễm Sắc Thể Thường 21, 18, 13)
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm border-collapse">
+                      <thead>
+                        <tr className="bg-slate-100 text-slate-700 text-xs uppercase font-extrabold border-b border-slate-300">
+                          <th className="py-2.5 px-4">Hội chứng / NST</th>
+                          <th className="py-2.5 px-4">Khoảng tham chiếu</th>
+                          <th className="py-2.5 px-4">Giá trị phân tích (Z-score)</th>
+                          <th className="py-2.5 px-4">Kết luận nguy cơ</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200">
+                        {renderNiptResultRows(section1Keys)}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Phần II: Lệch Bội NST Giới Tính (nếu không phải Twins) */}
+                {!formData.packageType.toLowerCase().includes('twins') && (
+                  <div className="space-y-3">
+                    <div className="bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-200 font-extrabold text-xs uppercase text-indigo-950">
+                      II. Lệch Bội Nhiễm Sắc Thể Giới Tính (Turner, Klinefelter, Jacobs, Triple X)
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-sm border-collapse">
+                        <thead>
+                          <tr className="bg-slate-100 text-slate-700 text-xs uppercase font-extrabold border-b border-slate-300">
+                            <th className="py-2.5 px-4">Hội chứng / NST</th>
+                            <th className="py-2.5 px-4">Khoảng tham chiếu</th>
+                            <th className="py-2.5 px-4">Giá trị phân tích (Z-score)</th>
+                            <th className="py-2.5 px-4">Kết luận nguy cơ</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200">
+                          {renderNiptResultRows(section2Keys)}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Phần III: Lệch Bội Các Cặp NST Thường Còn Lại (nếu có) */}
+                {section3Keys.length > 0 && (
+                  <div className="space-y-3">
+                    <div className="bg-purple-50 px-4 py-2 rounded-xl border border-purple-200 font-extrabold text-xs uppercase text-purple-950">
+                      III. Lệch Bội Các Cặp Nhiễm Sắc Thể Thường Còn Lại
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-sm border-collapse">
+                        <thead>
+                          <tr className="bg-slate-100 text-slate-700 text-xs uppercase font-extrabold border-b border-slate-300">
+                            <th className="py-2.5 px-4">Hội chứng / NST</th>
+                            <th className="py-2.5 px-4">Khoảng tham chiếu</th>
+                            <th className="py-2.5 px-4">Giá trị phân tích (Z-score)</th>
+                            <th className="py-2.5 px-4">Kết luận nguy cơ</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200">
+                          {renderNiptResultRows(section3Keys)}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Nội dung kết luận NIPT */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Nội dung kết luận NIPT:</label>
+                <textarea
+                  rows={3}
+                  value={formData.conclusion || ''}
+                  onChange={(e) => handleInputChange('conclusion', e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900"
+                />
               </div>
             </div>
 
@@ -582,52 +766,120 @@ export default function ComboSampleDetailPage() {
             </div>
 
             {/* SECTION 4: NGƯỜI KÝ TÊN */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 w-full">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 w-full">
               <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-2">
-                IV. Thông Tin Người Ký Tên & Đóng Dấu
+                IV. Thông Tin Người Ký Tên & Đóng Dấu (2 Phiếu Kết Quả Khác Nhau)
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Ngày trả kết quả</label>
-                  <input
-                    type="date"
-                    value={formatDateForInput(formData.reportDate)}
-                    onChange={(e) => handleInputChange('reportDate', e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
-                  />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* 1. NIPT Signatures */}
+                <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-200 space-y-4">
+                  <h4 className="text-xs font-extrabold text-blue-900 uppercase tracking-wider border-b border-blue-200 pb-2 flex items-center justify-between">
+                    <span>1. Thông Tin Ký Tên — Phiếu NIPT</span>
+                    <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] rounded font-mono">Phôi NIPT</span>
+                  </h4>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Ngày trả kết quả NIPT</label>
+                      <input
+                        type="date"
+                        value={formatDateForInput(formData.reportDate)}
+                        onChange={(e) => handleInputChange('reportDate', e.target.value)}
+                        className="w-full px-3.5 py-2 bg-white border border-blue-300 rounded-xl text-slate-900 text-xs font-semibold"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Kiểm soát kết quả (NIPT)</label>
+                      <input
+                        type="text"
+                        value={formData.checkerName || ''}
+                        onChange={(e) => handleInputChange('checkerName', e.target.value)}
+                        placeholder="TS. BS. Nguyễn Văn A"
+                        className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 text-xs font-semibold"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Giám đốc (NIPT)</label>
+                      <input
+                        type="text"
+                        value={formData.directorName || ''}
+                        onChange={(e) => handleInputChange('directorName', e.target.value)}
+                        placeholder="TS. Đặng..."
+                        className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 text-xs font-semibold"
+                      />
+                    </div>
+
+                    <div className="pt-2 flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="hasMstStamp"
+                        checked={!!formData.hasMstStamp}
+                        onChange={(e) => handleInputChange('hasMstStamp', e.target.checked)}
+                        className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer"
+                      />
+                      <label htmlFor="hasMstStamp" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
+                        Dấu vuông MST (NIPT)
+                      </label>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Kiểm soát kết quả</label>
-                  <input
-                    type="text"
-                    value={formData.checkerName || ''}
-                    onChange={(e) => handleInputChange('checkerName', e.target.value)}
-                    placeholder="TS. BS. Nguyễn Văn A"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Giám đốc</label>
-                  <input
-                    type="text"
-                    value={formData.directorName || ''}
-                    onChange={(e) => handleInputChange('directorName', e.target.value)}
-                    placeholder="TS. Đặng..."
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-semibold"
-                  />
-                </div>
-                <div className="col-span-1 md:col-span-2 pt-3 border-t border-slate-100 flex items-center gap-2.5">
-                  <input
-                    type="checkbox"
-                    id="hasMstStamp"
-                    checked={!!formData.hasMstStamp}
-                    onChange={(e) => handleInputChange('hasMstStamp', e.target.checked)}
-                    className="w-4 h-4 text-violet-600 rounded border-slate-300 focus:ring-violet-500 cursor-pointer"
-                  />
-                  <label htmlFor="hasMstStamp" className="text-xs font-bold text-slate-700 cursor-pointer flex items-center gap-2 select-none">
-                    <span>Thêm dấu vuông (MST GeneTrust)</span>
-                    <span className="text-[11px] text-slate-500 font-normal">(Tự động chèn con dấu đỏ CTCP GeneTrust MST: 0111559308 dưới phần chữ ký)</span>
-                  </label>
+
+                {/* 2. 20GA Signatures */}
+                <div className="bg-emerald-50/50 p-5 rounded-2xl border border-emerald-200 space-y-4">
+                  <h4 className="text-xs font-extrabold text-emerald-900 uppercase tracking-wider border-b border-emerald-200 pb-2 flex items-center justify-between">
+                    <span>2. Thông Tin Ký Tên — Phiếu 20GA</span>
+                    <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] rounded font-mono">Phôi 20GA</span>
+                  </h4>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Ngày trả kết quả 20GA</label>
+                      <input
+                        type="date"
+                        value={formatDateForInput(formData.reportDate20GA)}
+                        onChange={(e) => handleInputChange('reportDate20GA', e.target.value)}
+                        className="w-full px-3.5 py-2 bg-white border border-emerald-300 rounded-xl text-slate-900 text-xs font-semibold"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Kiểm soát kết quả (20GA)</label>
+                      <input
+                        type="text"
+                        value={formData.checkerName20GA || ''}
+                        onChange={(e) => handleInputChange('checkerName20GA', e.target.value)}
+                        placeholder="TS. BS. Nguyễn Văn A"
+                        className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 text-xs font-semibold"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">Giám đốc (20GA)</label>
+                      <input
+                        type="text"
+                        value={formData.directorName20GA || ''}
+                        onChange={(e) => handleInputChange('directorName20GA', e.target.value)}
+                        placeholder="TS. Đặng..."
+                        className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 text-xs font-semibold"
+                      />
+                    </div>
+
+                    <div className="pt-2 flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="hasMstStamp20GA"
+                        checked={!!formData.hasMstStamp20GA}
+                        onChange={(e) => handleInputChange('hasMstStamp20GA', e.target.checked)}
+                        className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                      />
+                      <label htmlFor="hasMstStamp20GA" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
+                        Dấu vuông MST (20GA)
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -667,6 +919,12 @@ export default function ComboSampleDetailPage() {
                       className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all ${previewType === 'nipt' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
                     >
                       Phôi Kết Quả NIPT
+                    </button>
+                    <button
+                      onClick={() => { setPreviewType('phu'); setPreviewKey(Date.now()); }}
+                      className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all ${previewType === 'phu' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
+                    >
+                      Phôi Kết Quả Phụ NIPT
                     </button>
                     <button
                       onClick={() => { setPreviewType('20ga'); setPreviewKey(Date.now()); }}
