@@ -135,7 +135,7 @@ export default function EcoPackageListPage() {
     }
   };
 
-  const completedCount = samples.filter(s => s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || Boolean(s.cfDNA)).length;
+  const completedCount = samples.filter(s => s.status === 'completed').length;
   const pendingCount = samples.length - completedCount;
 
   return (
@@ -287,7 +287,7 @@ export default function EcoPackageListPage() {
                     samples.map((s) => {
                       const id = s._id || s.id;
                       const hasCfDna = Boolean(s.cfDNA);
-                      const isCompleted = s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || hasCfDna;
+                      const isCompleted = s.status === 'completed';
                       const hasOriginalFile = Boolean(s.originalPdfUrl);
                       const isUploadingThis = uploadingId === id;
                       const detailUrl = '/samples/eco/' + id;

@@ -135,7 +135,7 @@ export default function PackageThalassemiaPage() {
     }
   };
 
-  const completedCount = samples.filter(s => s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl)).length;
+  const completedCount = samples.filter(s => s.status === 'completed').length;
   const pendingCount = samples.length - completedCount;
 
   return (
@@ -266,7 +266,7 @@ export default function PackageThalassemiaPage() {
                     samples.map((s, idx) => {
                       const id = s._id || s.id;
                       const detailUrl = `/samples/thalassemia/${id}`;
-                      const isCompleted = s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl);
+                      const isCompleted = s.status === 'completed';
                       const hasOriginalFile = Boolean(s.originalPdfUrl);
                       const isUploadingThis = uploadingId === id;
 

@@ -139,7 +139,7 @@ export default function ComboPackageListPage() {
     }
   };
 
-  const completedCount = samples.filter(s => s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || Boolean(s.originalPdf20GAUrl)).length;
+  const completedCount = samples.filter(s => s.status === 'completed').length;
   const pendingCount = samples.length - completedCount;
 
   return (

@@ -92,11 +92,13 @@ export async function POST(req, { params }) {
         })
         .catch(cErr => console.warn('Background Cloudinary upload warning:', cErr?.message));
 
+      const currentStatus = sampleObj?.status === 'completed' ? 'completed' : 'pending';
+
       updateData = {
         packageType: 'Thalassemia',
         results: extracted.results || {},
         conclusion: extracted.conclusion || 'Chưa phát hiện biến thể gây bệnh/ có thể gây bệnh trên các vùng gen được khảo sát.',
-        status: 'extracted',
+        status: currentStatus,
         originalPdfName: file.name,
         originalPdfUrl: `/api/samples/${id}/original-pdf`,
         updatedAt: new Date().toISOString()
@@ -131,10 +133,12 @@ export async function POST(req, { params }) {
         })
         .catch(cErr => console.warn('Background Cloudinary upload warning:', cErr?.message));
 
+      const currentStatus = sampleObj?.status === 'completed' ? 'completed' : 'pending';
+
       updateData = {
         results20GA: extracted.results || {},
         conclusion20GA: extracted.conclusion || 'Chưa phát hiện biến thể gây bệnh/ có thể gây bệnh trên các vùng gen được khảo sát.',
-        status: 'extracted',
+        status: currentStatus,
         originalPdf20GAName: file.name,
         originalPdf20GAUrl: `/api/samples/${id}/original-pdf?target=20ga`,
         updatedAt: new Date().toISOString()
@@ -174,12 +178,14 @@ export async function POST(req, { params }) {
         })
         .catch(cErr => console.warn('Background Cloudinary upload warning:', cErr?.message));
 
+      const currentStatus = sampleObj?.status === 'completed' ? 'completed' : 'pending';
+
       updateData = {
         cfDNA: extracted.cfDNA || '',
         results: extracted.results || {},
         gbsResult: extracted.gbsResult || 'Âm tính',
         conclusion: extracted.conclusion || 'Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy cơ thấp phản ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp Nhiễm sắc thể được kiểm tra.',
-        status: 'extracted',
+        status: currentStatus,
         originalPdfName: file.name,
         originalPdfUrl: `/api/samples/${id}/original-pdf`,
         updatedAt: new Date().toISOString()

@@ -228,7 +228,7 @@ export default function MainDashboardPage() {
   ];
 
   // Status statistics
-  const completedSamplesCount = samples.filter(s => s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || Boolean(s.cfDNA)).length;
+  const completedSamplesCount = samples.filter(s => s.status === 'completed').length;
   const pendingSamplesCount = totalSamplesCount - completedSamplesCount;
   const extractedCount = completedSamplesCount;
   const pendingCount = pendingSamplesCount;
@@ -556,7 +556,7 @@ export default function MainDashboardPage() {
                       {samples.map((s) => {
                         const id = s._id || s.id;
                         const hasCfDna = Boolean(s.cfDNA);
-                        const isCompleted = s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl) || hasCfDna;
+                        const isCompleted = s.status === 'completed';
                         const isUploadingThis = uploadingId === id;
                         const formattedDob = formatDateVN(s.dob);
                         const hasOriginalFile = Boolean(s.originalPdfUrl);

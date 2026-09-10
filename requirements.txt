@@ -1,0 +1,20 @@
+# PDF Processing & Parsing
+pypdf>=6.0.0
+pypdfium2>=5.0.0
+pdfplumber>=0.11.0
+pdfminer.six
+
+# Image & OCR
+pillow>=10.0.0
+opencv-python-headless>=4.8.0
+easyocr>=1.7.0
+
+# Data Processing & Office formats
+pandas>=2.0.0
+openpyxl>=3.1.0
+python-docx>=1.0.0
+xlrd>=1.2.0
+
+# Web & Utilities
+requests>=2.30.0
+Flask>=3.0.0

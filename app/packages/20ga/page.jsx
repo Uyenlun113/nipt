@@ -135,7 +135,7 @@ export default function Package20GAPage() {
     }
   };
 
-  const completedCount = samples.filter(s => s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl)).length;
+  const completedCount = samples.filter(s => s.status === 'completed').length;
   const pendingCount = samples.length - completedCount;
 
   return (
@@ -285,7 +285,7 @@ export default function Package20GAPage() {
                   ) : (
                     samples.map((s) => {
                       const id = s._id || s.id;
-                      const isCompleted = s.status === 'completed' || s.status === 'extracted' || Boolean(s.originalPdfUrl);
+                      const isCompleted = s.status === 'completed';
                       const hasOriginalFile = Boolean(s.originalPdfUrl);
                       const isUploadingThis = uploadingId === id;
                       const detailUrl = '/samples/20ga/' + id;
