@@ -37,3 +37,5 @@ next-env.d.ts
 # uploads & temporary files
 /public/uploads/
 *.pdf
+!Phôi kết quả/*.pdf
+

@@ -16,6 +16,8 @@ export default function SampleDetailDispatcherPage() {
           const pkg = (data.packageType || '').toLowerCase();
           if (pkg.includes('+') || pkg.includes('combo')) {
             router.replace(`/samples/combo/${sampleId}`);
+          } else if (pkg.includes('thal')) {
+            router.replace(`/samples/thalassemia/${sampleId}`);
           } else if (pkg.includes('20ga') || pkg.includes('20')) {
             router.replace(`/samples/20ga/${sampleId}`);
           } else if (pkg.includes('7')) {

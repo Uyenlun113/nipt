@@ -5,6 +5,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 import NiptSample from '@/models/NiptSample';
 import { extractNiptPdfData } from '@/lib/pdf-parser';
 import { package20gaHandler } from '@/lib/packages/20ga';
+import { thalassemiaPackageHandler } from '@/lib/packages/thalassemia';
 import { uploadPdfToCloudinary } from '@/lib/cloudinary';
 import { fallbackStore } from '@/lib/store-fallback';
 import mongoose from 'mongoose';
@@ -59,12 +60,49 @@ export async function POST(req, { params }) {
     const packageType = sampleObj?.packageType || 'GeneT 7';
     const sampleCode = sampleObj?.sampleCode || id;
 
-    const is20GAUpload = target === '20ga' || (packageType === '20GA' && target !== 'nipt');
+    const referer = req.headers.get('referer') || '';
+    const is20GAUpload = target === '20ga' || (packageType === '20GA' && target !== 'nipt') || referer.includes('/20ga');
+    const isThalassemiaUpload = target === 'thalassemia' || (packageType.toLowerCase().includes('thal') && target !== 'nipt') || sampleCode.toUpperCase().startsWith('THAL') || referer.includes('/thalassemia');
 
     let extracted;
     let updateData;
 
-    if (is20GAUpload) {
+    if (isThalassemiaUpload) {
+      extracted = await thalassemiaPackageHandler.parsePdf(buffer);
+      try {
+        const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'original-pdfs');
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        fs.writeFileSync(path.join(uploadDir, `${sampleCode}_Thalassemia.pdf`), buffer);
+      } catch (fsErr) {
+        console.warn('Local PDF save warning:', fsErr?.message);
+      }
+
+      uploadPdfToCloudinary(buffer, file.name, `${sampleCode}_Thalassemia`)
+        .then(async (uploadRes) => {
+          if (uploadRes?.secure_url || uploadRes?.url) {
+            const cUrl = uploadRes.secure_url || uploadRes.url;
+            const cPid = uploadRes.public_id || '';
+            if (db) {
+              const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { sampleCode: id };
+              await NiptSample.findOneAndUpdate(query, { originalPdfUrl: cUrl, originalPdfPublicId: cPid });
+            }
+          }
+        })
+        .catch(cErr => console.warn('Background Cloudinary upload warning:', cErr?.message));
+
+      updateData = {
+        packageType: 'Thalassemia',
+        results: extracted.results || {},
+        conclusion: extracted.conclusion || 'Chưa phát hiện biến thể gây bệnh/ có thể gây bệnh trên các vùng gen được khảo sát.',
+        status: 'extracted',
+        originalPdfName: file.name,
+        originalPdfUrl: `/api/samples/${id}/original-pdf`,
+        updatedAt: new Date().toISOString()
+      };
+
+    } else if (is20GAUpload) {
       // 1. Extract 20GA data
       extracted = await package20gaHandler.parsePdf(buffer);
 

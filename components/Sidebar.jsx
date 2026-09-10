@@ -24,6 +24,7 @@ export default function Sidebar({ selectedPackage, userRole }) {
     { id: 'GeneT Plus', label: 'GeneT Plus (k mở rộng)', icon: Dna, color: 'text-purple-600', href: '/packages/plus' },
     { id: 'GeneT Twins', label: 'GeneT Twins (Song thai)', icon: Dna, color: 'text-rose-600', href: '/packages/twins' },
     { id: '20GA', label: '20GA (20 Gen lặn)', icon: Dna, color: 'text-emerald-600', href: '/packages/20ga' },
+    { id: 'Thalassemia', label: 'Sàng lọc Thalassemia', icon: Dna, color: 'text-rose-600', href: '/packages/thalassemia' },
     { id: 'Combo', label: 'Gói Combo (NIPT + 20GA)', icon: Layers, color: 'text-violet-600', href: '/packages/combo' },
   ];
 

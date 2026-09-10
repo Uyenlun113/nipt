@@ -57,6 +57,7 @@ export default function CreateSamplePage() {
   const getPackageListRoute = (packageType) => {
     const pkg = (packageType || '').toLowerCase();
     if (pkg.includes('+') || pkg.includes('combo')) return '/packages/combo';
+    if (pkg.includes('thal')) return '/packages/thalassemia';
     if (pkg.includes('20ga') || pkg.includes('20')) return '/packages/20ga';
     if (pkg.includes('7')) return '/packages/genet7';
     if (pkg.includes('23')) return '/packages/genet23';
@@ -301,6 +302,7 @@ export default function CreateSamplePage() {
                     <option value="GeneT Plus">GeneT Plus (k mở rộng)</option>
                     <option value="GeneT Twins">GeneT Twins (Song thai)</option>
                     <option value="20GA">20GA (20 Bệnh Gen Lặn)</option>
+                    <option value="Thalassemia">Sàng lọc Thalassemia (Gen Lặn)</option>
                     <option disabled>── GÓI COMBO (NIPT + 20GA) ──</option>
                     <option value="GeneT 7 + 20GA">GeneT 7 + 20GA</option>
                     <option value="GeneT 23 + 20GA">GeneT 23 + 20GA</option>
