@@ -126,6 +126,35 @@ export default function GeneTPlusSampleDetailPage() {
     });
   };
 
+  const handleMicroChange = (originalIdx, field, value) => {
+    setFormData((prev) => {
+      const currentList = prev.results?.microdeletions || [];
+      const newMicros = [...currentList];
+      while (newMicros.length <= originalIdx) {
+        const stdItem = MICRO_LIST[newMicros.length] || {};
+        newMicros.push({
+          name: stdItem.name,
+          ref: '< 5%',
+          value: '0.00%',
+          risk: 'Nguy cơ thấp',
+          result: 'Không phát hiện'
+        });
+      }
+      newMicros[originalIdx] = {
+        ...newMicros[originalIdx],
+        name: MICRO_LIST[originalIdx]?.name || newMicros[originalIdx]?.name,
+        [field]: value
+      };
+      return {
+        ...prev,
+        results: {
+          ...prev.results,
+          microdeletions: newMicros
+        }
+      };
+    });
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setMsg({ type: '', text: '' });
@@ -646,22 +675,35 @@ export default function GeneTPlusSampleDetailPage() {
                           <td className="py-2 px-3 text-slate-400 font-mono">{idx + 1}</td>
                           <td className="py-2 px-3 font-bold text-slate-900">{item.name}</td>
                           <td className="py-2 px-3 text-center font-mono text-slate-500">{item.ref}</td>
-                          <td className="py-2 px-3 text-center font-mono font-bold text-purple-900">{item.value}</td>
-                          <td className="py-2 px-3 text-center">
-                            <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${(item.risk || '').includes('cao')
-                              ? 'bg-rose-100 text-rose-900'
-                              : 'bg-purple-100 text-purple-900'
-                              }`}>
-                              {item.risk}
-                            </span>
+                          <td className="py-1.5 px-3 text-center">
+                            <input
+                              type="text"
+                              value={item.value || ''}
+                              onChange={(e) => handleMicroChange(item.originalIdx, 'value', e.target.value)}
+                              className="w-24 px-2 py-1 bg-purple-50 hover:bg-white text-purple-900 border border-purple-200 focus:border-purple-500 rounded text-center font-mono font-bold text-xs focus:outline-none transition-all shadow-xs"
+                            />
                           </td>
-                          <td className="py-2 px-3 text-center">
-                            <span className={`px-2 py-0.5 rounded text-[11px] font-bold border ${((item.result || '').toLowerCase().includes('phát hiện') && !(item.result || '').toLowerCase().includes('không phát hiện')) || (item.risk || '').toLowerCase().includes('cao')
-                              ? 'bg-rose-100 text-rose-900 border-rose-200'
-                              : 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                              }`}>
-                              {item.result}
-                            </span>
+                          <td className="py-1.5 px-3 text-center">
+                            <input
+                              type="text"
+                              value={item.risk || ''}
+                              onChange={(e) => handleMicroChange(item.originalIdx, 'risk', e.target.value)}
+                              className={`w-32 px-2 py-1 border rounded text-center font-bold text-[11px] focus:outline-none transition-all shadow-xs ${(item.risk || '').toLowerCase().includes('cao')
+                                ? 'bg-rose-50 text-rose-900 border-rose-300 focus:border-rose-500'
+                                : 'bg-purple-50 text-purple-900 border-purple-200 focus:border-purple-500'
+                                }`}
+                            />
+                          </td>
+                          <td className="py-1.5 px-3 text-center">
+                            <input
+                              type="text"
+                              value={item.result || ''}
+                              onChange={(e) => handleMicroChange(item.originalIdx, 'result', e.target.value)}
+                              className={`w-36 px-2 py-1 border rounded text-center font-bold text-[11px] focus:outline-none transition-all shadow-xs ${((item.result || '').toLowerCase().includes('phát hiện') && !(item.result || '').toLowerCase().includes('không phát hiện')) || (item.risk || '').toLowerCase().includes('cao')
+                                ? 'bg-rose-50 text-rose-900 border-rose-300 focus:border-rose-500'
+                                : 'bg-emerald-50 text-emerald-800 border-emerald-300 focus:border-emerald-500'
+                                }`}
+                            />
                           </td>
                         </tr>
                       ))}
