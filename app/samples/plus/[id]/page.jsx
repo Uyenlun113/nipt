@@ -19,6 +19,7 @@ import {
   Dna,
   FileText
 } from 'lucide-react';
+import { MICRO_LIST } from '@/lib/constants/micro-list';
 
 import { formatDateVN, formatDateForInput } from '@/lib/date-utils';
 
@@ -151,6 +152,38 @@ export default function GeneTPlusSampleDetailPage() {
     }
   };
 
+  const handleConfirmAndDeliver = async () => {
+    setSaving(true);
+    setMsg({ type: '', text: '' });
+    try {
+      const todayStr = formatDateVN(new Date().toISOString().split('T')[0]);
+      const updatedData = {
+        ...formData,
+        status: 'completed',
+        reportDate: formData.reportDate || todayStr
+      };
+
+      const res = await fetch(`/api/samples/${sampleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+      });
+
+      if (res.ok) {
+        setFormData(updatedData);
+        setMsg({ type: 'success', text: 'Đã xác nhận và trả kết quả mẫu GeneT Plus thành công!' });
+        setPreviewKey(Date.now());
+      } else {
+        const d = await res.json();
+        throw new Error(d.error || 'Lỗi khi xác nhận trả kết quả');
+      }
+    } catch (err) {
+      setMsg({ type: 'error', text: err.message });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handlePdfUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -209,7 +242,20 @@ export default function GeneTPlusSampleDetailPage() {
     { key: 't22', label: 'Trisomy 22' }
   ];
 
-  const microdeletionsList = formData?.results?.microdeletions || [];
+  const rawMicroList = formData?.results?.microdeletions || [];
+  const microdeletionsList = MICRO_LIST.map((stdItem, idx) => {
+    const item = rawMicroList[idx] || {};
+    return {
+      ...item,
+      name: stdItem.name,
+      ref: item.ref || '< 5%',
+      value: item.value || '0.00%',
+      risk: item.risk || 'Nguy cơ thấp',
+      result: item.result || 'Không phát hiện',
+      originalIdx: idx
+    };
+  });
+
   const filteredMicros = microdeletionsList.filter(item =>
     (item.name || '').toLowerCase().includes(microSearch.toLowerCase())
   );
@@ -239,7 +285,7 @@ export default function GeneTPlusSampleDetailPage() {
                       Gói 23 NST + 122 Vi Mất Lặp Đoạn
                     </span>
                   </h1>
-                  {(formData?.status === 'completed' || formData?.status === 'extracted' || formData?.originalPdfUrl || formData?.cfDNA) ? (
+                  {formData?.status === 'completed' ? (
                     <span className="px-3 py-1 bg-emerald-50 text-emerald-800 text-xs font-extrabold rounded-lg border border-emerald-200 flex items-center gap-1.5 shadow-xs">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                       Đã trả kết quả
@@ -258,26 +304,33 @@ export default function GeneTPlusSampleDetailPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              {(formData?.status === 'completed' || formData?.status === 'extracted' || formData?.originalPdfUrl || formData?.cfDNA) ? (
-                <div className="flex items-center gap-2">
-                  <a
-                    href={`/api/samples/${sampleId}/original-pdf`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 border border-indigo-200 shadow-xs"
-                    title={`Xem/Tải file PDF gốc đối chiếu: ${formData?.originalPdfName || 'File PDF'}`}
-                  >
-                    <FileText className="w-4 h-4 text-indigo-600" />
-                    <span>Xem File Gốc Đối Chiếu</span>
-                  </a>
-                </div>
-              ) : (
-                <label className="px-4 py-2 bg-purple-50 text-purple-800 hover:bg-purple-100 rounded-xl text-xs font-extrabold cursor-pointer border border-purple-300 transition-all flex items-center gap-2">
-                  <Upload className="w-4 h-4" />
-                  <span>{uploading ? 'Đang phân tích...' : 'Upload File PDF Kết Quả'}</span>
-                  <input type="file" accept=".pdf" className="hidden" onChange={handlePdfUpload} disabled={uploading} />
-                </label>
+              {formData?.originalPdfUrl && (
+                <a
+                  href={`/api/samples/${sampleId}/original-pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 border border-indigo-200 shadow-xs"
+                  title={`Xem/Tải file PDF gốc đối chiếu: ${formData?.originalPdfName || 'File PDF'}`}
+                >
+                  <FileText className="w-4 h-4 text-indigo-600" />
+                  <span>Xem File Gốc</span>
+                </a>
               )}
+
+              <label className="px-4 py-2 bg-purple-50 text-purple-800 hover:bg-purple-100 rounded-xl text-xs font-extrabold cursor-pointer border border-purple-300 transition-all flex items-center gap-2">
+                <Upload className="w-4 h-4" />
+                <span>{uploading ? 'Đang đọc PDF...' : (formData?.originalPdfUrl ? 'Đọc Lại / Tải Lại PDF' : 'Upload File PDF Kết Quả')}</span>
+                <input type="file" accept=".pdf" className="hidden" onChange={handlePdfUpload} disabled={uploading} />
+              </label>
+
+              <button
+                onClick={handleConfirmAndDeliver}
+                disabled={saving}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 shadow-md disabled:opacity-50"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>{formData?.status === 'completed' ? 'Cập Nhật Trả Kết Quả' : 'Xác Nhận & Trả Kết Quả'}</span>
+              </button>
             </div>
           </div>
 

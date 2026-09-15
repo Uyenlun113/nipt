@@ -284,6 +284,7 @@ export default function PackageThalassemiaPage() {
                             </Link>
                             <span className="block text-xs text-slate-500 font-medium mt-0.5">
                               {formatDateVN(s.dob) ? ('Ngày sinh: ' + formatDateVN(s.dob)) : ''}
+                              {s.gender ? ` • Giới tính: ${s.gender}` : ''}
                             </span>
                           </td>
                           <td className="py-4 px-4 text-slate-700 font-medium">
@@ -311,7 +312,7 @@ export default function PackageThalassemiaPage() {
 
                           <td className="py-4 px-4 text-right">
                             <div className="flex items-center justify-end gap-2">
-                              {hasOriginalFile ? (
+                              {hasOriginalFile && (
                                 <a
                                   href={`/api/samples/${id}/original-pdf`}
                                   target="_blank"
@@ -322,24 +323,26 @@ export default function PackageThalassemiaPage() {
                                   <FileText className="w-4 h-4 text-indigo-600" />
                                   <span>File gốc</span>
                                 </a>
-                              ) : (
-                                <label
-                                  className={"px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all " + (isUploadingThis
-                                      ? 'bg-amber-100 text-amber-900'
-                                      : 'bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-300')}
-                                  title="Tải lên file PDF kết quả từ máy"
-                                >
-                                  <Upload className="w-4 h-4" />
-                                  <span>{isUploadingThis ? 'Đang đọc...' : 'Upload PDF'}</span>
-                                  <input
-                                    type="file"
-                                    accept=".pdf"
-                                    className="hidden"
-                                    onChange={(e) => handleFileUpload(id, e)}
-                                    disabled={isUploadingThis}
-                                  />
-                                </label>
                               )}
+
+                              <label
+                                className={`px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer flex items-center gap-1.5 transition-all ${
+                                  isUploadingThis
+                                    ? 'bg-amber-100 text-amber-900'
+                                    : 'bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-300'
+                                }`}
+                                title="Tải lên / Đọc lại file PDF kết quả từ máy"
+                              >
+                                <Upload className="w-4 h-4" />
+                                <span>{isUploadingThis ? 'Đang đọc...' : (hasOriginalFile ? 'Đọc lại PDF' : 'Upload PDF')}</span>
+                                <input
+                                  type="file"
+                                  accept=".pdf"
+                                  className="hidden"
+                                  onChange={(e) => handleFileUpload(id, e)}
+                                  disabled={isUploadingThis}
+                                />
+                              </label>
 
                               <Link
                                 href={detailUrl}

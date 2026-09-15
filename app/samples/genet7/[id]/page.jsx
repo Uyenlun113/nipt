@@ -121,6 +121,29 @@ export default function GeneT7SampleDetailPage() {
     }
   };
 
+  const handleConfirmAndDeliver = async () => {
+    try {
+      setSaving(true);
+      setMsg({ type: '', text: '' });
+      const updatedData = { ...formData, status: 'completed' };
+      const res = await fetch(`/api/samples/${sampleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Lỗi cập nhật');
+
+      setFormData(updatedData);
+      setMsg({ type: 'success', text: 'Đã xác nhận và chuyển trạng thái sang Đã trả kết quả!' });
+      setPreviewKey(Date.now());
+    } catch (err) {
+      setMsg({ type: 'error', text: err.message || 'Lỗi khi lưu và chuyển trạng thái trả kết quả' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -247,7 +270,7 @@ export default function GeneT7SampleDetailPage() {
                   <span className="px-3 py-1 bg-teal-100 text-teal-900 font-mono font-extrabold text-sm rounded-lg border border-teal-200">
                     {formData.sampleCode}
                   </span>
-                  {(formData.status === 'completed' || formData.status === 'extracted' || formData.originalPdfUrl || formData.cfDNA) ? (
+                  {formData.status === 'completed' ? (
                     <span className="px-3 py-1 bg-emerald-50 text-emerald-800 text-xs font-extrabold rounded-lg border border-emerald-200 flex items-center gap-1.5 shadow-xs">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                       Đã trả kết quả
@@ -266,7 +289,7 @@ export default function GeneT7SampleDetailPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              {(formData.status === 'completed' || formData.status === 'extracted' || formData.originalPdfUrl || formData.cfDNA) && (
+              {formData.originalPdfUrl && (
                 <a
                   href={`/api/samples/${sampleId}/original-pdf`}
                   target="_blank"
@@ -594,6 +617,19 @@ export default function GeneT7SampleDetailPage() {
                 >
                   <Save className="w-4 h-4" />
                   <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu GeneT 7'}</span>
+                </button>
+
+                <button
+                  onClick={handleConfirmAndDeliver}
+                  disabled={saving}
+                  className={`px-5 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center gap-2 ${
+                    formData?.status === 'completed'
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                      : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white'
+                  }`}
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>{formData?.status === 'completed' ? 'Cập Nhật Trả Kết Quả' : 'Xác Nhận & Trả Kết Quả'}</span>
                 </button>
 
                 <button

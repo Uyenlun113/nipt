@@ -22,6 +22,7 @@ export default function CreateSamplePage() {
     idCard: '',
     phone: '',
     address: '',
+    gender: 'Nữ',
     gestationalAge: '12 tuần 0 ngày',
     pregnancyType: 'Đơn thai',
     packageType: 'GeneT 7',
@@ -239,7 +240,20 @@ export default function CreateSamplePage() {
                   </select>
                 </div>
 
-                <div className="md:col-span-3">
+                <div>
+                  <label className="block text-sm font-bold text-slate-800 mb-1.5">Giới tính</label>
+                  <select
+                    name="gender"
+                    value={formData.gender || 'Nữ'}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 focus:bg-white transition-all"
+                  >
+                    <option value="Nữ">Nữ</option>
+                    <option value="Nam">Nam</option>
+                  </select>
+                </div>
+
+                <div className="md:col-span-2">
                   <label className="block text-sm font-bold text-slate-800 mb-1.5">Địa chỉ liên hệ</label>
                   <input
                     type="text"

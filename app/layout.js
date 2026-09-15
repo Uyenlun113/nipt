@@ -8,6 +8,8 @@ const plusJakarta = Plus_Jakarta_Sans({
   variable: '--font-plus-jakarta',
 });
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Hệ thống Quản lý Mẫu NIPT & Phôi Kết quả GeneTrust',
   description: 'Quản lý thông tin thai phụ, tự động đọc cfDNA và kết quả từ PDF, xuất phôi kết quả GeneTrust y khoa',

@@ -1,0 +1,418 @@
+
+--- PAGE 1 ---
+® viencongnghedna.com.vn NIP TOTAL
+(ViLAS Wea 335)
+PHIEU KET QUA XET NGHIEM DI TRUYEN
+SANG LQC TRUGC SINH KHONG XAM LAN
+Họ tên: DƯƠNG THỊ QUYÊN Mii số XN: P'-26-26B02345
+Giới tính: Nữ Năm sinh: 16/01/1997
+Địa chỉ: Số 62, Ngõ 97 Thái Thịnh, Hà Nội Số CMND: 030197007078
+Điện thoại: Bic sỹ chỉ định:
+Thời gian lấy mẫu: 11/09/2026 Thời gian nhận mẫn: 11/09/2026
+Loại mẫu: Máu Tình trạng mẫu: Đạt
+Tuổi thai: 11 tuần 86 Thai: 1
+Triện chứng lâm sàng; Chấn đoán ban ddu: Thai 11 tuần
+Tiền sử gia đình: Không ghi nhận bất thường
+Phuong pháp XN: Phân tích NIPT TOTAL bằng cách sử dụng cfDNA (DNA tự do) được tách chiết từ
+
+máu mẹ, tạo thư viện và giải trình tự bộ gen bằng công nghệ Giải trình tự thế hệ mới để
+xác định nguy cơ lệch bội nhiễm sắc thể của thai.
+
+“Thiết bị sử dụng: hệ thống giải trình tự gen thế hệ mới DNBSEQ-G50RS và hệ thống
+chuẩn bị thư viện tự động MGISP-100.
+
+Thông tin héa chất * MGIEasy Circulating DNA Isolation Kit đạt tiêu chuẩn ISO 13485:2016.
+
+thương mại sử dụng: . . 2
+* MGIEasy Cell-free DNA Library Prep Set đạt tiêu chuẩn 1SO13485:2016.
+
+* Universal Sequencing Reaction Kit (Model G50 SM FCL SE50) đạt tiêu chuẩn CE- IVD,
+ISO13485:2016.
+
+Gói NIPT: NIPT Plus 122 (Phát hiện lệch bội 23 cặp Nhiễm sắc thé và 122 hội chứng vi mắt
+lặp đoạn nhiễm sắc thể)
+Kết quả: cfDNA(%): 14.84 QC: Passed
+i FR iE Khoảng giá trị Giá trị Fics
+Léch bội phô biên thám cit phân tích Nguy cơ Két quả
+HC Down (Trisomy 21) -3<Z-score <3 -0,940 Nguy cơ thấp Không phát hiện
+HC Edwards (Trisomy 18) -3<Z-score <3 0,750 Nguy cơ thấp Không phát hiện
+HƠC Patau (Trisomy 13) -3<Z-score <3 -0,681 Nguy cơ thấp Không phát hiện
+hơn _ Khoảng giá trị Giá trị
+Léch bội NST giới tinh thio chiến phân tích Nguy cơ Kết quả
+HC Turner (XO) -3<Z-score <3 0,569 Nguy cơ thấp Không phát hiện
+HC Klinefelter (XXY) -3<Z-score<3 0,569 Nguy cơ thấp Không phát hiện
+
+Phòng Xét nghiệm Di truyền Y học Viện Công Nghệ DNA sử dụng hệ thồng giải trình tự gen thế hệ mới (NGS) được chuyển giao
+công nghệ và phần mềm phân tích tin sinh độc quyền từ công ty MGI tech ( Thuộc tập đoàn BGI)
+
+E--C--T--HƯƠỉ=-=-=-=------"-"-"-"r-rrnnnnn nh... da... ÍẬE
+ee EE |
+
+
+--- PAGE 2 ---
+® viencongnghedna.com.vn
+
+Errors
+
+Họ tôn: DƯƠNG THỊ QUYÊN Mã số XN: P'-26-26B02345
+HC Jacobs (XYY) -3<Z-score <3 0,569 Nguy cơ thấp Không phát hiện
+HC siêu nữ (XXX) -3< Z-score <3 0,569 Nguy cơ thấp Không phát hiện
+Lệch bội NST khác Khoảng gid trj | Giátr Nguy cơ Kết quả
+
+A
+tham chiều
+
+phân tích
+
+Trisomy 1 -3<Z-score <3 1,560 Nguy cơ thấp Không phát hiện
+Trisomy 2 -3< Z-score <3 0,189 Nguy cơ thấp Không phát hiện
+Trisomy 3 -3<Z-score <3 0,314 Nguy cơ thấp Không phát hiện
+Trisomy 4 -3< Z-score <3 -0,119 Nguy cơ thấp Không phát hiện
+Trisomy 5 -3< Z-score < 3 0,093 Nguy cơ thấp Không phát hiện
+Trisomy 6 -3<Z-score <3 -0,254 Nguy cơ thấp Không phát hiện
+Trisomy 7 -3<Z-score <3 -0,965 Nguy cơ thấp Không phát hiện
+Trisomy 8 -3<7Z-score <3 -0,082 Nguy cơ thấp Không phát hiện
+Trisomy 9 -3<Z-score <3 -0,609 Nguy co thấp Không phát hiện
+Trisomy 10 -3<Z-score <3 -0,894 Nguy cơ thấp Không phát hiện
+Trisomy 11 -3<Z-score <3 0,749 Nguy cơ thấp Không phát hiện
+Trisomy 12 -3<Z-score <3 0,662 Nguy cơ thấp Không phát hiện
+Trisomy 14 -3<Z-score <3 0,171 Nguy cơ thấp Không phát hiện
+Trisomy 15 -3< Z-score < 3 2,077 Nguy cơ thấp Không phát hiện
+Trisomy 16 -3< Z-score <3 -1,730 Nguy cơ thấp Không phát hiện
+Trisomy 17 -3<Z-score <3 0,907 Nguy cơ thấp Không phát hiện
+Trisomy 19 -3<Z-score <3 -1,361 Nguy cơ thấp Không phát hiện
+Trisomy 20 -3< Z-score <3 -0,020 Nguy cơ thấp Không phát hiện
+Trisomy 22 -3<Z-score <3 0,731 Nguy cơ thấp Không phát hiện
+
+4i chứng vì môi —— TH
+
+AI wens | wa
+ty deletion <5% 0,91% Nguy cơ thấp Không phát hiện
+— dels <5% 0,29% Nguy cơ thấp Không phát hiện
+Chromosome 2p12-p11.2 deletion <5% 0.71% Nguy cơ th ấn Không phát hiện
+syndrome
+
+Chromosome 2q duplication <5% 0,35% Nguy cơ thấp Không phát hiện
+A an satel <5% 0,19% Nguy co thấp Không phát hiện
+Split-hand/foot malformation 5 <5% 0,09% Nguy cơ thấp Không phát hiện
+
+Phong Xét nghiệm Di truyền Y học Viện Công Nghệ DNA sử dụng hệ thống giải trình tự gen thé hệ mới (NGS) được chuyển giao
+công nghệ va phan mềm phân tích tin sinh độc quyền từ công ty MGI tech ( Thuộc tập đoàn BG)
+
+—eeee ee ma ggN NẠI
+
+
+--- PAGE 3 ---
+@ viencongnghedna.com.vn
+
+(VitAs wea 35)
+
+&NI>Tor2:
+
+Họ tên: DƯƠNG THỊ QUYÊN Mã số XN: P'-26-26B02345
+TH LG <5% 092% | Nguycơthấp | Không phát hiện
+Holoprosencephaly 6 <5% 0,74% Nguy cơ thấp Không phát hiện
+lu se. Askin xổ % 1,42% Nguy cơ thấp Không phát hiện
+Distal ng "Go <5% 0.35% Khoyiet thấp Không phát hiện
+Chromosome 3q duplication <5% 0,83% Nguy cơ thấp Không phát hiện
+Dandy-Walker syndrome <5% 1,25% Nguy co thấp Không phát hiện
+CHAE DƯ deletign <5% 0,38% Nguy cơ thấp Không phát hiện
+Chromosome 4p duplication <5% 0,22% Nguy co thấp Không phát hiện
+Distal deletion of chromosome 4q <5% 0,26% Nguy cơ thấp Không phát hiện
+Distal Ee of chromosome <5% 0.26% neo ấp Không phát hiện
+a HH <5% 0,23% Nguy cơ thấp Không phát hiện
+Chromosome 5p duplication <5 7% 0,98% Nguy cơ thấp Không phát hiện
+Chromosome 5p13 duplication <5% 1,02% Nguy co thấp Không phát hiện
+Chromosome nu Sasi <5% 0,60% Nguy cơ thấp Không phát hiện
+NI la Sư Ha <5% 090% | Nguycơthấp | Không pháthiện
+Ga lets <5% 2,19% Nguy cơ thấp Không phát hiện
+Chromosome 6p deletion <5% 0,25% Nguy cơ thấp Không phát hiện
+HH ng Sal <5% 0,11% Nguy cơ thấp Không phát hiện
+er deletion <5% 0,35% Nguy co thấp Không phát hiện
+——  ả Cư Na <5% 0,90% Nguy cơ thấp Không phát hiện
+i deletion <5% 1,48% Nguy cơ thấp Không phát hiện
+Chromosome 7q deletion <5% 0,23% Nguy cơ thấp Không phát hiện
+ns isto <5% 0,02% Nguy cơ thấp Không phát hiện
+ng deletion <5% 1,06% | Nguycơthấp | Không phát hiện
+
+Phòng Xét nghiệm Di truyền Y học Viện Công Nghệ DNA sử dụng hệ thong giải trình tự gen thế hệ mới (NGS) được chuyển giao
+
+công nghệ và phần mềm phân tích tin sinh độc quyền từ công ty MGI tech ( Thuộc tập đoàn BGI)
+
+
+--- PAGE 4 ---
+@ viencongnghedna.com.vn
+Ñ , (Viasweass)
+
+Ho tên: DUONG THI QUYEN Mii số XN: P'-26-26B02345
+
+Chromosome 8p duplication <5% 0,29% Nguy cơ thấp Không phát hiện
+p guy
+Chromosome 8q duplication <5% 0,21% Nguy cơ thấp Không phát hiện
+Bi <5% 1,16% Nguy cơ thấp Không phát hiện
+Chromosome 9p duplication <5% 0,66% Nguy co thấp Không phát hiện
+Chromosome 9p deletion syndrome <5% 0,66% Nguy cơ thấp Không phát hiện
+Chromosome 10p duplication <5% 0,27% Nguy cơ thấp Không phát hiện
+ng I deletion <5% 0,01% Nguy co thấp Không phát hiện
+lu nu <5% 1,80% Nguy cơ thấp Không phát hiện
+Chikicionic Oh <5 % 0,86% Nguy cơ thấp Không phát hiện
+duplication syndrome - ey
+Qu
+pg delattan <5% 1,74% Nguy cơ thấp Không phát hiện
+WAGRO syndrome <5% 0,20% Nguy cơ thấp Không phát hiện
+y guy
+
+Jacobsen syndrome <5% 1,14% Nguy co thấp Không phát hiện
+Chromosome 12p duplication <5% 1,13% Nguy cơ thấp Không phát hiện
+Chromosome 13q14 deletion <5% 0,29% Nguy cơ thấp Không phát hiện
+
+q guy p
+HH Sein <5% 039% | Nguycơthấp | Không phát hiện
+Chromosome 14q duplication <5% 0,17% Nguy cơ thấp Không phát hiện
+Proximal sr chromosome <59 037% Nguy co thấp Không phát hiện
+Chromosome 14q32 duplication <5% 0,03% Nguy cơ thấp Không phát hiện
+as i <5% 3,23% Nguy cơ thấp Không phát hiện
+MR frog Hela <5% 035% | Nguycơthấp | Không phát hiện
+Distal deletion of chromosome 15q <5% 0,97% Nguy cơ thấp Không phát hiện
+Levy-Shanske syndrome <5% 0,97% Nguy cơ thấp Không phát hiện
+RR hy Gh <5% 0,97% Nguy cơ thấp Không phát hiện
+a SEA <5% 1,41% Nguy cơ thấp Không phát hiện
+hung ai <5% 127% | Nguycơthấp | Không phát hiện
+Chromosome 17p duplication <5% 0,23% Nguy co thấp Không phát hiện
+
+Phòng Xét nghiệm Di truyền Y học Viện Công Nghệ DNA sử dụng hệ thống giải trình tự gen thế hệ mới (NGS) được chuyển giao
+công nghệ và phan mềm phân tích tin sinh độc quyền từ công ty MGI tech ( Thuộc tập đoàn BGI)
+II 2/00/000 2 0000: N00 000 an G GHI
+= eee << TT
+
+
+--- PAGE 5 ---
+@&NI>T-rA.
+
+@ viencongnghedna.com.vn
+
+(Viths wea 735)
+
+\B\ > == /E‡
+
+Họ tên: DƯƠNG THỊ QUYÊN Mii số XN: P'-26-26B02345
+CHOHBIRE togdogoig <5% 0,31% Nguy cơ thấp Không phát hiện
+syndrome
+Chromosome 18q deletion & o Ầ . ie, foi
+syhidroiie <5% 0,44% Nguy cơ thập Không phát hiện
+Chromosome 20p duplication <5% 0,12% Nguy cơ thấp Không phát hiện
+Cat-Eye syndrome <5% 1,75% Nguy cơ thấp Không phát hiện
+Hội chứng vi mất, Khoảng giá trị Giá trị Nguy tứ Kết quá
+lặp đoạn NST (> 5Mb) tham chiéu phân tích
+Chromosome Ip31 duplication é 4 £ i EE
+syndroife <7% 1,31% Nguy cơ thập Không phát hiện
+21.3 i £ A PORTE
+tapi p21, 2048598 <7% 2,49% Nguy cơ thập Không phát hiện
+syndrome
+Chromosome 1p36 deletion ˆ 5 , x A i Lia
+syadeotne <7% 0,40% Nguy cơ thập Không phát hiện
+2pl6.1- i h x + hia
+0 eeg2pond FL de <7% 2,57% Nguy cơ thập Không phát hiện
+syndrome
+h 4 icati x A Egan
+ShamnosineOgrL.] egies <7% 0,15% Nguy co thap Không phat hiện
+syndrome
+Chromosome 2q33.1 deletion " 5 H 7 fied
+syiidioe <7% 0,52% Nguy cơ thập Không phát hiện
+nu <7% 3,21% Nguy cơ thấp Không phát hiện
+syndrome
+3q29 icati 4 - By ges
+Chante 1¢% daplicgon <7% 0,82% Nguy cơ thập Không phát hiện
+syndrome
+Chromosome 3q29 deletion b 6 £ a 7 y th
+syhdiome <7% 0,82% Nguy cơ thập Không phát hiện
+Wolf-Hirschhorn syndrome <7% 0,63% Nguy cơ thấp Không phát hiện
+Chromosome 4q32.1-q32.2 . i A Aria
+tiplicationisyndrome <7% 0,78% Nguy co thap Không phat hiện
+Cri-du-chat syndrome <7 % 0,79% Nguy cơ thấp Không phát hiện
+Chromosome 5q12 deletion i " ñ i An 5
+eyhidtoms <7% 1,65% Nguy cơ thập Không phát hiện
+CHDM <7 % 0,21% Nguy cơ thấp Không phát hiện
+11. i x % Hp fsa
+Chominmnts Rl Lữ defstion <7% 1,45% Nguy cơ thập Không phát hiện
+syndrome
+hi 11.23 duplicati 1 2 Be 15a
+Sm sĩ Mpsation <7% 1,45% Nguy cơ thập Không phát hiện
+syndrome
+Chromosome 8p23.1 deletion 6 TA Ầ 5 Gi Toa
+syndionie <7 % 0,29% Nguy cơ thập Không phát hiện
+
+Phòng Xét nghiệm Di truyền Y học Viện Công Nghệ DNA sử dụng hệ thống giải trình tự gen thế hệ mới (NGS) được chuyển giao
+công nghệ và phan mềm phân tích tin sinh độc quyền từ công ty MGI tech ( Thuộc tập đoàn BGI)
+
+1—Á#=zZ~2=]-]===9-9-7-]7---7--------=--2=:-]e-eơươg=<“=====°=-------9-7---O-2u ai
+[es ea SS Ee Se es EE
+
+
+--- PAGE 6 ---
+® viencongnghedna.com.vn ¢ NIP TOTAL
+Họ tên: DƯƠNG THỊ QUYÊN P'-26-26B02345
+Cheomussaniipes. | Agglestion <7% 029% | Nguycothdp | Không phát hiện
+syndrome ẽ 1
+i = he <7% 0,87% Nguy cơ thấp Không phát hiện
+Chnompsene En 1 deities <7% 0,87% Nguy cơ thấp Không phát hiện
+syndrome guy I
+Langer-Giedion syndrome <7% 0,25% Nguy co thấp Không phát hiện
+Chigmortas SQA B.dsletivn <7% 1,54% Nguy cơ thi Không phát hiện
+syndrome ph p
+DiGeorge syndrome 2 <7% 1,08% Nguy cơ thấp Không phát hiện
+WAGR syndrome <7% 0,30% Nguy cơ thấp Không phát hiện
+Potocki-Shaffer syndrome <7% 0,07% Nguy cơ thấp Không phát hiện
+mm aa <7% 0,32% Nguy cơ thấp Không phát hiện
+tips lepio.) gogBog <7 % 0,59% Nguy cơ thấp Không phát hiện
+syndrome suy
+Chromosome 12q14 microdeletion <7% 0.84% Nguy co thấp Không phát hiện
+syndrome ỹ
+Distal deletion of chromosome <7% 1,91% Nguy cơ thấp Không phát hiện
+Frias syndrome <7% 1,10% Nguy cơ thấp Không phát hiện
+Prader-Willi syndrome <7% 2,11% Nguy co thấp Không phát hiện
+Angelman syndrome <7% 2,11% Nguy cơ thấp Không phát hiện
+EE  N 9aisđah <7% 1,96% Nguy cơ thấp Không phát hiện
+tc hee <7% 0,04% Nguy cơ thấp Không phát hiện
+HCD <7% 1,06% Nguy cơ thấp Không phát hiện
+— wy Sele <7% 4,61% Nguy cơ thấp Không phát hiện
+12.2-p11.2 x A EU X
+se, oa <7% 1,27% Nguy cơ thập Không phát hiện
+|
+ic kd <7% 1,32% Nguy cơ thấp Không phát hiện |
+a A <7% 0,07% Nguy cơ thấp Không phát hiện
+9Asgssewtosglig delet <1% 198% | Nguycơthấp | Không phát hiện
+syndrome guy
+Chromosome 17p13.3 duplication <1% 108% Nguy co ths Không phát hiện
+syndrome - p
+Phòng Xét nghiệm Di truyền Y học Viện Công Nghệ DNA sử dụng hệ thống giải trình tự gen thế hệ mới (NGS) được chuyển giao
+công nghệ và phần mềm phân tích tin sinh độc quyền từ công ty MGI tech ( Thuộc tập đoàn BGI)
+—“—7---/”7”/—2022020202702700070000/000. II 0m 1.
+ee Re Ea ee em pe ae Te me NA — |
+
+
+--- PAGE 7 ---
+® viencongnghedna.com.vn ¢ NIPTOTAL
+Ho tén: DUONG THI QUYÊN P'-26-26B02345
+Smith-Magenis syndrome <7% 0,58% Nguy cơ thấp Không phát hiện
+Potocki-Lupski syndrome <7 % 0,58% Nguy cơ thấp Không phát hiện
+Chr 1 i h 5 anh Ba
+Noetgepixe CAE <7% 1,70% Nguy cơ thập Không phát hiện
+syndrome
+Ch 12 icati x Au BÊ,
+RERans | Iain <7% 1,70% Nguy cơ thập Không phát hiện
+syndrome
+Chr 17q21. icati £ A Ap Tia
+a ne ng <7% 1,50% Nguy cơ thập Không phát hiện
+syndrome
+Chromosome 17q23.1-q23.2 £ 2 Kiva
+< 0, 0,
+deletion synatons 7% 4,30% Nguy cơ thập Không phát hiện
+Yuan-Harel-Lupski syndrome <7% 0,76% Nguy cơ thấp Không phát hiện
+I S 13. i x 2 LTA
+Ehiiosme 015 41 ditstion <7% 0,49% Nguy cơ thập Không phát hiện
+syndrome
+Holoprosencephaly 1 <7 % 1,51% Nguy cơ thấp Không phát hiện
+DiGeorge syndrome <7% 1,36% Nguy cơ thấp Không phát hiện
+Chr 22411.2 icati £ 5 Fis
+oe sh <7% 1,36% Nguy cơ thập Không phát hiện
+syndrome
+Ch 2411.2 i Ẩ ˆ Po
+EErnosomE 22 LL 2 deletion <7% 1,36% Nguy cơ thập Không phát hiện
+syndrome
+Chromosome Xp22.2-p22.13 £ Ề
+<7? 2 á
+diiglicayoneynatams 7% 0,45% Nguy cơ thập Không phát hiện
+Chromosome Xq27.3-q28 x i fia
+< 0, 0,
+duplication syndrois 7% 1,34% Nguy co thap Khong phat hién
+lol 2 icati : Ñ
+game Xo Sduplicauon <7% 1,40% Nguy cơ thập Không phát hiện
+syndrome
+Chị XI i H sis
+gens lL dation <7% 1,16% Nguy co thap Không phat hiện
+syndrome
+Chromosome Xpl1.3 deletion x A pi
+< 0, 0,
+syiidine 7% 0,96% Nguy co thap Không phat hiện
+Chromosome Xp11.23-p11.22 a tố £ A PET
+dupliition syndrome <7% 3,09% Nguy cơ thập Không phát hiện
+Chromosome Xq21 deletion h vẽ in
+= 0, 0,
+syridtoms 7% 4,97% Nguy cơ thập Không phát hiện
+Chromosome Xq22.3 telomeric h i 3
+<709 0, i at hiê
+deletion syndrome 7% 0,02% Nguy cơ thập Không phát hiện
+Chromosome Xq28 deletion x 5
+<19 6 H i ki
+aymlorne 7% 3,11% Nguy cơ thập Không phát hiện
+Phiên giải kết quả: Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể
+thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy
+cơ thấp phần ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp
+Nhiễm sắc thé được kiểm tra.
+Phòng Xét nghiệm Di truyền Y học Viện Công Nghệ DNA sử dụng hệ thong giải trình tự gen thế hệ mới (NGS) được chuyển giao
+công nghệ va phần mềm phân tích tin sinh độc quyền từ công ty MGI tech ( Thuộc tập đoàn BGI)
+———m—‹v‹<x——"'s”—n 0200007070272: đi SG 0 00/0
+I a Em II |
+
+
+--- PAGE 8 ---
+® viencongnghedna.com.vn
+
+Ho tên: DƯƠNG THỊ QUYÊN
+
+@&Ni=TorA:
+
+P'-26-26B02345
+
+Mất đoạn, lặp đoạn xảy ra do mất hoặc thêm vật chất di truyền ở trên một nhiễm sắc thể. Các
+bit thường này có thé gây ra các khuyết tật bam sinh. Kết quả xét nghiệm “Khéng phát
+hiện” phản ánh không phát hiện các bất thường vi mất, lặp đoạn nằm trong khả năng bao
+phủ của xét nghiệm.
+
+Lưu ý: 1)(*) Chỉ tiêu xét nghiệm được công nhận ISO 15189:2022.
+
+2)Kết quả xét nghiệm này chỉ áp dụng đối với mẫu bệnh phẩm đã nhận như ở trên. Độ chính
+xác của xét nghiệm một phần phụ thuộc vào thông tin do bác sỹ và bệnh nhân cung cấp.
+
+3)Xét nghiệm NIPT KHÔNG thể phát hiện bất thường cấu trúc nhiễm sắc thé (dao đoạn,
+chuyển đoạn, nhiềm sắc thể vòng, đa bội, uniparental disomy), bệnh đơn gen. Xét nghiệm
+này cũng KHÔNG thể khẳng định thể khảm cũng như mức độ khảm.
+
+4)Xét nghiệm này không nên thực hiện được cho các trường hợp: cha hoặc mẹ của thai nhi
+có bất thường nhiễm sắc thể, thai phụ có truyền máu trong vòng 1 năm, ghép tạng, điều trị
+miễn dịch, bệnh ác tính, béo phì (BMI>40) và các nguyên nhân khác.
+
+5)Kết quả xét nghiệm phải luôn được diễn giải bởi bác sỹ chỉ định hoặc bác sỹ di truyền.
+
+6)Kết quả xét nghiệm không loại trừ các bất thường khác trên nhiễm sắc thé được khảo sát,
+các bit thường di truyền và khuyết tật bẩm sinh khác.
+
+7)Tuyên bồ miễn trừ trách nhiệm: Thông tin kết quả đưa ra để các đơn vị y tế tham khảo.
+
+Khuyến cáo lâm sang: 1)NIPT là xét nghiệm sàng lọc số lượng nhiễm sắc thé của thai nhi - KHÔNG có mục đích ’
+chẩn đoán, vì thế, dương tính giả và âm tính giả có thể xảy ra do vấn đề Khảm Nhiễm sắc
+thể hoặc lý do khác. Các trường hợp ‹ có kết quả bit thường nên được kiềm tra bằng thực hiện
+các xét nghiệm chẩn đoán như chọc ối, sinh thiết gai rau.
+
+2)Tham vấn với bác si chuyên khoa về kết quả của xét nghiệm này.
+
+3)Giữ gìn kết quả lâu dài.
+
+Người XN: phòng xét nghiệm
+Phê duyệt kết quả: Đã duyệt
+
+Hà Nội, ngày 12 tháng 9 năm 2026
+Phòng xét nghiệm di truyền yhọc
+
+Phụ trách chuyên môn
+CÔNG TY THHH VIEN CONG NGHỆ D
+
+VIỆNCÔNG NGHỆ NMÁ
+GS.TS.BS. Trần Vân Khánh
+
+Phòng Xét nghiệm Di truyền Y học Viện Công Nghệ DNA sử dụng hệ thống giải trình tự gen thế hệ mới (NGS) được chuyển giao
+công nghệ và phần mềm phân tích tin sinh độc quyền từ công ty MGI tech ( Thuộc tập đoàn BGI)
+
+ee |
+

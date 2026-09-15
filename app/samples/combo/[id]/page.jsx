@@ -323,10 +323,10 @@ export default function ComboSampleDetailPage() {
                   <span className="px-3 py-1 bg-violet-100 text-violet-900 font-mono font-extrabold text-sm rounded-lg border border-violet-200">
                     {formData.sampleCode}
                   </span>
-                  {(formData.originalPdfUrl || formData.originalPdf20GAUrl || formData.status === 'completed' || formData.status === 'extracted') ? (
+                  {formData.status === 'completed' ? (
                     <span className="px-3 py-1 bg-emerald-50 text-emerald-800 text-xs font-extrabold rounded-lg border border-emerald-200 flex items-center gap-1.5 shadow-xs">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      Đã có kết quả
+                      Đã trả kết quả
                     </span>
                   ) : (
                     <span className="px-3 py-1 bg-amber-50 text-amber-800 text-xs font-bold rounded-lg border border-amber-200 flex items-center gap-1.5">
@@ -892,6 +892,19 @@ export default function ComboSampleDetailPage() {
                 >
                   <Save className="w-4 h-4" />
                   <span>{saving ? 'Đang lưu...' : 'Lưu Mẫu Combo'}</span>
+                </button>
+
+                <button
+                  onClick={handleConfirmAndDeliver}
+                  disabled={saving}
+                  className={`px-5 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center gap-2 ${
+                    formData?.status === 'completed'
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                      : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white'
+                  }`}
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>{formData?.status === 'completed' ? 'Cập Nhật Trả Kết Quả' : 'Xác Nhận & Trả Kết Quả'}</span>
                 </button>
 
                 <button
