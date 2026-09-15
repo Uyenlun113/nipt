@@ -463,58 +463,76 @@ export default function ThalassemiaSampleDetailPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-200 text-sm">
                     {/* Row 1: Alpha */}
-                    <tr className="hover:bg-slate-50/80">
-                      <td className="py-3.5 px-4 text-center font-bold text-slate-500">1</td>
-                      <td className="py-3.5 px-4 font-bold text-slate-900">
-                        Tan máu bẩm sinh thể Alpha (Alpha-thalassemia)
-                      </td>
-                      <td className="py-3.5 px-4 font-mono font-bold text-slate-700 italic">HBA1, HBA2</td>
-                      <td className="py-3.5 px-4 font-mono text-slate-600">16p13.3</td>
-                      <td className="py-3.5 px-4">
-                        <div className="space-y-2">
-                          <input
-                            type="text"
-                            value={formData.results?.disease_1?.value || ''}
-                            onChange={(e) => handleResultChange('disease_1', 'value', e.target.value)}
-                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl font-medium text-slate-900 focus:bg-white"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleResultChange('disease_1', 'value', 'Chưa phát hiện đột biến trong vùng được khảo sát')}
-                            className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-lg border border-emerald-300 transition-all"
-                          >
-                            Set: Chưa phát hiện đột biến
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                    {(() => {
+                      const val1 = formData.results?.disease_1?.value || '';
+                      const isMutated1 = val1 && !val1.toLowerCase().includes('chưa phát hiện đột biến') && !val1.toLowerCase().includes('chưa phát hiện biến thể');
+                      return (
+                        <tr className={isMutated1 ? 'bg-rose-50/50 hover:bg-rose-100/50' : 'hover:bg-slate-50/80'}>
+                          <td className="py-3.5 px-4 text-center font-bold text-slate-500">1</td>
+                          <td className="py-3.5 px-4 font-bold text-slate-900">
+                            Tan máu bẩm sinh thể Alpha (Alpha-thalassemia)
+                          </td>
+                          <td className="py-3.5 px-4 font-mono font-bold text-slate-700 italic">HBA1, HBA2</td>
+                          <td className="py-3.5 px-4 font-mono text-slate-600">16p13.3</td>
+                          <td className="py-3.5 px-4">
+                            <div className="space-y-2">
+                              <input
+                                type="text"
+                                value={val1}
+                                onChange={(e) => handleResultChange('disease_1', 'value', e.target.value)}
+                                className={`w-full px-3 py-2 rounded-xl font-bold transition-all ${isMutated1
+                                  ? 'bg-rose-50 text-rose-900 border border-rose-300 focus:outline-none focus:border-rose-500 focus:bg-white shadow-xs'
+                                  : 'bg-slate-50 text-slate-900 border border-slate-300 focus:bg-white'
+                                  }`}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleResultChange('disease_1', 'value', 'Chưa phát hiện đột biến trong vùng được khảo sát')}
+                                className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-lg border border-emerald-300 transition-all"
+                              >
+                                Set: Chưa phát hiện đột biến
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })()}
 
                     {/* Row 2: Beta */}
-                    <tr className="hover:bg-slate-50/80">
-                      <td className="py-3.5 px-4 text-center font-bold text-slate-500">2</td>
-                      <td className="py-3.5 px-4 font-bold text-slate-900">
-                        Tan máu bẩm sinh thể Beta (Beta-thalassemia)
-                      </td>
-                      <td className="py-3.5 px-4 font-mono font-bold text-slate-700 italic">HBB</td>
-                      <td className="py-3.5 px-4 font-mono text-slate-600">11p15.4</td>
-                      <td className="py-3.5 px-4">
-                        <div className="space-y-2">
-                          <input
-                            type="text"
-                            value={formData.results?.disease_2?.value || ''}
-                            onChange={(e) => handleResultChange('disease_2', 'value', e.target.value)}
-                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl font-medium text-slate-900 focus:bg-white"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleResultChange('disease_2', 'value', 'Chưa phát hiện đột biến trong vùng được khảo sát')}
-                            className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-lg border border-emerald-300 transition-all"
-                          >
-                            Set: Chưa phát hiện đột biến
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                    {(() => {
+                      const val2 = formData.results?.disease_2?.value || '';
+                      const isMutated2 = val2 && !val2.toLowerCase().includes('chưa phát hiện đột biến') && !val2.toLowerCase().includes('chưa phát hiện biến thể');
+                      return (
+                        <tr className={isMutated2 ? 'bg-rose-50/50 hover:bg-rose-100/50' : 'hover:bg-slate-50/80'}>
+                          <td className="py-3.5 px-4 text-center font-bold text-slate-500">2</td>
+                          <td className="py-3.5 px-4 font-bold text-slate-900">
+                            Tan máu bẩm sinh thể Beta (Beta-thalassemia)
+                          </td>
+                          <td className="py-3.5 px-4 font-mono font-bold text-slate-700 italic">HBB</td>
+                          <td className="py-3.5 px-4 font-mono text-slate-600">11p15.4</td>
+                          <td className="py-3.5 px-4">
+                            <div className="space-y-2">
+                              <input
+                                type="text"
+                                value={val2}
+                                onChange={(e) => handleResultChange('disease_2', 'value', e.target.value)}
+                                className={`w-full px-3 py-2 rounded-xl font-bold transition-all ${isMutated2
+                                  ? 'bg-rose-50 text-rose-900 border border-rose-300 focus:outline-none focus:border-rose-500 focus:bg-white shadow-xs'
+                                  : 'bg-slate-50 text-slate-900 border border-slate-300 focus:bg-white'
+                                  }`}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleResultChange('disease_2', 'value', 'Chưa phát hiện đột biến trong vùng được khảo sát')}
+                                className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-lg border border-emerald-300 transition-all"
+                              >
+                                Set: Chưa phát hiện đột biến
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })()}
                   </tbody>
                 </table>
               </div>
@@ -529,12 +547,22 @@ export default function ThalassemiaSampleDetailPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1">Nội dung kết luận:</label>
-                  <textarea
-                    rows={3}
-                    value={formData.conclusion || ''}
-                    onChange={(e) => handleInputChange('conclusion', e.target.value)}
-                    className="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl font-bold text-slate-900 focus:bg-white"
-                  />
+                  {(() => {
+                    const concStr = formData.conclusion || '';
+                    const concLower = concStr.toLowerCase();
+                    const isConcMutated = concStr.length > 0 && !concLower.includes('chưa phát hiện');
+                    return (
+                      <textarea
+                        rows={3}
+                        value={concStr}
+                        onChange={(e) => handleInputChange('conclusion', e.target.value)}
+                        className={`w-full p-3 rounded-xl font-bold transition-all ${isConcMutated
+                          ? 'bg-rose-50 text-rose-900 border border-rose-300 focus:outline-none focus:border-rose-500 shadow-xs'
+                          : 'bg-slate-50 text-slate-900 border border-slate-300 focus:bg-white'
+                          }`}
+                      />
+                    );
+                  })()}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-sm font-medium pt-2 border-t border-slate-100">

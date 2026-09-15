@@ -412,8 +412,12 @@ export default function Package20GASampleDetailPage() {
                         ? { ...defaultItem, ...rawItem }
                         : (typeof rawItem === 'string' ? { ...defaultItem, value: rawItem } : defaultItem);
 
+                      const valStr = item.value || 'Chưa phát hiện đột biến trong vùng được khảo sát';
+                      const valLower = valStr.toLowerCase();
+                      const isMutated = valStr && !valLower.includes('chưa phát hiện đột biến') && !valLower.includes('chưa phát hiện biến thể');
+
                       return (
-                        <tr key={key} className="hover:bg-slate-50">
+                        <tr key={key} className={isMutated ? 'bg-rose-50/50 hover:bg-rose-100/50' : 'hover:bg-slate-50'}>
                           <td className="py-3 px-4 font-bold text-slate-500 text-center">{idx + 1}</td>
                           <td className="py-3 px-4 font-bold text-slate-900">{item.label}</td>
                           <td className="py-3 px-4 text-emerald-800 font-mono font-bold">{item.gene}</td>
@@ -421,9 +425,12 @@ export default function Package20GASampleDetailPage() {
                           <td className="py-3 px-4">
                             <input
                               type="text"
-                              value={item.value || 'Chưa phát hiện đột biến trong vùng được khảo sát'}
+                              value={valStr}
                               onChange={(e) => handleResultChange(key, 'value', e.target.value)}
-                              className="w-full px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900"
+                              className={`w-full px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${isMutated
+                                ? 'bg-rose-50 text-rose-900 border border-rose-300 focus:outline-none focus:border-rose-500 focus:bg-white shadow-xs'
+                                : 'bg-slate-50 text-slate-900 border border-slate-300 focus:outline-none focus:border-emerald-500'
+                                }`}
                             />
                           </td>
                         </tr>
@@ -442,12 +449,22 @@ export default function Package20GASampleDetailPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1">Nội dung kết luận:</label>
-                  <textarea
-                    rows={3}
-                    value={formData.conclusion || ''}
-                    onChange={(e) => handleInputChange('conclusion', e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold"
-                  />
+                  {(() => {
+                    const concStr = formData.conclusion || '';
+                    const concLower = concStr.toLowerCase();
+                    const isConcMutated = concStr.length > 0 && !concLower.includes('chưa phát hiện');
+                    return (
+                      <textarea
+                        rows={3}
+                        value={concStr}
+                        onChange={(e) => handleInputChange('conclusion', e.target.value)}
+                        className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${isConcMutated
+                          ? 'bg-rose-50 text-rose-900 border border-rose-300 focus:outline-none focus:border-rose-500 shadow-xs'
+                          : 'bg-slate-50 text-slate-900 border border-slate-300 focus:outline-none focus:border-emerald-500'
+                          }`}
+                      />
+                    );
+                  })()}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-slate-100">
                   <div>

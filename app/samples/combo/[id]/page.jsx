@@ -765,8 +765,12 @@ export default function ComboSampleDetailPage() {
                           ? { ...defaultItem, ...rawItem }
                           : (typeof rawItem === 'string' ? { ...defaultItem, value: rawItem } : defaultItem);
 
+                        const valStr = item.value || 'Chưa phát hiện đột biến trong vùng được khảo sát';
+                        const valLower = valStr.toLowerCase();
+                        const isMutated = valStr && !valLower.includes('chưa phát hiện đột biến') && !valLower.includes('chưa phát hiện biến thể');
+
                         return (
-                          <tr key={key} className="hover:bg-slate-50">
+                          <tr key={key} className={isMutated ? 'bg-rose-50/50 hover:bg-rose-100/50' : 'hover:bg-slate-50'}>
                             <td className="py-2 px-4 font-bold text-slate-500 text-center">{idx + 1}</td>
                             <td className="py-2 px-4 font-bold text-slate-900 text-xs">{item.label}</td>
                             <td className="py-2 px-4 text-emerald-800 font-mono font-bold text-xs">{item.gene}</td>
@@ -774,9 +778,12 @@ export default function ComboSampleDetailPage() {
                             <td className="py-2 px-4">
                               <input
                                 type="text"
-                                value={item.value || 'Chưa phát hiện đột biến trong vùng được khảo sát'}
+                                value={valStr}
                                 onChange={(e) => handle20GAResultChange(key, 'value', e.target.value)}
-                                className="w-full px-3 py-1 bg-slate-50 border border-slate-300 rounded-lg text-xs font-semibold text-slate-900"
+                                className={`w-full px-3 py-1 rounded-lg text-xs font-bold transition-all ${isMutated
+                                  ? 'bg-rose-50 text-rose-900 border border-rose-300 focus:outline-none focus:border-rose-500 focus:bg-white shadow-xs'
+                                  : 'bg-slate-50 text-slate-900 border border-slate-300 focus:outline-none focus:border-emerald-500'
+                                  }`}
                               />
                             </td>
                           </tr>
@@ -788,12 +795,22 @@ export default function ComboSampleDetailPage() {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Nội dung kết luận 20GA:</label>
-                  <textarea
-                    rows={2}
-                    value={formData.conclusion20GA || ''}
-                    onChange={(e) => handleInputChange('conclusion20GA', e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900"
-                  />
+                  {(() => {
+                    const concStr = formData.conclusion20GA || '';
+                    const concLower = concStr.toLowerCase();
+                    const isConcMutated = concStr.length > 0 && !concLower.includes('chưa phát hiện');
+                    return (
+                      <textarea
+                        rows={2}
+                        value={concStr}
+                        onChange={(e) => handleInputChange('conclusion20GA', e.target.value)}
+                        className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${isConcMutated
+                          ? 'bg-rose-50 text-rose-900 border border-rose-300 focus:outline-none focus:border-rose-500 shadow-xs'
+                          : 'bg-slate-50 text-slate-900 border border-slate-300 focus:outline-none focus:border-emerald-500'
+                          }`}
+                      />
+                    );
+                  })()}
                 </div>
               </div>
             </div>
