@@ -184,6 +184,39 @@ export default function ComboSampleDetailPage() {
     }
   };
 
+  const handleConfirmAndDeliver = async () => {
+    setSaving(true);
+    setMsg({ type: '', text: '' });
+    try {
+      const todayStr = formatDateVN(new Date().toISOString().split('T')[0]);
+      const updatedData = {
+        ...formData,
+        status: 'completed',
+        reportDate: formData.reportDate || todayStr,
+        reportDate20GA: formData.reportDate20GA || formData.reportDate || todayStr
+      };
+
+      const res = await fetch(`/api/samples/${sampleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+      });
+
+      if (res.ok) {
+        setFormData(updatedData);
+        setMsg({ type: 'success', text: 'Đã xác nhận và trả kết quả mẫu Combo thành công!' });
+        setPreviewKey(Date.now());
+      } else {
+        const d = await res.json();
+        throw new Error(d.error || 'Lỗi khi xác nhận trả kết quả');
+      }
+    } catch (err) {
+      setMsg({ type: 'error', text: err.message });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleFileUpload = async (e, target) => {
     const file = e.target.files?.[0];
     if (!file) return;
