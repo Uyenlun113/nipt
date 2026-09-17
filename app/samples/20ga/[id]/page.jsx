@@ -81,6 +81,7 @@ export default function Package20GASampleDetailPage() {
         setFormData({
           ...data,
           packageType: '20GA',
+          gender: data.gender || 'Nữ',
           dob: formatDateVN(data.dob),
           receivedDate: formatDateVN(data.receivedDate),
           reportDate: formatDateVN(data.reportDate),
@@ -306,6 +307,17 @@ export default function Package20GASampleDetailPage() {
                     onChange={(e) => handleInputChange('dob', e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-medium"
                   />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Giới tính</label>
+                  <select
+                    value={formData.gender || 'Nữ'}
+                    onChange={(e) => handleInputChange('gender', e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-medium"
+                  >
+                    <option value="Nữ">Nữ</option>
+                    <option value="Nam">Nam</option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1">CMT / CCCD</label>
