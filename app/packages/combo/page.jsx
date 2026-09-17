@@ -284,20 +284,21 @@ export default function ComboPackageListPage() {
                     <th className="py-4 px-4">Gói Xét Nghiệm</th>
                     <th className="py-4 px-4">Số Điện Thoại / CMT</th>
                     <th className="py-4 px-4 text-center">Trạng Thái NIPT / 20GA</th>
+                    <th className="py-4 px-4 text-center">Trạng Thái Trả Kết Quả</th>
                     <th className="py-4 px-4 text-right">Thao Tác</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm">
                   {loading ? (
                     <tr>
-                      <td colSpan={6} className="py-12 text-center text-slate-400">
+                      <td colSpan={7} className="py-12 text-center text-slate-400">
                         <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-violet-600" />
                         <span>Đang tải danh sách mẫu Combo NIPT + 20GA...</span>
                       </td>
                     </tr>
                   ) : samples.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-12 text-center text-slate-400">
+                      <td colSpan={7} className="py-12 text-center text-slate-400">
                         Chưa có mẫu xét nghiệm Combo NIPT + 20GA nào trong danh sách.
                       </td>
                     </tr>
@@ -306,6 +307,7 @@ export default function ComboPackageListPage() {
                       const id = s._id || s.id;
                       const hasNiptFile = Boolean(s.originalPdfUrl) || Boolean(s.cfDNA);
                       const has20GAFile = Boolean(s.originalPdf20GAUrl) || (s.results20GA && Object.keys(s.results20GA).length > 0);
+                      const isCompleted = s.status === 'completed';
                       const detailUrl = '/samples/combo/' + id;
 
                       const isUploadingNipt = uploadingId === `${id}_nipt`;
@@ -345,6 +347,20 @@ export default function ComboPackageListPage() {
                                 20GA: {has20GAFile ? 'Đã có' : 'Chưa up'}
                               </span>
                             </div>
+                          </td>
+
+                          <td className="py-4 px-4 text-center">
+                            {isCompleted ? (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 font-extrabold text-xs border border-emerald-200 shadow-xs">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                Đã trả kết quả
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 font-bold text-xs border border-amber-200">
+                                <Clock className="w-3.5 h-3.5 text-amber-600" />
+                                Chờ kết quả
+                              </span>
+                            )}
                           </td>
 
                           <td className="py-4 px-4 text-right">

@@ -401,6 +401,19 @@ export default function ComboSampleDetailPage() {
                 <Download className="w-4 h-4" />
                 <span>Tải Tất Cả (ZIP 2 File)</span>
               </button>
+
+              <button
+                onClick={handleConfirmAndDeliver}
+                disabled={saving}
+                className={`px-5 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center gap-2 ${
+                  formData?.status === 'completed'
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                    : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white'
+                }`}
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>{formData?.status === 'completed' ? 'Cập Nhật Trả Kết Quả' : 'Xác Nhận & Trả Kết Quả'}</span>
+              </button>
             </div>
           </div>
 
