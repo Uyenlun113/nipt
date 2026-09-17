@@ -101,6 +101,7 @@ export async function POST(req) {
       const newSample = await NiptSample.create({
         fullName,
         dob: dob || '',
+        gender: gender || 'Nữ',
         idCard: idCard || '',
         phone: phone || '',
         address: address || '',

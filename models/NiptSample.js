@@ -4,6 +4,7 @@ const NiptSampleSchema = new mongoose.Schema({
   sampleCode: { type: String, required: true, unique: true },
   fullName: { type: String, required: true },
   dob: { type: String },
+  gender: { type: String, default: 'Nữ' },
   idCard: { type: String },
   phone: { type: String },
   address: { type: String },
