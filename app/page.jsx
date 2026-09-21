@@ -27,6 +27,7 @@ import {
   Layers,
   ArrowUpRight
 } from 'lucide-react';
+import { formatReportDateTime, formatCreatedDate } from '@/lib/date-utils';
 
 function formatDateVN(dateStr) {
   if (!dateStr) return '';
@@ -548,7 +549,8 @@ export default function MainDashboardPage() {
                         <th className="py-3.5 px-4">Gói Xét Nghiệm</th>
                         <th className="py-3.5 px-4">Tuổi Thai</th>
                         <th className="py-3.5 px-4 text-center">Hàm lượng cfDNA (%)</th>
-                        <th className="py-3.5 px-4 text-center">Trạng thái</th>
+                        <th className="py-3.5 px-4 text-left">THỜI GIAN TRẢ / DỰ KIẾN</th>
+                        <th className="py-3.5 px-4 text-left">NGÀY TẠO</th>
                         <th className="py-3.5 px-4 text-right">Thao tác</th>
                       </tr>
                     </thead>
@@ -561,9 +563,19 @@ export default function MainDashboardPage() {
                         const formattedDob = formatDateVN(s.dob);
                         const hasOriginalFile = Boolean(s.originalPdfUrl);
                         const detailUrl = getPackageDetailRoute(id, s.packageType);
+                        const reportDateTime = formatReportDateTime(s);
+                        const createdDateStr = formatCreatedDate(s.createdAt || s.receivedDate);
+                        const isWarning = reportDateTime.isWarning;
 
                         return (
-                          <tr key={id} className="hover:bg-slate-50 transition-colors">
+                          <tr
+                            key={id}
+                            className={`transition-colors ${
+                              isWarning
+                                ? 'bg-rose-50/90 hover:bg-rose-100 border-l-4 border-rose-500 text-rose-950 font-medium'
+                                : 'hover:bg-slate-50'
+                            }`}
+                          >
                             <td className="py-4 px-4 font-mono font-extrabold text-teal-900 text-sm">
                               <Link href={detailUrl} className="hover:underline flex items-center gap-1">
                                 <span>{s.sampleCode}</span>
@@ -601,18 +613,30 @@ export default function MainDashboardPage() {
                               )}
                             </td>
 
-                            <td className="py-4 px-4 text-center">
-                              {isCompleted ? (
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 font-extrabold text-xs border border-emerald-200 shadow-xs">
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                                  Đã trả kết quả
-                                </span>
+                            <td className="py-4 px-4">
+                              <div className={`font-bold text-sm font-mono tracking-tight ${isWarning ? 'text-rose-900 font-extrabold' : 'text-slate-900'}`}>
+                                {reportDateTime.dateTimeStr}
+                              </div>
+                              {reportDateTime.isCompleted ? (
+                                <div className="flex items-center gap-1 text-[#0d7a5f] font-bold text-xs mt-0.5">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-[#0d7a5f] shrink-0" />
+                                  <span>Đã trả kết quả</span>
+                                </div>
+                              ) : isWarning ? (
+                                <div className="flex items-center gap-1 text-rose-600 font-bold text-xs mt-0.5 animate-pulse">
+                                  <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                                  <span>Cảnh báo: Ngày {reportDateTime.daysElapsed} (Chờ KQL)</span>
+                                </div>
                               ) : (
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 font-bold text-xs border border-amber-200">
-                                  <Clock className="w-3.5 h-3.5 text-amber-600" />
-                                  Chờ kết quả
-                                </span>
+                                <div className="flex items-center gap-1 text-amber-700 font-bold text-xs mt-0.5">
+                                  <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                                  <span>Chờ kết quả (Dự kiến 5 ngày)</span>
+                                </div>
                               )}
+                            </td>
+
+                            <td className="py-4 px-4 font-bold text-slate-700 text-sm font-mono whitespace-nowrap">
+                              {createdDateStr}
                             </td>
 
                             <td className="py-4 px-4 text-right">
