@@ -70,6 +70,7 @@ export async function POST(req) {
     const {
       fullName,
       dob,
+      gender,
       idCard,
       phone,
       address,
@@ -134,6 +135,7 @@ export async function POST(req) {
       sampleCode: formattedSampleCode,
       fullName,
       dob: dob || '',
+      gender: gender || 'Nữ',
       idCard: idCard || '',
       phone: phone || '',
       address: address || '',
