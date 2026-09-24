@@ -17,11 +17,14 @@ import {
   Eye,
   FileText,
   Dna,
-  Layers
+  Layers,
+  Search
 } from 'lucide-react';
 
 import { formatDateVN, formatDateForInput } from '@/lib/date-utils';
 import { sync20GAResultsWithConclusion } from '@/lib/20ga-utils';
+import { getDefaultResultsForPackage } from '@/lib/package-defaults';
+import { getNiptSubPackageFromCombo } from '@/lib/constants/packages';
 
 const DEFAULT_20GA_RESULTS = {
   disease_1: { label: 'Alpha-Thalassemia', gene: 'HBA1 & HBA2', nst: '16p13.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
@@ -88,28 +91,22 @@ export default function ComboSampleDetailPage() {
       if (res.ok) {
         const data = await res.json();
 
-        const hasNiptResults = data.results && Object.keys(data.results).length > 0;
-        let activeNipt = hasNiptResults ? { ...DEFAULT_NIPT_RESULTS, ...data.results } : { ...DEFAULT_NIPT_RESULTS };
+        const pkgType = data.packageType || 'GeneT 7 + 20GA';
+        const defaultNipt = getDefaultResultsForPackage(pkgType);
 
-        const pkgLower = (data.packageType || '').toLowerCase();
-        if (pkgLower.includes('23') || pkgLower.includes('plus')) {
-          const otherTrisomies = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19, 20, 22];
-          otherTrisomies.forEach(num => {
-            const k = `trisomy_${num}`;
-            if (!activeNipt[k]) {
-              activeNipt[k] = { label: `Trisomy ${num}`, value: '', risk: '', ref: '-3 < Z < 3' };
-            }
-          });
+        let activeNipt = { ...defaultNipt, ...(data.results || {}) };
+        if (defaultNipt.otherTrisomies) {
+          activeNipt.otherTrisomies = { ...defaultNipt.otherTrisomies, ...(data.results?.otherTrisomies || {}) };
         }
-        if (pkgLower.includes('twins')) {
-          delete activeNipt.turner;
-          delete activeNipt.klinefelter;
-          delete activeNipt.jacobs;
-          delete activeNipt.tripleX;
+        if (defaultNipt.microdeletions) {
+          activeNipt.microdeletions = (data.results?.microdeletions && data.results.microdeletions.length > 0)
+            ? data.results.microdeletions
+            : defaultNipt.microdeletions;
         }
 
+        const default20GA = DEFAULT_20GA_RESULTS;
         const has20GAResults = data.results20GA && Object.keys(data.results20GA).length > 0;
-        let active20GA = has20GAResults ? { ...DEFAULT_20GA_RESULTS, ...data.results20GA } : DEFAULT_20GA_RESULTS;
+        let active20GA = has20GAResults ? { ...default20GA, ...data.results20GA } : default20GA;
         active20GA = sync20GAResultsWithConclusion(active20GA, data.conclusion20GA || data.conclusion);
 
         setFormData({
@@ -150,6 +147,40 @@ export default function ComboSampleDetailPage() {
         }
       }
     }));
+  };
+
+  const [microSearch, setMicroSearch] = useState('');
+
+  const handleOtherTrisomyChange = (key, subfield, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      results: {
+        ...prev.results,
+        otherTrisomies: {
+          ...(prev.results?.otherTrisomies || {}),
+          [key]: {
+            ...(prev.results?.otherTrisomies?.[key] || {}),
+            [subfield]: value
+          }
+        }
+      }
+    }));
+  };
+
+  const handleMicroChange = (index, subfield, value) => {
+    setFormData((prev) => {
+      const list = [...(prev.results?.microdeletions || [])];
+      if (list[index]) {
+        list[index] = { ...list[index], [subfield]: value };
+      }
+      return {
+        ...prev,
+        results: {
+          ...prev.results,
+          microdeletions: list
+        }
+      };
+    });
   };
 
   const handle20GAResultChange = (key, subfield, value) => {
@@ -681,23 +712,139 @@ export default function ComboSampleDetailPage() {
                 )}
 
                 {/* Phần III: Lệch Bội Các Cặp NST Thường Còn Lại (nếu có) */}
-                {section3Keys.length > 0 && (
-                  <div className="space-y-3">
+                {Boolean(formData?.results?.otherTrisomies) && (
+                  <div className="space-y-3 pt-2">
                     <div className="bg-purple-50 px-4 py-2 rounded-xl border border-purple-200 font-extrabold text-xs uppercase text-purple-950">
-                      III. Lệch Bội Các Cặp Nhiễm Sắc Thể Thường Còn Lại
+                      III. Lệch Bội 19 Cặp Nhiễm Sắc Thể Thường Còn Lại
                     </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-sm border-collapse">
-                        <thead>
-                          <tr className="bg-slate-100 text-slate-700 text-xs uppercase font-extrabold border-b border-slate-300">
-                            <th className="py-2.5 px-4">Hội chứng / NST</th>
-                            <th className="py-2.5 px-4">Khoảng tham chiếu</th>
-                            <th className="py-2.5 px-4">Giá trị phân tích (Z-score)</th>
-                            <th className="py-2.5 px-4">Kết luận nguy cơ</th>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                      {[
+                        { key: 't1', label: 'Trisomy 1' },
+                        { key: 't2', label: 'Trisomy 2' },
+                        { key: 't3', label: 'Trisomy 3' },
+                        { key: 't4', label: 'Trisomy 4' },
+                        { key: 't5', label: 'Trisomy 5' },
+                        { key: 't6', label: 'Trisomy 6' },
+                        { key: 't7', label: 'Trisomy 7' },
+                        { key: 't8', label: 'Trisomy 8' },
+                        { key: 't9', label: 'Trisomy 9' },
+                        { key: 't10', label: 'Trisomy 10' },
+                        { key: 't11', label: 'Trisomy 11' },
+                        { key: 't12', label: 'Trisomy 12' },
+                        { key: 't14', label: 'Trisomy 14' },
+                        { key: 't15', label: 'Trisomy 15' },
+                        { key: 't16', label: 'Trisomy 16' },
+                        { key: 't17', label: 'Trisomy 17' },
+                        { key: 't19', label: 'Trisomy 19' },
+                        { key: 't20', label: 'Trisomy 20' },
+                        { key: 't22', label: 'Trisomy 22' },
+                      ].map((item) => {
+                        const rowData = formData?.results?.otherTrisomies?.[item.key] || {};
+                        return (
+                          <div key={item.key} className="p-2 bg-slate-50 rounded-xl border border-slate-200 space-y-1 text-xs">
+                            <div className="font-bold text-slate-800 truncate text-[11px]">{item.label}</div>
+                            <div className="grid grid-cols-2 gap-1">
+                              <input
+                                type="text"
+                                value={rowData.value || ''}
+                                onChange={(e) => handleOtherTrisomyChange(item.key, 'value', e.target.value)}
+                                className="w-full px-1 py-0.5 bg-white border border-slate-200 rounded text-center font-mono font-bold text-[11px]"
+                                placeholder="Z-score"
+                              />
+                              <input
+                                type="text"
+                                value={rowData.risk || ''}
+                                onChange={(e) => handleOtherTrisomyChange(item.key, 'risk', e.target.value)}
+                                className="w-full px-1 py-0.5 bg-purple-50 text-purple-900 border border-purple-200 rounded text-center font-bold text-[10px]"
+                                placeholder="Nguy cơ"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Phần IV: 122 Hội Chứng Vi Mất / Lặp Đoạn NST */}
+                {Array.isArray(formData?.results?.microdeletions) && formData.results.microdeletions.length > 0 && (
+                  <div className="space-y-4 pt-2">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-purple-100 pb-3">
+                      <div className="flex items-center gap-2">
+                        <Dna className="w-5 h-5 text-purple-600" />
+                        <h4 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
+                          IV. Danh Sách 122 Hội Chứng Vi Mất / Lặp Đoạn NST (&gt;10Mb & &gt;5Mb)
+                        </h4>
+                        <span className="px-2.5 py-0.5 bg-purple-100 text-purple-900 font-mono font-extrabold text-xs rounded-full border border-purple-200">
+                          {formData.results.microdeletions.length} hội chứng
+                        </span>
+                      </div>
+
+                      <div className="relative w-full md:w-72">
+                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                          type="text"
+                          placeholder="Tìm tên hội chứng vi mất/lặp..."
+                          value={microSearch}
+                          onChange={(e) => setMicroSearch(e.target.value)}
+                          className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-purple-500"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="max-h-96 overflow-y-auto rounded-xl border border-slate-200">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead className="bg-slate-50 sticky top-0 border-b border-slate-200 font-extrabold text-slate-600 uppercase">
+                          <tr>
+                            <th className="py-2.5 px-3">STT</th>
+                            <th className="py-2.5 px-3">Tên Hội Chứng Vi Mất / Lặp Đoạn</th>
+                            <th className="py-2.5 px-3 text-center">Ngưỡng Tham Chiếu</th>
+                            <th className="py-2.5 px-3 text-center">Giá Trị Phân Tích (%)</th>
+                            <th className="py-2.5 px-3 text-center">Đánh Giá Nguy Cơ</th>
+                            <th className="py-2.5 px-3 text-center">Kết Quả</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-200">
-                          {renderNiptResultRows(section3Keys)}
+                        <tbody className="divide-y divide-slate-100">
+                          {formData.results.microdeletions
+                            .map((item, idx) => ({ ...item, originalIdx: idx }))
+                            .filter(item => !microSearch || item.name.toLowerCase().includes(microSearch.toLowerCase()))
+                            .map((item, idx) => (
+                              <tr key={idx} className="hover:bg-slate-50 font-semibold">
+                                <td className="py-2 px-3 text-slate-400 font-mono">{idx + 1}</td>
+                                <td className="py-2 px-3 font-bold text-slate-900">{item.name}</td>
+                                <td className="py-2 px-3 text-center font-mono text-slate-500">{item.ref || '< 5%'}</td>
+                                <td className="py-1.5 px-3 text-center">
+                                  <input
+                                    type="text"
+                                    value={item.value || ''}
+                                    onChange={(e) => handleMicroChange(item.originalIdx, 'value', e.target.value)}
+                                    className="w-24 px-2 py-1 bg-purple-50 hover:bg-white text-purple-900 border border-purple-200 focus:border-purple-500 rounded text-center font-mono font-bold text-xs focus:outline-none transition-all shadow-xs"
+                                  />
+                                </td>
+                                <td className="py-1.5 px-3 text-center">
+                                  <input
+                                    type="text"
+                                    value={item.risk || ''}
+                                    onChange={(e) => handleMicroChange(item.originalIdx, 'risk', e.target.value)}
+                                    className={`w-32 px-2 py-1 border rounded text-center font-bold text-[11px] focus:outline-none transition-all shadow-xs ${(item.risk || '').toLowerCase().includes('cao')
+                                      ? 'bg-rose-50 text-rose-900 border-rose-300 focus:border-rose-500'
+                                      : 'bg-purple-50 text-purple-900 border-purple-200 focus:border-purple-500'
+                                      }`}
+                                  />
+                                </td>
+                                <td className="py-1.5 px-3 text-center">
+                                  <input
+                                    type="text"
+                                    value={item.result || ''}
+                                    onChange={(e) => handleMicroChange(item.originalIdx, 'result', e.target.value)}
+                                    className={`w-36 px-2 py-1 border rounded text-center font-bold text-[11px] focus:outline-none transition-all shadow-xs ${((item.result || '').toLowerCase().includes('phát hiện') && !(item.result || '').toLowerCase().includes('không phát hiện')) || (item.risk || '').toLowerCase().includes('cao')
+                                      ? 'bg-rose-50 text-rose-900 border-rose-300 focus:border-rose-500'
+                                      : 'bg-emerald-50 text-emerald-800 border-emerald-300 focus:border-emerald-500'
+                                      }`}
+                                  />
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </table>
                     </div>

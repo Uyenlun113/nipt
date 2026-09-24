@@ -8,6 +8,7 @@ import { package20gaHandler } from '@/lib/packages/20ga';
 import { thalassemiaPackageHandler } from '@/lib/packages/thalassemia';
 import { uploadPdfToCloudinary } from '@/lib/cloudinary';
 import { fallbackStore } from '@/lib/store-fallback';
+import { getNiptSubPackageFromCombo } from '@/lib/constants/packages';
 import mongoose from 'mongoose';
 
 export async function POST(req, { params }) {
@@ -148,7 +149,11 @@ export async function POST(req, { params }) {
     } else {
       // NIPT Upload
       // 1. Extract NIPT data
-      extracted = await extractNiptPdfData(buffer, packageType);
+      const targetPkg = (packageType.includes('+') || packageType.toLowerCase().includes('combo'))
+        ? getNiptSubPackageFromCombo(packageType)
+        : packageType;
+
+      extracted = await extractNiptPdfData(buffer, targetPkg);
 
       // 2. Save PDF locally
       try {

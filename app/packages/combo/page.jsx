@@ -308,8 +308,8 @@ export default function ComboPackageListPage() {
                   ) : (
                     samples.map((s) => {
                       const id = s._id || s.id;
-                      const hasNiptFile = Boolean(s.originalPdfUrl) || Boolean(s.cfDNA);
-                      const has20GAFile = Boolean(s.originalPdf20GAUrl) || (s.results20GA && Object.keys(s.results20GA).length > 0);
+                      const hasNiptFile = Boolean(s.originalPdfUrl) || (Boolean(s.cfDNA) && String(s.cfDNA).trim() !== '');
+                      const has20GAFile = Boolean(s.originalPdf20GAUrl);
                       const isCompleted = s.status === 'completed';
                       const detailUrl = '/samples/combo/' + id;
                       const reportDateTime = formatReportDateTime(s);
@@ -390,13 +390,27 @@ export default function ComboPackageListPage() {
 
                           <td className="py-4 px-4 text-right">
                             <div className="flex items-center justify-end gap-2 flex-wrap">
+                              {/* View Original NIPT File Button */}
+                              {Boolean(s.originalPdfUrl) && (
+                                <a
+                                  href={`/api/samples/${id}/original-pdf?target=nipt`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-2.5 py-1 rounded-xl text-xs font-extrabold bg-blue-100 text-blue-900 hover:bg-blue-200 border border-blue-300 flex items-center gap-1 transition-all shadow-xs"
+                                  title="Xem/Tải file PDF NIPT gốc"
+                                >
+                                  <FileText className="w-3.5 h-3.5 text-blue-700" />
+                                  <span>NIPT gốc</span>
+                                </a>
+                              )}
+
                               {/* Upload NIPT Button */}
                               <label
                                 className={`px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer transition-all flex items-center gap-1 border ${isUploadingNipt ? 'bg-amber-100 text-amber-900' : 'bg-blue-50 text-blue-800 hover:bg-blue-100 border-blue-200'}`}
-                                title="Up file NIPT PDF"
+                                title="Upload/Đọc lại file NIPT PDF"
                               >
                                 <Upload className="w-3.5 h-3.5" />
-                                <span>{isUploadingNipt ? '...' : 'Up NIPT'}</span>
+                                <span>{isUploadingNipt ? 'Đang đọc...' : (s.originalPdfUrl ? 'Đọc lại NIPT' : 'Up NIPT')}</span>
                                 <input
                                   type="file"
                                   accept=".pdf"
@@ -406,13 +420,27 @@ export default function ComboPackageListPage() {
                                 />
                               </label>
 
+                              {/* View Original 20GA File Button */}
+                              {Boolean(s.originalPdf20GAUrl) && (
+                                <a
+                                  href={`/api/samples/${id}/original-pdf?target=20ga`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-2.5 py-1 rounded-xl text-xs font-extrabold bg-emerald-100 text-emerald-900 hover:bg-emerald-200 border border-emerald-300 flex items-center gap-1 transition-all shadow-xs"
+                                  title="Xem/Tải file PDF 20GA gốc"
+                                >
+                                  <FileText className="w-3.5 h-3.5 text-emerald-700" />
+                                  <span>20GA gốc</span>
+                                </a>
+                              )}
+
                               {/* Upload 20GA Button */}
                               <label
                                 className={`px-2.5 py-1 rounded-xl text-xs font-bold cursor-pointer transition-all flex items-center gap-1 border ${isUploading20GA ? 'bg-amber-100 text-amber-900' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border-emerald-200'}`}
-                                title="Up file 20GA PDF"
+                                title="Upload/Đọc lại file 20GA PDF"
                               >
                                 <Upload className="w-3.5 h-3.5" />
-                                <span>{isUploading20GA ? '...' : 'Up 20GA'}</span>
+                                <span>{isUploading20GA ? 'Đang đọc...' : (s.originalPdf20GAUrl ? 'Đọc lại 20GA' : 'Up 20GA')}</span>
                                 <input
                                   type="file"
                                   accept=".pdf"

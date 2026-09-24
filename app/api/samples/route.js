@@ -3,6 +3,9 @@ import { connectToDatabase } from '@/lib/mongodb';
 import NiptSample from '@/models/NiptSample';
 import { fallbackStore } from '@/lib/store-fallback';
 import { cleanAndFormatBarcode } from '@/lib/barcode-utils';
+import { normalizePackageType, getNiptSubPackageFromCombo } from '@/lib/constants/packages';
+import { getPackageHandler } from '@/lib/package-registry';
+import { package20gaHandler } from '@/lib/packages/20ga';
 
 export async function GET(req) {
   try {
@@ -93,6 +96,14 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Họ tên, Gói xét nghiệm và Barcode / Mã số mẫu là bắt buộc' }, { status: 400 });
     }
 
+    const normalizedPkg = normalizePackageType(packageType);
+    const isCombo = normalizedPkg.includes('+') || normalizedPkg.toLowerCase().includes('combo');
+    const niptPkg = isCombo ? getNiptSubPackageFromCombo(normalizedPkg) : normalizedPkg;
+
+    const niptHandler = getPackageHandler(niptPkg);
+    const initialResults = niptHandler ? niptHandler.getDefaultResults() : {};
+    const initialResults20GA = (isCombo || normalizedPkg === '20GA') ? package20gaHandler.getDefaultResults() : {};
+
     const db = await connectToDatabase();
     if (db) {
       const existing = await NiptSample.findOne({ sampleCode: formattedSampleCode });
@@ -108,7 +119,7 @@ export async function POST(req) {
         address: address || '',
         gestationalAge: gestationalAge || '',
         pregnancyType: pregnancyType || 'Đơn thai',
-        packageType,
+        packageType: normalizedPkg,
         agencyCode: agencyCode || '',
         sampleCode: formattedSampleCode,
         doctorName: doctorName || '',
@@ -118,7 +129,8 @@ export async function POST(req) {
         receivedDate: receivedDate || new Date().toISOString().split('T')[0],
         reportDate: reportDate || '',
         cfDNA: '',
-        results: {},
+        results: initialResults,
+        results20GA: initialResults20GA,
         status: 'pending'
       });
       return NextResponse.json({ message: 'Tạo mẫu NIPT thành công', sample: newSample });
