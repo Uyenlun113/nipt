@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 
 import { formatDateVN, formatDateForInput } from '@/lib/date-utils';
+import { sync20GAResultsWithConclusion } from '@/lib/20ga-utils';
 
 
 const DEFAULT_20GA_RESULTS = {
@@ -77,6 +78,7 @@ export default function Package20GASampleDetailPage() {
 
         const hasCustomResults = data.results && Object.keys(data.results).length > 0;
         let activeResults = hasCustomResults ? { ...DEFAULT_20GA_RESULTS, ...data.results } : DEFAULT_20GA_RESULTS;
+        activeResults = sync20GAResultsWithConclusion(activeResults, data.conclusion);
 
         setFormData({
           ...data,
@@ -203,7 +205,8 @@ export default function Package20GASampleDetailPage() {
 
   const pdfPreviewUrl = `/api/samples/${sampleId}/generate-genetrust?t=${previewKey}`;
 
-  const resultsObj = formData.results || {};
+  const rawResults = formData.results || {};
+  const resultsObj = rawResults;
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
@@ -437,7 +440,7 @@ export default function Package20GASampleDetailPage() {
                         ? { ...defaultItem, ...rawItem }
                         : (typeof rawItem === 'string' ? { ...defaultItem, value: rawItem } : defaultItem);
 
-                      const valStr = item.value || 'Chưa phát hiện đột biến trong vùng được khảo sát';
+                      const valStr = item.value !== undefined ? item.value : 'Chưa phát hiện đột biến trong vùng được khảo sát';
                       const valLower = valStr.toLowerCase();
                       const isMutated = valStr && !valLower.includes('chưa phát hiện đột biến') && !valLower.includes('chưa phát hiện biến thể');
 

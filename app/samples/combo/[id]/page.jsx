@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 
 import { formatDateVN, formatDateForInput } from '@/lib/date-utils';
+import { sync20GAResultsWithConclusion } from '@/lib/20ga-utils';
 
 const DEFAULT_20GA_RESULTS = {
   disease_1: { label: 'Alpha-Thalassemia', gene: 'HBA1 & HBA2', nst: '16p13.3', value: 'Chưa phát hiện đột biến trong vùng được khảo sát' },
@@ -109,6 +110,7 @@ export default function ComboSampleDetailPage() {
 
         const has20GAResults = data.results20GA && Object.keys(data.results20GA).length > 0;
         let active20GA = has20GAResults ? { ...DEFAULT_20GA_RESULTS, ...data.results20GA } : DEFAULT_20GA_RESULTS;
+        active20GA = sync20GAResultsWithConclusion(active20GA, data.conclusion20GA || data.conclusion);
 
         setFormData({
           ...data,
@@ -121,7 +123,7 @@ export default function ComboSampleDetailPage() {
           hasMstStamp20GA: data.hasMstStamp20GA !== undefined ? data.hasMstStamp20GA : (!!data.hasMstStamp),
           gbsResult: data.gbsResult || 'Âm tính',
           conclusion: data.conclusion || 'Bộ nhiễm sắc thể người bình thường bao gồm 23 cặp, trong đó có 22 cặp Nhiễm sắc thể thường và 1 cặp nhiễm sắc thể giới tính. Mỗi cặp có 2 nhiễm sắc thể. Kết quả NIPT nguy cơ thấp phản ánh không có bất thường về số lượng Nhiễm sắc thể đối với các cặp Nhiễm sắc thể được kiểm tra.',
-          conclusion20GA: data.conclusion20GA || 'Chưa phát hiện biến thể gây bệnh/ có thể gây bệnh trên các vùng gen được khảo sát.',
+          conclusion20GA: data.conclusion20GA || (data.conclusion && !data.conclusion.includes('Bộ nhiễm sắc thể') ? data.conclusion : 'Chưa phát hiện biến thể gây bệnh/ có thể gây bệnh trên các vùng gen được khảo sát.'),
           results: activeNipt,
           results20GA: active20GA
         });
@@ -285,7 +287,8 @@ export default function ComboSampleDetailPage() {
         ? `/api/samples/${sampleId}/generate-supplementary?t=${previewKey}`
         : `/api/samples/${sampleId}/generate-genetrust?type=nipt&t=${previewKey}`);
 
-  const results20GAObj = formData.results20GA || DEFAULT_20GA_RESULTS;
+  const raw20GA = formData.results20GA || DEFAULT_20GA_RESULTS;
+  const results20GAObj = raw20GA;
   const niptResultsObj = formData.results || {};
   const section1Keys = ['t21', 't18', 't13'];
   const section2Keys = ['turner', 'klinefelter', 'jacobs', 'tripleX'];
@@ -295,9 +298,10 @@ export default function ComboSampleDetailPage() {
     return keys.map((key) => {
       const item = niptResultsObj[key];
       if (!item) return null;
+      const isHighRisk = (item.risk || '').toLowerCase().includes('cao');
       return (
-        <tr key={key} className="hover:bg-slate-50">
-          <td className="py-2.5 px-4 font-bold text-slate-900 text-xs md:text-sm">{item.label}</td>
+        <tr key={key} className={isHighRisk ? 'bg-rose-50/70 hover:bg-rose-100/70' : 'hover:bg-slate-50'}>
+          <td className={`py-2.5 px-4 font-bold text-xs md:text-sm ${isHighRisk ? 'text-rose-950 font-extrabold' : 'text-slate-900'}`}>{item.label}</td>
           <td className="py-2.5 px-4 text-slate-600 font-mono text-xs">{item.ref || '-3 < Z < 3'}</td>
           <td className="py-2.5 px-4">
             <input
@@ -305,7 +309,11 @@ export default function ComboSampleDetailPage() {
               value={item.value || ''}
               onChange={(e) => handleNiptResultChange(key, 'value', e.target.value)}
               placeholder="VD: 0.12"
-              className="w-32 px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 focus:bg-white"
+              className={`w-32 px-3 py-1.5 border rounded-xl text-xs font-mono font-bold focus:bg-white ${
+                isHighRisk
+                  ? 'bg-rose-50 text-rose-900 border-2 border-rose-400 shadow-xs'
+                  : 'bg-slate-50 text-slate-900 border-slate-300'
+              }`}
             />
           </td>
           <td className="py-2.5 px-4">
@@ -313,8 +321,8 @@ export default function ComboSampleDetailPage() {
               value={item.risk || ''}
               onChange={(e) => handleNiptResultChange(key, 'risk', e.target.value)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold border ${
-                (item.risk || '').includes('cao')
-                  ? 'bg-rose-50 text-rose-800 border-rose-300'
+                isHighRisk
+                  ? 'bg-rose-100 text-rose-900 border-2 border-rose-400 font-extrabold shadow-xs'
                   : (item.risk || '').includes('thấp')
                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                   : 'bg-slate-50 text-slate-500 border-slate-300'
@@ -699,13 +707,30 @@ export default function ComboSampleDetailPage() {
 
               {/* Nội dung kết luận NIPT */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Nội dung kết luận NIPT:</label>
-                <textarea
-                  rows={3}
-                  value={formData.conclusion || ''}
-                  onChange={(e) => handleInputChange('conclusion', e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900"
-                />
+                {(() => {
+                  const hasNiptHighRisk = Object.values(niptResultsObj).some(it => (it?.risk || '').toLowerCase().includes('cao'));
+                  const concStr = formData.conclusion || '';
+                  const concLower = concStr.toLowerCase();
+                  const isConcAbnormal = hasNiptHighRisk || concLower.includes('nguy cơ cao') || concLower.includes('dương tính') || (concLower.includes('phát hiện') && !concLower.includes('không phát hiện') && !concLower.includes('chưa phát hiện'));
+                  return (
+                    <>
+                      <label className={`block text-xs font-bold mb-1 flex items-center justify-between ${isConcAbnormal ? 'text-rose-900 font-extrabold' : 'text-slate-700'}`}>
+                        <span>Nội dung kết luận NIPT:</span>
+                        {isConcAbnormal && <span className="text-rose-600 text-[11px] font-extrabold">● Nguy cơ cao / Bất thường</span>}
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={concStr}
+                        onChange={(e) => handleInputChange('conclusion', e.target.value)}
+                        className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
+                          isConcAbnormal
+                            ? 'bg-rose-50 text-rose-900 border-2 border-rose-400 focus:outline-none focus:border-rose-600 shadow-sm'
+                            : 'bg-slate-50 text-slate-900 border border-slate-300 focus:outline-none focus:border-blue-500'
+                        }`}
+                      />
+                    </>
+                  );
+                })()}
               </div>
             </div>
 
@@ -778,7 +803,7 @@ export default function ComboSampleDetailPage() {
                           ? { ...defaultItem, ...rawItem }
                           : (typeof rawItem === 'string' ? { ...defaultItem, value: rawItem } : defaultItem);
 
-                        const valStr = item.value || 'Chưa phát hiện đột biến trong vùng được khảo sát';
+                        const valStr = item.value !== undefined ? item.value : 'Chưa phát hiện đột biến trong vùng được khảo sát';
                         const valLower = valStr.toLowerCase();
                         const isMutated = valStr && !valLower.includes('chưa phát hiện đột biến') && !valLower.includes('chưa phát hiện biến thể');
 
@@ -807,21 +832,33 @@ export default function ComboSampleDetailPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Nội dung kết luận 20GA:</label>
                   {(() => {
+                    const has20GAMutation = Array.from({ length: 20 }).some((_, idx) => {
+                      const raw = results20GAObj[`disease_${idx + 1}`];
+                      const val = typeof raw === 'object' ? raw?.value : raw;
+                      const valL = (val || '').toLowerCase();
+                      return val && !valL.includes('chưa phát hiện');
+                    });
                     const concStr = formData.conclusion20GA || '';
                     const concLower = concStr.toLowerCase();
-                    const isConcMutated = concStr.length > 0 && !concLower.includes('chưa phát hiện');
+                    const isConcMutated = has20GAMutation || (concStr.length > 0 && !concLower.includes('chưa phát hiện'));
                     return (
-                      <textarea
-                        rows={2}
-                        value={concStr}
-                        onChange={(e) => handleInputChange('conclusion20GA', e.target.value)}
-                        className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${isConcMutated
-                          ? 'bg-rose-50 text-rose-900 border border-rose-300 focus:outline-none focus:border-rose-500 shadow-xs'
-                          : 'bg-slate-50 text-slate-900 border border-slate-300 focus:outline-none focus:border-emerald-500'
+                      <>
+                        <label className={`block text-xs font-bold mb-1 flex items-center justify-between ${isConcMutated ? 'text-rose-900 font-extrabold' : 'text-slate-700'}`}>
+                          <span>Nội dung kết luận 20GA:</span>
+                          {isConcMutated && <span className="text-rose-600 text-[11px] font-extrabold">● Bất thường / Đột biến</span>}
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={concStr}
+                          onChange={(e) => handleInputChange('conclusion20GA', e.target.value)}
+                          className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
+                            isConcMutated
+                              ? 'bg-rose-50 text-rose-900 border-2 border-rose-400 focus:outline-none focus:border-rose-600 shadow-sm'
+                              : 'bg-slate-50 text-slate-900 border border-slate-300 focus:outline-none focus:border-emerald-500'
                           }`}
-                      />
+                        />
+                      </>
                     );
                   })()}
                 </div>

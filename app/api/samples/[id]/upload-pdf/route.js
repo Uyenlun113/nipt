@@ -143,7 +143,7 @@ export async function POST(req, { params }) {
         originalPdf20GAUrl: `/api/samples/${id}/original-pdf?target=20ga`,
         updatedAt: new Date().toISOString()
       };
-      if (extracted.gender) updateData.gender = extracted.gender;
+      if (extracted.reportDate) updateData.reportDate20GA = extracted.reportDate;
 
     } else {
       // NIPT Upload
@@ -191,7 +191,10 @@ export async function POST(req, { params }) {
         originalPdfUrl: `/api/samples/${id}/original-pdf`,
         updatedAt: new Date().toISOString()
       };
+      if (extracted.reportDate) updateData.reportDate = extracted.reportDate;
     }
+
+
 
     if (db) {
       let updated = null;

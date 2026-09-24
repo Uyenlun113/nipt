@@ -12,6 +12,7 @@ const NiptSampleSchema = new mongoose.Schema({
   pregnancyType: { type: String, default: 'Đơn thai' },
   packageType: { type: String, required: true },
   agencyCode: { type: String },
+  facilityName: { type: String },
   doctorName: { type: String },
   tubeType: { type: String, default: 'Streck' },
   receivedDate: { type: String },
